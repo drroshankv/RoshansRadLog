@@ -1,0 +1,2039 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Radiology Residency Case Log Tracker</title>
+    <meta name="description" content="A high-efficiency, mobile-first case log tracker designed for radiology residents in reading rooms to rapidly log cases, backup locally, and export data." />
+    <meta property="og:title" content="Radiology Residency Case Log Tracker" />
+    <meta property="og:description" content="A high-efficiency, mobile-first case log tracker designed for radiology residents in reading rooms to rapidly log cases, backup locally, and export data." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#090d16" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <style>
+      :root {
+        --bg-main: #090d16;
+        --bg-card: #0f172a;
+        --bg-elevated: #1e293b;
+        --bg-input: #111827;
+        --border-subtle: #1e293b;
+        --border-active: #38bdf8;
+        --border-focus: rgba(56, 189, 248, 0.45);
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --accent-cyan: #06b6d4;
+        --accent-teal: #14b8a6;
+        --accent-blue: #38bdf8;
+        --accent-emerald: #10b981;
+        --accent-rose: #f43f5e;
+        --accent-amber: #f59e0b;
+        --accent-purple: #a855f7;
+        --safe-bottom: env(safe-area-inset-bottom, 16px);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        line-height: 1.45;
+        font-size: 15px;
+        min-height: 100vh;
+        overflow-x: hidden;
+        padding-bottom: calc(90px + var(--safe-bottom));
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #090d16;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1e293b;
+        border-radius: 9999px;
+      }
+
+      /* Container */
+      .app-container {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 12px 14px;
+      }
+
+      /* Header */
+      header.app-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 4px 16px 4px;
+        border-bottom: 1px solid var(--border-subtle);
+        margin-bottom: 16px;
+      }
+
+      .brand-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      }
+
+      .brand-title {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .brand-badge {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(14, 165, 233, 0.15);
+        color: var(--accent-blue);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+      }
+
+      .brand-subtitle {
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .icon-btn {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .icon-btn:hover {
+        background: var(--bg-elevated);
+        color: var(--text-primary);
+        border-color: #334155;
+      }
+      .icon-btn:active {
+        transform: scale(0.96);
+      }
+
+      /* Status Pill in Header */
+      .sync-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 9999px;
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        color: var(--text-secondary);
+      }
+      .sync-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent-amber);
+      }
+      .sync-dot.connected {
+        background: var(--accent-emerald);
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+      }
+
+      /* Sections and Form */
+      .card-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      .section-heading {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: var(--text-secondary);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 440px) {
+        .field-row {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+      }
+
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
+      .field-group:last-child {
+        margin-bottom: 0;
+      }
+
+      .field-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .field-label-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      /* Inputs */
+      input[type="text"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        background: var(--bg-input);
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-size: 15px;
+        color: var(--text-primary);
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        -webkit-appearance: none;
+      }
+
+      input[type="date"] {
+        color-scheme: dark;
+      }
+
+      input[type="text"]::placeholder,
+      textarea::placeholder {
+        color: #475569;
+        font-size: 14px;
+      }
+
+      input[type="text"]:focus,
+      input[type="date"]:focus,
+      textarea:focus {
+        border-color: var(--border-active);
+        box-shadow: 0 0 0 3px var(--border-focus);
+        background: #0b1120;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 58px;
+        font-family: inherit;
+        line-height: 1.4;
+      }
+
+      /* Segmented Chips */
+      .chips-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .chip-btn {
+        background: #111827;
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 9px 13px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        user-select: none;
+        flex: 1 1 auto;
+        min-height: 42px;
+      }
+
+      .chip-btn:hover {
+        background: #1e293b;
+        color: #ffffff;
+        border-color: #334155;
+      }
+
+      .chip-btn:active {
+        transform: scale(0.97);
+      }
+
+      /* Active States for Modalities */
+      .chip-btn.active {
+        background: rgba(14, 165, 233, 0.18);
+        border-color: var(--accent-blue);
+        color: #38bdf8;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+      }
+
+      /* Modality color codings */
+      .chip-btn[data-mod="DR"].active {
+        border-color: #60a5fa;
+        color: #93c5fd;
+        background: rgba(96, 165, 250, 0.18);
+      }
+      .chip-btn[data-mod="MG"].active {
+        border-color: #ec4899;
+        color: #f472b6;
+        background: rgba(236, 72, 153, 0.18);
+      }
+      .chip-btn[data-mod="CT"].active {
+        border-color: #0284c7;
+        color: #38bdf8;
+        background: rgba(2, 132, 199, 0.22);
+      }
+      .chip-btn[data-mod="MRI"].active {
+        border-color: #a855f7;
+        color: #c084fc;
+        background: rgba(168, 85, 247, 0.2);
+      }
+      .chip-btn[data-mod="USG"].active {
+        border-color: #10b981;
+        color: #34d399;
+        background: rgba(16, 185, 129, 0.2);
+      }
+      .chip-btn[data-mod="IR"].active {
+        border-color: #f59e0b;
+        color: #fbbf24;
+        background: rgba(245, 158, 11, 0.2);
+      }
+
+      /* System Chips Grid */
+      .systems-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+      @media (max-width: 360px) {
+        .systems-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .systems-grid .chip-btn.active {
+        background: rgba(20, 184, 166, 0.18);
+        border-color: var(--accent-teal);
+        color: #2dd4bf;
+        box-shadow: 0 0 10px rgba(20, 184, 166, 0.25);
+      }
+
+      /* Toggle Switch for Finding & Status */
+      .segmented-toggle {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: #111827;
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 3px;
+        gap: 3px;
+      }
+
+      .toggle-option {
+        padding: 9px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+        border-radius: 7px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.15s ease;
+        user-select: none;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .toggle-option:hover {
+        color: #ffffff;
+      }
+
+      /* Finding Active states */
+      .toggle-option[data-val="Normal"].active {
+        background: rgba(16, 185, 129, 0.22);
+        color: #34d399;
+        border: 1px solid #10b981;
+        font-weight: 700;
+      }
+      .toggle-option[data-val="Abnormal"].active {
+        background: rgba(244, 63, 94, 0.22);
+        color: #fb7185;
+        border: 1px solid #f43f5e;
+        font-weight: 700;
+      }
+
+      /* Status Active states */
+      .toggle-option[data-status="Completed"].active {
+        background: rgba(2, 132, 199, 0.25);
+        color: #38bdf8;
+        border: 1px solid #0284c7;
+        font-weight: 700;
+      }
+      .toggle-option[data-status="Pending Review"].active {
+        background: rgba(245, 158, 11, 0.22);
+        color: #fbbf24;
+        border: 1px solid #f59e0b;
+        font-weight: 700;
+      }
+
+      /* Quick Suggestions Chips */
+      .quick-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 5px;
+      }
+      .quick-chip {
+        font-size: 11px;
+        background: #1e293b;
+        border: 1px solid #334155;
+        color: #94a3b8;
+        padding: 3px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.12s ease;
+      }
+      .quick-chip:hover {
+        color: #38bdf8;
+        border-color: #38bdf8;
+        background: #0f172a;
+      }
+
+      /* Fixed Bottom Sticky Bar */
+      .bottom-action-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid #1e293b;
+        padding: 10px 14px calc(10px + var(--safe-bottom)) 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 50;
+      }
+
+      .action-bar-inner {
+        max-width: 640px;
+        margin: 0 auto;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 10px;
+      }
+
+      .btn-secondary {
+        background: #111827;
+        border: 1px solid #334155;
+        color: var(--text-secondary);
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 12px 14px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 48px;
+      }
+      .btn-secondary:hover {
+        background: #1e293b;
+        color: #ffffff;
+      }
+      .btn-secondary:active {
+        transform: scale(0.97);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        border-radius: 12px;
+        padding: 12px 18px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+        min-height: 48px;
+      }
+      .btn-primary:hover {
+        opacity: 0.95;
+        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Collapsible Drawer for Recent Cases */
+      .recent-drawer {
+        margin-top: 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .drawer-header {
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        user-select: none;
+        background: #0f172a;
+      }
+
+      .drawer-title-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .drawer-badge {
+        background: #1e293b;
+        color: var(--accent-blue);
+        font-size: 12px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 9999px;
+      }
+
+      .drawer-body {
+        padding: 12px 14px;
+        border-top: 1px solid var(--border-subtle);
+        display: none;
+      }
+
+      .drawer-body.open {
+        display: block;
+      }
+
+      .search-box {
+        position: relative;
+        margin-bottom: 12px;
+      }
+      .search-box input {
+        padding-left: 36px;
+      }
+      .search-icon {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .recent-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 380px;
+        overflow-y: auto;
+      }
+
+      .case-card {
+        background: #111827;
+        border: 1px solid #1e293b;
+        border-radius: 10px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .case-card:hover {
+        border-color: #334155;
+        background: #162032;
+      }
+
+      .case-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .modality-tag {
+        font-size: 11px;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: #1e293b;
+        color: #94a3b8;
+      }
+      .modality-tag.DR { background: rgba(96, 165, 250, 0.2); color: #93c5fd; }
+      .modality-tag.MG { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
+      .modality-tag.CT { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
+      .modality-tag.MRI { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+      .modality-tag.USG { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+      .modality-tag.IR { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+      .case-diag {
+        font-size: 14px;
+        font-weight: 600;
+        color: #f1f5f9;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .case-details-meta {
+        font-size: 12px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* Modal Base */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 100;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      .modal-backdrop.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-card {
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 520px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        transform: translateY(12px) scale(0.98);
+        transition: transform 0.2s ease;
+      }
+
+      .modal-backdrop.show .modal-card {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #1e293b;
+      }
+
+      .modal-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .code-snippet {
+        background: #090d16;
+        border: 1px solid #1e293b;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-family: monospace;
+        font-size: 12px;
+        color: #38bdf8;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        margin: 8px 0;
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-30px);
+        background: #10b981;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 9999px;
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 200;
+        max-width: 90vw;
+        text-align: center;
+      }
+
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      .toast.warning {
+        background: #f59e0b;
+        box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35);
+      }
+
+      /* Spinner */
+      .spinner {
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .btn-loading .spinner {
+        display: inline-block;
+      }
+      .btn-loading .btn-text {
+        opacity: 0.8;
+      }
+
+      /* Subtle helper styles */
+      .helper-text {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+
+      .button-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .btn-sm {
+        font-size: 12px;
+        padding: 7px 12px;
+        border-radius: 8px;
+        background: #1e293b;
+        border: 1px solid #334155;
+        color: #f1f5f9;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .btn-sm:hover {
+        background: #334155;
+      }
+
+      .btn-danger {
+        color: #fb7185;
+        border-color: rgba(244, 63, 94, 0.3);
+        background: rgba(244, 63, 94, 0.1);
+      }
+      .btn-danger:hover {
+        background: rgba(244, 63, 94, 0.2);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 24px 12px;
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Toast Feedback -->
+    <div id="toast" class="toast" role="alert" aria-live="polite">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <span id="toast-text">Case Logged!</span>
+    </div>
+
+    <div class="app-container">
+      <!-- App Header -->
+      <header class="app-header">
+        <div class="brand-group">
+          <div class="logo-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="2"></circle>
+              <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">
+              RadLog
+              <span class="brand-badge">Residency</span>
+            </div>
+            <div class="brand-subtitle">Dark-room quick entry logger</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div id="sync-indicator" class="sync-pill" title="Webhook Connection Status">
+            <span id="sync-dot" class="sync-dot"></span>
+            <span id="sync-status-text">Local</span>
+          </div>
+
+          <button id="open-settings-btn" class="icon-btn" title="Settings & Webhook" aria-label="Open Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Case Log Form -->
+      <form id="case-log-form" autocomplete="off" onsubmit="event.preventDefault(); submitCase();">
+        
+        <!-- SECTION 1: Patient & Study Meta -->
+        <div class="card-section">
+          <div class="section-heading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Patient & Date
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="field-date" class="field-label">Date of Study</label>
+              <input type="date" id="field-date" name="date" required enterkeyhint="next" />
+            </div>
+
+            <div class="field-group">
+              <label for="field-mrn" class="field-label">
+                Institute ID / MRN
+                <span class="field-label-hint">Required</span>
+              </label>
+              <input type="text" id="field-mrn" name="mrn" placeholder="e.g. MRN-94021" autocapitalize="characters" required enterkeyhint="next" />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="field-patient-name" class="field-label">
+              Patient Name / Initials
+              <span class="field-label-hint">e.g. J.D. or Jane Doe</span>
+            </label>
+            <input type="text" id="field-patient-name" name="patientName" placeholder="Patient initials or name" autocapitalize="words" enterkeyhint="next" />
+          </div>
+        </div>
+
+        <!-- SECTION 2: Modality & Study -->
+        <div class="card-section">
+          <div class="section-heading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            Modality & Protocol
+          </div>
+
+          <!-- Modality segmented chips -->
+          <div class="field-group">
+            <label class="field-label">Modality (Single-tap)</label>
+            <div class="chips-container" id="modality-chips" role="radiogroup" aria-label="Modality">
+              <button type="button" class="chip-btn" data-mod="DR" role="radio" aria-checked="false">DR</button>
+              <button type="button" class="chip-btn" data-mod="MG" role="radio" aria-checked="false">MG</button>
+              <button type="button" class="chip-btn active" data-mod="CT" role="radio" aria-checked="true">CT</button>
+              <button type="button" class="chip-btn" data-mod="MRI" role="radio" aria-checked="false">MRI</button>
+              <button type="button" class="chip-btn" data-mod="USG" role="radio" aria-checked="false">USG</button>
+              <button type="button" class="chip-btn" data-mod="IR" role="radio" aria-checked="false">IR</button>
+            </div>
+            <input type="hidden" id="field-modality" name="modality" value="CT" />
+          </div>
+
+          <!-- Study Description with auto suggestions -->
+          <div class="field-group">
+            <label for="field-study" class="field-label">
+              Study Description
+              <span class="field-label-hint">Fast tap presets below</span>
+            </label>
+            <input type="text" id="field-study" name="studyDescription" placeholder="e.g. NCCT Head, CECT Abdomen" list="study-suggestions" enterkeyhint="next" required />
+            <datalist id="study-suggestions">
+              <option value="NCCT Head"></option>
+              <option value="CECT Abdomen & Pelvis"></option>
+              <option value="HRCT Chest"></option>
+              <option value="CT Angiography Brain & Neck"></option>
+              <option value="CT Pulmonary Angiogram (CTPA)"></option>
+              <option value="MRI Brain Stroke Protocol"></option>
+              <option value="MRI Spine Lumbar / Cervical"></option>
+              <option value="MRI Knee Joint"></option>
+              <option value="USG Abdomen & Pelvis"></option>
+              <option value="USG KUB"></option>
+              <option value="Chest X-Ray PA View"></option>
+            </datalist>
+
+            <!-- Quick tap chips for active modality -->
+            <div id="study-quick-presets" class="quick-suggestions"></div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Anatomy & Findings -->
+        <div class="card-section">
+          <div class="section-heading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            Anatomy & Diagnosis
+          </div>
+
+          <!-- Organ System chips -->
+          <div class="field-group">
+            <label class="field-label">Organ System</label>
+            <div class="systems-grid" id="system-chips" role="radiogroup" aria-label="Organ System">
+              <button type="button" class="chip-btn active" data-sys="CNS" role="radio" aria-checked="true">CNS</button>
+              <button type="button" class="chip-btn" data-sys="MSK" role="radio" aria-checked="false">MSK</button>
+              <button type="button" class="chip-btn" data-sys="GIT" role="radio" aria-checked="false">GIT</button>
+              <button type="button" class="chip-btn" data-sys="GUT" role="radio" aria-checked="false">GUT</button>
+              <button type="button" class="chip-btn" data-sys="CVS" role="radio" aria-checked="false">CVS</button>
+              <button type="button" class="chip-btn" data-sys="ENT" role="radio" aria-checked="false">ENT</button>
+              <button type="button" class="chip-btn" data-sys="RS" role="radio" aria-checked="false">RS</button>
+            </div>
+            <input type="hidden" id="field-system" name="organSystem" value="CNS" />
+          </div>
+
+          <div class="field-group">
+            <label for="field-organ" class="field-label">Organ of Interest</label>
+            <input type="text" id="field-organ" name="organOfInterest" placeholder="e.g. Appendix, Middle Cerebral Artery, Gallbladder" enterkeyhint="next" />
+          </div>
+
+          <div class="field-group">
+            <label for="field-primary-diag" class="field-label">
+              Primary Diagnosis
+              <span class="field-label-hint">Required</span>
+            </label>
+            <input type="text" id="field-primary-diag" name="primaryDiagnosis" placeholder="e.g. Acute MCA Territory Infarct, Acute Appendicitis" required enterkeyhint="next" />
+          </div>
+
+          <div class="field-group">
+            <label for="field-differentials" class="field-label">Differential Diagnoses (Optional)</label>
+            <textarea id="field-differentials" name="differentialDiagnoses" placeholder="Comma-separated or notes, e.g. Glioma vs Brain Abscess, Mesenteric Adenitis"></textarea>
+          </div>
+
+          <!-- Finding Toggle: Normal vs Abnormal -->
+          <div class="field-group">
+            <label class="field-label">Finding</label>
+            <div class="segmented-toggle" id="finding-toggle">
+              <div class="toggle-option" data-val="Normal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Normal
+              </div>
+              <div class="toggle-option active" data-val="Abnormal">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Abnormal
+              </div>
+            </div>
+            <input type="hidden" id="field-finding" name="finding" value="Abnormal" />
+          </div>
+        </div>
+
+        <!-- SECTION 4: Supervision & Status -->
+        <div class="card-section">
+          <div class="section-heading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+            Reviewers & Status
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="field-reported-by" class="field-label">Reported By</label>
+              <input type="text" id="field-reported-by" name="reportedBy" placeholder="Dr. Resident" enterkeyhint="next" />
+            </div>
+
+            <div class="field-group">
+              <label for="field-consultant" class="field-label">Checked By / Consultant</label>
+              <input type="text" id="field-consultant" name="checkedBy" placeholder="Dr. Consultant" list="consultant-suggestions" enterkeyhint="next" />
+              <datalist id="consultant-suggestions"></datalist>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="field-confirmation" class="field-label">Confirmation / Histopath / Follow-up</label>
+            <input type="text" id="field-confirmation" name="confirmationFollowup" placeholder="e.g. Histopath confirmed, Surgery concordant, DSA pending" enterkeyhint="done" />
+          </div>
+
+          <!-- Status Toggle: Completed vs Pending Review -->
+          <div class="field-group">
+            <label class="field-label">Status</label>
+            <div class="segmented-toggle" id="status-toggle">
+              <div class="toggle-option active" data-status="Completed">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Completed
+              </div>
+              <div class="toggle-option" data-status="Pending Review">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                Pending Review
+              </div>
+            </div>
+            <input type="hidden" id="field-status" name="status" value="Completed" />
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Collapsible Drawer: Recent Logged Cases -->
+      <section class="recent-drawer" aria-labelledby="drawer-heading">
+        <div class="drawer-header" id="drawer-toggle-btn" role="button" tabindex="0" aria-expanded="false">
+          <div class="drawer-title-group">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="drawer-heading" style="font-weight: 700;">Recent Cases</span>
+            <span id="case-count-badge" class="drawer-badge">0</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button id="quick-export-csv" class="btn-sm" type="button" title="Export local cases as CSV">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              CSV
+            </button>
+            <svg id="drawer-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </div>
+
+        <div class="drawer-body" id="drawer-content">
+          <div class="search-box">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="recent-search" placeholder="Search by MRN, diagnosis, modality..." />
+          </div>
+
+          <div id="recent-cases-list" class="recent-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Fixed Bottom Sticky Bar -->
+    <div class="bottom-action-bar">
+      <div class="action-bar-inner">
+        <button type="button" class="btn-secondary" id="clear-form-btn" title="Clear current inputs">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+        <button type="submit" form="case-log-form" class="btn-primary" id="submit-btn">
+          <span class="spinner" id="submit-spinner" aria-hidden="true"></span>
+          <span class="btn-text" id="submit-text">Submit & Log Next</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title" id="settings-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            Configuration & Sync
+          </div>
+          <button class="icon-btn" id="close-settings-btn" aria-label="Close settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div class="field-group">
+          <label for="settings-webhook-url" class="field-label">Google Apps Script Web App URL</label>
+          <input type="text" id="settings-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" />
+          <p class="helper-text">Cases are automatically transmitted to your Google Sheet via POST `no-cors`.</p>
+        </div>
+
+        <div class="field-group" style="margin-top: 10px;">
+          <label for="settings-default-reporter" class="field-label">Default "Reported By" Name</label>
+          <input type="text" id="settings-default-reporter" placeholder="Dr. Jane Resident" />
+          <p class="helper-text">Prefills the "Reported By" field so you don't need to retype it.</p>
+        </div>
+
+        <div class="button-row" style="margin-top: 14px;">
+          <button type="button" class="btn-sm" id="test-webhook-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Test Webhook
+          </button>
+          <button type="button" class="btn-sm" id="save-settings-btn" style="background: #0284c7; border-color: #38bdf8; margin-left: auto;">
+            Save Settings
+          </button>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #1e293b; margin: 18px 0;" />
+
+        <div style="margin-top: 12px;">
+          <div style="font-weight: 700; font-size: 13px; color: #ffffff; margin-bottom: 6px;">
+            Google Apps Script Starter Code
+          </div>
+          <p class="helper-text">Create a Google Sheet, click Extensions → Apps Script, paste this code, and deploy as Web App (Execute as: Me, Who has access: Anyone):</p>
+          <div class="code-snippet" id="apps-script-code">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      "Timestamp", "Date", "MRN", "Patient", "Modality",
+      "Study", "System", "Organ", "Diagnosis", "Differentials",
+      "Finding", "Status", "ReportedBy", "CheckedBy", "Confirmation"
+    ]);
+  }
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    new Date(),
+    data.date || "",
+    data.mrn || "",
+    data.patientName || "",
+    data.modality || "",
+    data.studyDescription || "",
+    data.organSystem || "",
+    data.organOfInterest || "",
+    data.primaryDiagnosis || "",
+    data.differentialDiagnoses || "",
+    data.finding || "",
+    data.status || "",
+    data.reportedBy || "",
+    data.checkedBy || "",
+    data.confirmationFollowup || ""
+  ]);
+  return ContentService.createTextOutput("OK");
+}</div>
+          <button type="button" class="btn-sm" id="copy-script-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy Script Code
+          </button>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #1e293b; margin: 18px 0;" />
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: #f8fafc;">Local Cache</div>
+            <div class="helper-text" id="storage-stats-text">Cached locally: 0 cases</div>
+          </div>
+          <button type="button" class="btn-sm btn-danger" id="clear-cache-btn">
+            Clear Local Cache
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case Detail Modal -->
+    <div class="modal-backdrop" id="case-detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title" id="detail-title">
+            <span id="detail-modality-badge" class="modality-tag">CT</span>
+            <span id="detail-heading-text">Case Details</span>
+          </div>
+          <button class="icon-btn" id="close-detail-btn" aria-label="Close details">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div id="detail-body-content" style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="button-row" style="margin-top: 18px; justify-content: space-between;">
+          <button type="button" class="btn-sm btn-danger" id="delete-case-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            Delete Entry
+          </button>
+          <button type="button" class="btn-sm" id="close-detail-action-btn">
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- App JavaScript Logic -->
+    <script>
+      (function() {
+        'use strict';
+
+        // State & Storage Keys
+        const STORAGE_CASES = 'radlog_cases_v1';
+        const STORAGE_CONFIG = 'radlog_config_v1';
+        const STORAGE_CONSULTANTS = 'radlog_consultants_v1';
+
+        // Modality-specific common study presets for lightning speed
+        const PRESETS = {
+          CT: ['NCCT Head', 'CECT Abdomen & Pelvis', 'HRCT Chest', 'CT Angio Brain/Neck', 'CTPA (Pulmonary Angio)', 'CT KUB'],
+          MRI: ['MRI Brain Stroke Protocol', 'MRI Spine (Lumbar)', 'MRI Spine (Cervical)', 'MRI Knee', 'MRI Shoulder', 'MRCP'],
+          USG: ['USG Abdomen & Pelvis', 'USG KUB', 'USG Obstetric / Anomaly', 'USG Thyroid & Neck', 'Doppler Lower Limb', 'USG Scrotum'],
+          DR: ['CXR PA View', 'Chest AP View (Bedside)', 'Abdomen Erect & Supine', 'PNS Waters View', 'Pelvis AP', 'Spine AP/Lat'],
+          MG: ['Bilateral Diagnostic Mammogram', 'Bilateral Screening Mammogram', 'Spot Compression MG'],
+          IR: ['USG Guided Biopsy', 'CT Guided FNAC / Biopsy', 'Pigtail Catheter Insertion', 'Diagnostic Angiogram', 'TACE / Embolization']
+        };
+
+        let currentActiveCase = null;
+
+        // Elements
+        const form = document.getElementById('case-log-form');
+        const dateInput = document.getElementById('field-date');
+        const mrnInput = document.getElementById('field-mrn');
+        const patientNameInput = document.getElementById('field-patient-name');
+        const modalityInput = document.getElementById('field-modality');
+        const studyInput = document.getElementById('field-study');
+        const systemInput = document.getElementById('field-system');
+        const organInput = document.getElementById('field-organ');
+        const primaryDiagInput = document.getElementById('field-primary-diag');
+        const diffInput = document.getElementById('field-differentials');
+        const findingInput = document.getElementById('field-finding');
+        const reportedByInput = document.getElementById('field-reported-by');
+        const consultantInput = document.getElementById('field-consultant');
+        const confirmationInput = document.getElementById('field-confirmation');
+        const statusInput = document.getElementById('field-status');
+
+        const submitBtn = document.getElementById('submit-btn');
+        const submitSpinner = document.getElementById('submit-spinner');
+        const submitText = document.getElementById('submit-text');
+        const clearBtn = document.getElementById('clear-form-btn');
+
+        const syncDot = document.getElementById('sync-dot');
+        const syncStatusText = document.getElementById('sync-status-text');
+        const toast = document.getElementById('toast');
+        const toastText = document.getElementById('toast-text');
+
+        // Modal elements
+        const settingsModal = document.getElementById('settings-modal');
+        const openSettingsBtn = document.getElementById('open-settings-btn');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
+        const settingsWebhookUrl = document.getElementById('settings-webhook-url');
+        const settingsDefaultReporter = document.getElementById('settings-default-reporter');
+        const saveSettingsBtn = document.getElementById('save-settings-btn');
+        const testWebhookBtn = document.getElementById('test-webhook-btn');
+        const copyScriptBtn = document.getElementById('copy-script-btn');
+        const storageStatsText = document.getElementById('storage-stats-text');
+        const clearCacheBtn = document.getElementById('clear-cache-btn');
+
+        // Drawer & Recent Cases
+        const drawerHeader = document.getElementById('drawer-toggle-btn');
+        const drawerContent = document.getElementById('drawer-content');
+        const drawerChevron = document.getElementById('drawer-chevron');
+        const recentCasesList = document.getElementById('recent-cases-list');
+        const recentSearch = document.getElementById('recent-search');
+        const caseCountBadge = document.getElementById('case-count-badge');
+        const quickExportCsvBtn = document.getElementById('quick-export-csv');
+
+        // Detail Modal
+        const caseDetailModal = document.getElementById('case-detail-modal');
+        const closeDetailBtn = document.getElementById('close-detail-btn');
+        const closeDetailActionBtn = document.getElementById('close-detail-action-btn');
+        const deleteCaseBtn = document.getElementById('delete-case-btn');
+        const detailBodyContent = document.getElementById('detail-body-content');
+        const detailModalityBadge = document.getElementById('detail-modality-badge');
+        const detailHeadingText = document.getElementById('detail-heading-text');
+
+        // Helper: Format today YYYY-MM-DD
+        function getTodayString() {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        }
+
+        // Load & Save Config
+        function loadConfig() {
+          try {
+            const raw = localStorage.getItem(STORAGE_CONFIG);
+            return raw ? JSON.parse(raw) : { webhookUrl: '', defaultReporter: 'Dr. Resident' };
+          } catch (e) {
+            return { webhookUrl: '', defaultReporter: 'Dr. Resident' };
+          }
+        }
+
+        function saveConfig(cfg) {
+          localStorage.setItem(STORAGE_CONFIG, JSON.stringify(cfg));
+          updateSyncIndicator();
+        }
+
+        function updateSyncIndicator() {
+          const cfg = loadConfig();
+          if (cfg.webhookUrl && cfg.webhookUrl.trim().length > 10) {
+            syncDot.classList.add('connected');
+            syncStatusText.textContent = 'Sync ON';
+            syncStatusText.style.color = '#34d399';
+          } else {
+            syncDot.classList.remove('connected');
+            syncStatusText.textContent = 'Local Only';
+            syncStatusText.style.color = '#94a3b8';
+          }
+        }
+
+        // Load & Save Cases
+        function loadCases() {
+          try {
+            const raw = localStorage.getItem(STORAGE_CASES);
+            if (!raw) {
+              const sampleCase = {
+                id: 'case_sample_1',
+                timestamp: new Date().toISOString(),
+                date: getTodayString(),
+                mrn: 'MRN-849201',
+                patientName: 'R.S.',
+                modality: 'CT',
+                studyDescription: 'NCCT Head (Emergency)',
+                organSystem: 'CNS',
+                organOfInterest: 'Middle Cerebral Artery territory',
+                primaryDiagnosis: 'Acute Left MCA Infarct (Dense MCA sign + Loss of insular ribbon)',
+                differentialDiagnoses: 'Herpes simplex encephalitis, Todd paralysis mimic',
+                finding: 'Abnormal',
+                status: 'Completed',
+                reportedBy: 'Dr. Resident',
+                checkedBy: 'Dr. Consultant',
+                confirmationFollowup: 'CT Angiography confirmed M1 cutoff; mechanical thrombectomy performed'
+              };
+              localStorage.setItem(STORAGE_CASES, JSON.stringify([sampleCase]));
+              return [sampleCase];
+            }
+            return JSON.parse(raw);
+          } catch (e) {
+            return [];
+          }
+        }
+
+        function saveCases(cases) {
+          localStorage.setItem(STORAGE_CASES, JSON.stringify(cases));
+          renderRecentCases();
+          updateStorageStats();
+        }
+
+        // Consultant suggestions
+        function loadConsultants() {
+          try {
+            const raw = localStorage.getItem(STORAGE_CONSULTANTS);
+            return raw ? JSON.parse(raw) : [];
+          } catch (e) {
+            return [];
+          }
+        }
+
+        function rememberConsultant(name) {
+          if (!name || !name.trim()) return;
+          const trimmed = name.trim();
+          let list = loadConsultants();
+          if (!list.includes(trimmed)) {
+            list.unshift(trimmed);
+            if (list.length > 20) list = list.slice(0, 20);
+            localStorage.setItem(STORAGE_CONSULTANTS, JSON.stringify(list));
+            renderConsultantDatalist();
+          }
+        }
+
+        function renderConsultantDatalist() {
+          const list = loadConsultants();
+          const datalist = document.getElementById('consultant-suggestions');
+          datalist.innerHTML = '';
+          list.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            datalist.appendChild(opt);
+          });
+        }
+
+        // Toast
+        let toastTimeout = null;
+        function showToast(msg, isWarning = false) {
+          if (toastTimeout) clearTimeout(toastTimeout);
+          toastText.textContent = msg;
+          if (isWarning) {
+            toast.classList.add('warning');
+          } else {
+            toast.classList.remove('warning');
+          }
+          toast.classList.add('show');
+          if (navigator.vibrate) {
+            try { navigator.vibrate(isWarning ? [50, 50] : [35]); } catch (e) {}
+          }
+          toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+          }, 3000);
+        }
+
+        // Preset Chips for Modality
+        function renderStudyPresets(modality) {
+          const container = document.getElementById('study-quick-presets');
+          container.innerHTML = '';
+          const presets = PRESETS[modality] || [];
+          presets.forEach(p => {
+            const chip = document.createElement('span');
+            chip.className = 'quick-chip';
+            chip.textContent = p;
+            chip.addEventListener('click', () => {
+              studyInput.value = p;
+              // Suggest organ or focus
+              autoGuessOrgan(p);
+            });
+            container.appendChild(chip);
+          });
+        }
+
+        function autoGuessOrgan(studyName) {
+          const lower = studyName.toLowerCase();
+          if (lower.includes('head') || lower.includes('brain') || lower.includes('stroke')) {
+            selectSystem('CNS');
+            if (!organInput.value) organInput.value = 'Brain';
+          } else if (lower.includes('chest') || lower.includes('cxr') || lower.includes('hrct') || lower.includes('pulmonary')) {
+            selectSystem('RS');
+            if (!organInput.value) organInput.value = 'Lungs';
+          } else if (lower.includes('abdomen') || lower.includes('pelvis')) {
+            selectSystem('GIT');
+          } else if (lower.includes('kub')) {
+            selectSystem('GUT');
+            if (!organInput.value) organInput.value = 'Kidneys / Bladder';
+          } else if (lower.includes('knee') || lower.includes('shoulder') || lower.includes('spine')) {
+            selectSystem('MSK');
+          }
+        }
+
+        // System selector helper
+        function selectSystem(sys) {
+          systemInput.value = sys;
+          document.querySelectorAll('#system-chips .chip-btn').forEach(btn => {
+            const isMatch = btn.dataset.sys === sys;
+            btn.classList.toggle('active', isMatch);
+            btn.setAttribute('aria-checked', isMatch ? 'true' : 'false');
+          });
+        }
+
+        // Setup Modality Chips
+        document.querySelectorAll('#modality-chips .chip-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('#modality-chips .chip-btn').forEach(b => {
+              b.classList.remove('active');
+              b.setAttribute('aria-checked', 'false');
+            });
+            btn.classList.add('active');
+            btn.setAttribute('aria-checked', 'true');
+            const mod = btn.dataset.mod;
+            modalityInput.value = mod;
+            renderStudyPresets(mod);
+          });
+        });
+
+        // Setup Organ System Chips
+        document.querySelectorAll('#system-chips .chip-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            selectSystem(btn.dataset.sys);
+          });
+        });
+
+        // Setup Finding Toggle (Normal / Abnormal)
+        document.querySelectorAll('#finding-toggle .toggle-option').forEach(opt => {
+          opt.addEventListener('click', () => {
+            document.querySelectorAll('#finding-toggle .toggle-option').forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+            findingInput.value = opt.dataset.val;
+          });
+        });
+
+        // Setup Status Toggle (Completed / Pending Review)
+        document.querySelectorAll('#status-toggle .toggle-option').forEach(opt => {
+          opt.addEventListener('click', () => {
+            document.querySelectorAll('#status-toggle .toggle-option').forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+            statusInput.value = opt.dataset.status;
+          });
+        });
+
+        // Initialize Form Defaults
+        function initFormDefaults() {
+          dateInput.value = getTodayString();
+          const cfg = loadConfig();
+          if (cfg.defaultReporter && (!reportedByInput.value || reportedByInput.value === '')) {
+            reportedByInput.value = cfg.defaultReporter;
+          }
+          renderStudyPresets(modalityInput.value || 'CT');
+          renderConsultantDatalist();
+          updateSyncIndicator();
+        }
+
+        // Clear Form Button
+        clearBtn.addEventListener('click', () => {
+          const hasContent = mrnInput.value || patientNameInput.value || studyInput.value || primaryDiagInput.value;
+          if (hasContent && !confirm('Clear current form entries?')) {
+            return;
+          }
+          resetFormFields(false);
+          mrnInput.focus();
+        });
+
+        function resetFormFields(keepModality = true) {
+          mrnInput.value = '';
+          patientNameInput.value = '';
+          studyInput.value = '';
+          organInput.value = '';
+          primaryDiagInput.value = '';
+          diffInput.value = '';
+          confirmationInput.value = '';
+
+          // Reset Finding to default Abnormal
+          document.querySelectorAll('#finding-toggle .toggle-option').forEach(o => {
+            o.classList.toggle('active', o.dataset.val === 'Abnormal');
+          });
+          findingInput.value = 'Abnormal';
+
+          // Reset Status to Completed
+          document.querySelectorAll('#status-toggle .toggle-option').forEach(o => {
+            o.classList.toggle('active', o.dataset.status === 'Completed');
+          });
+          statusInput.value = 'Completed';
+
+          // Keep date as today
+          dateInput.value = getTodayString();
+
+          // Keep default reporter
+          const cfg = loadConfig();
+          if (cfg.defaultReporter) {
+            reportedByInput.value = cfg.defaultReporter;
+          }
+
+          if (!keepModality) {
+            // default back to CT
+            const ctBtn = document.querySelector('#modality-chips .chip-btn[data-mod="CT"]');
+            if (ctBtn) ctBtn.click();
+          }
+        }
+
+        // Form Submission
+        window.submitCase = async function() {
+          // Validation
+          if (!mrnInput.value.trim()) {
+            showToast('MRN / Institute ID is required', true);
+            mrnInput.focus();
+            return;
+          }
+          if (!primaryDiagInput.value.trim()) {
+            showToast('Primary Diagnosis is required', true);
+            primaryDiagInput.focus();
+            return;
+          }
+
+          const now = new Date();
+          const caseData = {
+            id: 'case_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+            timestamp: now.toISOString(),
+            date: dateInput.value || getTodayString(),
+            mrn: mrnInput.value.trim().toUpperCase(),
+            patientName: patientNameInput.value.trim(),
+            modality: modalityInput.value || 'CT',
+            studyDescription: studyInput.value.trim(),
+            organSystem: systemInput.value || 'CNS',
+            organOfInterest: organInput.value.trim(),
+            primaryDiagnosis: primaryDiagInput.value.trim(),
+            differentialDiagnoses: diffInput.value.trim(),
+            finding: findingInput.value || 'Abnormal',
+            status: statusInput.value || 'Completed',
+            reportedBy: reportedByInput.value.trim(),
+            checkedBy: consultantInput.value.trim(),
+            confirmationFollowup: confirmationInput.value.trim()
+          };
+
+          // Remember consultant for rapid autocomplete in the future
+          rememberConsultant(caseData.checkedBy);
+
+          // Save locally first
+          const cases = loadCases();
+          cases.unshift(caseData);
+          saveCases(cases);
+
+          // Disable submit button & show spinner
+          submitBtn.disabled = true;
+          submitBtn.classList.add('btn-loading');
+          submitText.textContent = 'Logging...';
+
+          const cfg = loadConfig();
+          let syncSuccess = false;
+
+          if (cfg.webhookUrl && cfg.webhookUrl.trim().startsWith('http')) {
+            try {
+              // HTTP POST with fetch mode: 'no-cors' per requirements
+              await fetch(cfg.webhookUrl.trim(), {
+                method: 'POST',
+                body: JSON.stringify(caseData),
+                mode: 'no-cors'
+              });
+              syncSuccess = true;
+            } catch (err) {
+              console.warn('Webhook transmission failed:', err);
+              syncSuccess = false;
+            }
+          }
+
+          // Finish UI animation
+          setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-loading');
+            submitText.textContent = 'Submit & Log Next';
+
+            if (syncSuccess) {
+              showToast(`Case Logged & Synced! (${caseData.modality}: ${caseData.mrn})`);
+            } else if (cfg.webhookUrl && cfg.webhookUrl.trim().length > 0) {
+              showToast(`Saved locally (Webhook queued/no response)`);
+            } else {
+              showToast(`Case Logged Locally! (${caseData.modality}: ${caseData.mrn})`);
+            }
+
+            // Reset form fields but retain date, modality, and reporter for lightning-fast next entry
+            resetFormFields(true);
+
+            // Immediately focus MRN so next case can be entered without touching screen
+            mrnInput.focus();
+          }, 350);
+        };
+
+        // Render Recent Cases List
+        function renderRecentCases(filterText = '') {
+          const cases = loadCases();
+          caseCountBadge.textContent = cases.length;
+
+          const query = (filterText || '').toLowerCase().trim();
+          const filtered = query
+            ? cases.filter(c =>
+                (c.mrn && c.mrn.toLowerCase().includes(query)) ||
+                (c.primaryDiagnosis && c.primaryDiagnosis.toLowerCase().includes(query)) ||
+                (c.modality && c.modality.toLowerCase().includes(query)) ||
+                (c.organSystem && c.organSystem.toLowerCase().includes(query)) ||
+                (c.patientName && c.patientName.toLowerCase().includes(query))
+              )
+            : cases.slice(0, 15); // Show latest 15 by default for performance
+
+          if (filtered.length === 0) {
+            recentCasesList.innerHTML = `
+              <div class="empty-state">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 6px; opacity: 0.5;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <div>${query ? 'No matching cases found' : 'No cases logged yet today'}</div>
+              </div>
+            `;
+            return;
+          }
+
+          recentCasesList.innerHTML = '';
+          filtered.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'case-card';
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+
+            const findingDot = c.finding === 'Normal'
+              ? '<span style="color: #34d399; font-size: 11px;">● Normal</span>'
+              : '<span style="color: #fb7185; font-size: 11px;">● Abnormal</span>';
+
+            card.innerHTML = `
+              <div class="case-card-header">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span class="modality-tag ${c.modality || ''}">${c.modality || 'CT'}</span>
+                  <span style="font-weight: 700; font-size: 13px; color: #ffffff;">${escapeHtml(c.mrn || 'No MRN')}</span>
+                  ${c.patientName ? `<span style="font-size: 12px; color: #94a3b8;">(${escapeHtml(c.patientName)})</span>` : ''}
+                </div>
+                <div>${findingDot}</div>
+              </div>
+              <div class="case-diag">${escapeHtml(c.primaryDiagnosis || 'No Diagnosis')}</div>
+              <div class="case-details-meta">
+                <span>${escapeHtml(c.studyDescription || c.organSystem || '')}</span>
+                <span>${formatDateDisplay(c.date)}</span>
+              </div>
+            `;
+
+            card.addEventListener('click', () => openCaseDetail(c));
+            recentCasesList.appendChild(card);
+          });
+        }
+
+        function formatDateDisplay(d) {
+          if (!d) return '';
+          try {
+            const parts = d.split('-');
+            if (parts.length === 3) return `${parts[1]}/${parts[2]}`;
+            return d;
+          } catch (e) {
+            return d;
+          }
+        }
+
+        function escapeHtml(str) {
+          if (!str) return '';
+          return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+        }
+
+        // Open Case Detail Modal
+        function openCaseDetail(c) {
+          currentActiveCase = c;
+          detailModalityBadge.className = `modality-tag ${c.modality || ''}`;
+          detailModalityBadge.textContent = c.modality || 'CT';
+          detailHeadingText.textContent = `${c.mrn} - ${c.patientName || 'Patient'}`;
+
+          detailBodyContent.innerHTML = `
+            <div style="background: #111827; border-radius: 8px; padding: 10px; border: 1px solid #1e293b;">
+              <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 2px;">Study & Protocol</div>
+              <div style="color: #ffffff; font-weight: 600;">${escapeHtml(c.studyDescription || 'Not specified')}</div>
+              <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">System: <strong>${escapeHtml(c.organSystem || '-')}</strong> &bull; Organ: <strong>${escapeHtml(c.organOfInterest || '-')}</strong> &bull; Date: <strong>${escapeHtml(c.date || '-')}</strong></div>
+            </div>
+
+            <div style="background: #111827; border-radius: 8px; padding: 10px; border: 1px solid #1e293b;">
+              <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 2px;">Primary Diagnosis</div>
+              <div style="color: #38bdf8; font-weight: 700; font-size: 15px;">${escapeHtml(c.primaryDiagnosis || '-')}</div>
+              ${c.differentialDiagnoses ? `
+                <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-top: 8px; margin-bottom: 2px;">Differentials</div>
+                <div style="color: #e2e8f0; font-size: 13px;">${escapeHtml(c.differentialDiagnoses)}</div>
+              ` : ''}
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div style="background: #111827; border-radius: 8px; padding: 8px 10px; border: 1px solid #1e293b;">
+                <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Finding</div>
+                <div style="font-weight: 700; color: ${c.finding === 'Normal' ? '#34d399' : '#fb7185'};">${escapeHtml(c.finding || 'Abnormal')}</div>
+              </div>
+              <div style="background: #111827; border-radius: 8px; padding: 8px 10px; border: 1px solid #1e293b;">
+                <div style="font-size: 10px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Status</div>
+                <div style="font-weight: 700; color: #38bdf8;">${escapeHtml(c.status || 'Completed')}</div>
+              </div>
+            </div>
+
+            <div style="background: #111827; border-radius: 8px; padding: 10px; border: 1px solid #1e293b;">
+              <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 2px;">Reporting Team</div>
+              <div style="font-size: 13px; color: #ffffff;">Reported by: <strong>${escapeHtml(c.reportedBy || '-')}</strong></div>
+              <div style="font-size: 13px; color: #ffffff; margin-top: 2px;">Consultant: <strong>${escapeHtml(c.checkedBy || '-')}</strong></div>
+              ${c.confirmationFollowup ? `
+                <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-top: 8px; margin-bottom: 2px;">Confirmation / Histopath / Follow-up</div>
+                <div style="color: #e2e8f0; font-size: 13px;">${escapeHtml(c.confirmationFollowup)}</div>
+              ` : ''}
+            </div>
+          `;
+
+          caseDetailModal.classList.add('show');
+        }
+
+        // Close Detail Modal
+        function closeDetailModal() {
+          caseDetailModal.classList.remove('show');
+          currentActiveCase = null;
+        }
+
+        closeDetailBtn.addEventListener('click', closeDetailModal);
+        closeDetailActionBtn.addEventListener('click', closeDetailModal);
+
+        // Delete Case
+        deleteCaseBtn.addEventListener('click', () => {
+          if (!currentActiveCase) return;
+          if (confirm('Delete this case entry from local log?')) {
+            let cases = loadCases();
+            cases = cases.filter(item => item.id !== currentActiveCase.id);
+            saveCases(cases);
+            closeDetailModal();
+            showToast('Entry deleted');
+          }
+        });
+
+        // Search in drawer
+        recentSearch.addEventListener('input', (e) => {
+          renderRecentCases(e.target.value);
+        });
+
+        // Drawer collapse toggle
+        drawerHeader.addEventListener('click', (e) => {
+          if (e.target.closest('#quick-export-csv')) return;
+          const isOpen = drawerContent.classList.toggle('open');
+          drawerHeader.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          drawerChevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        // Settings Modal Open/Close
+        openSettingsBtn.addEventListener('click', () => {
+          const cfg = loadConfig();
+          settingsWebhookUrl.value = cfg.webhookUrl || '';
+          settingsDefaultReporter.value = cfg.defaultReporter || '';
+          updateStorageStats();
+          settingsModal.classList.add('show');
+        });
+
+        closeSettingsBtn.addEventListener('click', () => {
+          settingsModal.classList.remove('show');
+        });
+
+        settingsModal.addEventListener('click', (e) => {
+          if (e.target === settingsModal) {
+            settingsModal.classList.remove('show');
+          }
+        });
+        caseDetailModal.addEventListener('click', (e) => {
+          if (e.target === caseDetailModal) {
+            closeDetailModal();
+          }
+        });
+
+        // Save Settings
+        saveSettingsBtn.addEventListener('click', () => {
+          const cfg = {
+            webhookUrl: settingsWebhookUrl.value.trim(),
+            defaultReporter: settingsDefaultReporter.value.trim()
+          };
+          saveConfig(cfg);
+          if (cfg.defaultReporter && (!reportedByInput.value || reportedByInput.value === '')) {
+            reportedByInput.value = cfg.defaultReporter;
+          }
+          settingsModal.classList.remove('show');
+          showToast('Settings saved!');
+        });
+
+        // Test Webhook
+        testWebhookBtn.addEventListener('click', async () => {
+          const url = settingsWebhookUrl.value.trim();
+          if (!url || !url.startsWith('http')) {
+            showToast('Enter a valid Webhook URL starting with https://', true);
+            return;
+          }
+          testWebhookBtn.disabled = true;
+          testWebhookBtn.textContent = 'Testing...';
+
+          try {
+            await fetch(url, {
+              method: 'POST',
+              body: JSON.stringify({
+                test: true,
+                timestamp: new Date().toISOString(),
+                primaryDiagnosis: 'PING TEST - Radiology Tracker'
+              }),
+              mode: 'no-cors'
+            });
+            showToast('Webhook ping sent successfully!');
+          } catch (e) {
+            showToast('Failed to ping webhook: ' + e.message, true);
+          } finally {
+            testWebhookBtn.disabled = false;
+            testWebhookBtn.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              Test Webhook
+            `;
+          }
+        });
+
+        // Copy Apps Script Starter Code
+        copyScriptBtn.addEventListener('click', () => {
+          const code = document.getElementById('apps-script-code').innerText;
+          navigator.clipboard.writeText(code).then(() => {
+            showToast('Google Apps Script copied to clipboard!');
+          }).catch(() => {
+            showToast('Failed to copy', true);
+          });
+        });
+
+        // Update Storage Stats
+        function updateStorageStats() {
+          const cases = loadCases();
+          storageStatsText.textContent = `Cached locally: ${cases.length} case${cases.length === 1 ? '' : 's'}`;
+        }
+
+        // Clear Local Cache
+        clearCacheBtn.addEventListener('click', () => {
+          if (confirm('Clear all locally saved cases? (Make sure you have exported to CSV first if needed!)')) {
+            localStorage.removeItem(STORAGE_CASES);
+            renderRecentCases();
+            updateStorageStats();
+            showToast('Local cache cleared');
+          }
+        });
+
+        // CSV Export Functionality
+        function exportCasesCSV() {
+          const cases = loadCases();
+          if (cases.length === 0) {
+            showToast('No logged cases to export', true);
+            return;
+          }
+
+          const headers = [
+            'ID',
+            'Date',
+            'MRN',
+            'PatientName',
+            'Modality',
+            'StudyDescription',
+            'OrganSystem',
+            'OrganOfInterest',
+            'PrimaryDiagnosis',
+            'DifferentialDiagnoses',
+            'Finding',
+            'Status',
+            'ReportedBy',
+            'CheckedBy',
+            'ConfirmationFollowup',
+            'Timestamp'
+          ];
+
+          const rows = cases.map(c => [
+            c.id || '',
+            c.date || '',
+            c.mrn || '',
+            c.patientName || '',
+            c.modality || '',
+            c.studyDescription || '',
+            c.organSystem || '',
+            c.organOfInterest || '',
+            c.primaryDiagnosis || '',
+            c.differentialDiagnoses || '',
+            c.finding || '',
+            c.status || '',
+            c.reportedBy || '',
+            c.checkedBy || '',
+            c.confirmationFollowup || '',
+            c.timestamp || ''
+          ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+
+          const csvContent = [headers.join(','), ...rows].join('\r\n');
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          const filename = `RadLog_Cases_${getTodayString()}.csv`;
+
+          link.setAttribute('href', url);
+          link.setAttribute('download', filename);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          showToast(`Exported ${cases.length} cases to CSV!`);
+        }
+
+        quickExportCsvBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          exportCasesCSV();
+        });
+
+        // Keyboard Navigation & Shortcuts
+        const inputSequence = [
+          mrnInput,
+          patientNameInput,
+          studyInput,
+          organInput,
+          primaryDiagInput,
+          diffInput,
+          consultantInput,
+          confirmationInput
+        ];
+
+        inputSequence.forEach((field, index) => {
+          field.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+              if (field === confirmationInput) {
+                e.preventDefault();
+                window.submitCase();
+              } else if (field !== diffInput) {
+                e.preventDefault();
+                const nextField = inputSequence[index + 1];
+                if (nextField) nextField.focus();
+              }
+            }
+          });
+        });
+
+        // Keyboard Shortcut: Cmd/Ctrl + Enter submits form from anywhere
+        window.addEventListener('keydown', (e) => {
+          if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+            e.preventDefault();
+            window.submitCase();
+          }
+          if (e.key === 'Escape') {
+            if (settingsModal.classList.contains('show')) settingsModal.classList.remove('show');
+            if (caseDetailModal.classList.contains('show')) closeDetailModal();
+          }
+        });
+
+        // Initialize on DOM Ready
+        initFormDefaults();
+        renderRecentCases();
+        updateStorageStats();
+
+      })();
+    </script>
+  </body>
+</html>
