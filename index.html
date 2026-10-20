@@ -12,6 +12,14 @@
     <meta name="theme-color" content="#090d16" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <script type="module">
+      import QRCode from 'qrcode';
+      import jsQR from 'jsqr';
+      window.__QRCodeLib = QRCode;
+      window.__jsQRLib = jsQR;
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
     <style>
       :root {
@@ -51,7 +59,7 @@
         min-height: 100vh;
         min-height: 100dvh;
         overflow-x: hidden;
-        line-height: 1.45;
+        line-height: 1.4;
         font-size: 14px;
         -webkit-font-smoothing: antialiased;
       }
@@ -60,7 +68,7 @@
       .app-container {
         max-width: 540px;
         margin: 0 auto;
-        padding: calc(var(--safe-top) + 22px) 14px calc(var(--safe-bottom) + 95px) 14px;
+        padding: calc(var(--safe-top) + 12px) 12px calc(var(--safe-bottom) + 82px) 12px;
         min-height: 100vh;
         min-height: 100dvh;
         display: flex;
@@ -72,7 +80,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 14px;
+        margin-bottom: 8px;
         padding-top: 2px;
       }
 
@@ -558,34 +566,34 @@
 
       /* ================= REDESIGNED QUICK LOG UI ================= */
       .quick-log-tip {
-        background: linear-gradient(135deg, rgba(2, 132, 199, 0.15) 0%, rgba(15, 23, 42, 0.7) 100%);
-        border: 1px solid rgba(56, 189, 248, 0.25);
-        border-radius: 14px;
-        padding: 12px 14px;
-        margin-bottom: 14px;
+        background: linear-gradient(135deg, rgba(2, 132, 199, 0.14) 0%, rgba(15, 23, 42, 0.7) 100%);
+        border: 1px solid rgba(56, 189, 248, 0.22);
+        border-radius: 11px;
+        padding: 7px 11px;
+        margin-bottom: 8px;
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        font-size: 12px;
+        gap: 8px;
+        font-size: 11px;
         color: #bae6fd;
-        line-height: 1.4;
+        line-height: 1.3;
         position: relative;
       }
       .quick-log-tip-content {
         display: flex;
-        align-items: flex-start;
-        gap: 10px;
+        align-items: center;
+        gap: 7px;
         flex: 1;
       }
       .quick-tip-close {
         background: transparent;
         border: none;
         color: #94a3b8;
-        font-size: 18px;
+        font-size: 16px;
         line-height: 1;
         cursor: pointer;
-        padding: 2px 6px;
+        padding: 2px 5px;
         border-radius: 6px;
         transition: color 0.15s ease;
       }
@@ -594,45 +602,97 @@
         background: rgba(255, 255, 255, 0.1);
       }
 
-      /* Quick Log Large Card */
+      /* Quick Log Compact Hero Card (Zero-Scroll Opening Screen) */
       .quick-hero-card {
         background: var(--bg-card);
         border: 1px solid rgba(56, 189, 248, 0.25);
-        border-radius: 18px;
-        padding: 18px 16px;
-        margin-bottom: 16px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        border-radius: 16px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 10px;
       }
 
-      .quick-modality-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+      .quick-modality-primary-row {
+        display: flex;
+        align-items: stretch;
+        gap: 6px;
       }
-      @media (min-width: 480px) {
-        .quick-modality-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
+
+      .quick-modality-primary-row .quick-mod-btn {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+
+      .quick-mod-more-btn {
+        background: #131c33;
+        border: 1px solid #334155;
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 0 11px;
+        border-radius: 10px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-height: 42px;
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+        user-select: none;
+      }
+      .quick-mod-more-btn:hover,
+      .quick-mod-more-btn.expanded {
+        background: #1e293b;
+        color: #38bdf8;
+        border-color: #38bdf8;
+      }
+      .quick-mod-more-btn.has-active-hidden {
+        border-color: #38bdf8;
+        color: #38bdf8;
+        background: rgba(2, 132, 199, 0.2);
+      }
+
+      .quick-modality-overflow {
+        display: none;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+        padding: 8px;
+        background: #0b1120;
+        border: 1px solid #1e293b;
+        border-radius: 11px;
+        animation: fadeIn 0.15s ease-out;
+      }
+      .quick-modality-overflow.open {
+        display: flex;
+      }
+      .quick-modality-overflow .quick-mod-btn {
+        flex: 1 1 calc(25% - 6px);
+        min-width: 60px;
+        min-height: 38px;
+        font-size: 12px;
+        padding: 6px 8px;
       }
 
       .quick-mod-btn {
         background: #111827;
         border: 1px solid var(--border-subtle);
         color: var(--text-secondary);
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 800;
-        letter-spacing: 0.5px;
-        padding: 12px 10px;
-        border-radius: 12px;
+        letter-spacing: 0.4px;
+        padding: 9px 6px;
+        border-radius: 10px;
         cursor: pointer;
         transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 48px;
+        min-height: 42px;
         user-select: none;
       }
       .quick-mod-btn:hover {
@@ -643,87 +703,117 @@
         transform: scale(0.96);
       }
       .quick-mod-btn.active {
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
       }
 
-      /* Large Inputs in Quick Log */
+      /* Compact Ergonomic Inputs in Quick Log */
       .input-large {
-        height: 52px !important;
-        font-size: 17px !important;
-        padding: 12px 16px !important;
+        height: 44px !important;
+        font-size: 15px !important;
+        padding: 8px 13px !important;
         font-weight: 500 !important;
       }
       .input-large-mrn {
-        height: 54px !important;
-        font-size: 19px !important;
+        height: 44px !important;
+        font-size: 16px !important;
         font-weight: 700 !important;
-        letter-spacing: 0.5px !important;
+        letter-spacing: 0.4px !important;
       }
 
-      /* Quick Dual Action Buttons */
-      .quick-action-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+      /* Prefix Badge Numbers-Only Mode */
+      .input-prefix-badge.numbers-only {
+        color: #94a3b8;
+        background: #0f172a;
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      /* Live Duplicate MRN Warning Banner */
+      .mrn-dup-warning {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        background: rgba(245, 158, 11, 0.14);
+        border: 1px solid rgba(245, 158, 11, 0.45);
+        border-radius: 9px;
+        padding: 6px 10px;
         margin-top: 4px;
+        font-size: 11px;
+        color: #fde68a;
+        line-height: 1.3;
+        animation: fadeIn 0.15s ease-out;
       }
-
-      .btn-quick-primary {
-        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-        border: 1px solid #f59e0b;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 700;
-        padding: 14px 12px;
-        border-radius: 14px;
-        cursor: pointer;
+      .mrn-dup-warning.show {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35);
-        transition: all 0.15s ease;
-        min-height: 52px;
       }
-      .btn-quick-primary:active {
-        transform: scale(0.98);
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
-      }
-
-      .btn-quick-complete {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        border: 1px solid #10b981;
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 700;
-        padding: 14px 12px;
-        border-radius: 14px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
-        transition: all 0.15s ease;
-        min-height: 52px;
-      }
-      .btn-quick-complete:active {
-        transform: scale(0.98);
+      .input-dup-alert {
+        border-color: #f59e0b !important;
+        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.22) !important;
       }
 
       /* Drawer / Pending List */
       .recent-list {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
         overflow-y: auto;
+      }
+
+      /* Clean Single-Row Pending Completion Item */
+      .pending-compact-row {
+        background: #111827;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 10px;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease;
+      }
+      .pending-compact-row:hover {
+        background: #1e293b;
+        border-color: #38bdf8;
+      }
+      .pending-row-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        flex: 1;
+      }
+      .pending-row-text {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        min-width: 0;
+        flex: 1;
+      }
+      .pending-row-dx {
+        font-size: 13px;
+        font-weight: 600;
+        color: #f8fafc;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+        flex: 1;
+      }
+      .pending-row-mrn {
+        font-size: 11px;
+        color: #94a3b8;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        white-space: nowrap;
+        flex-shrink: 0;
       }
 
       .case-card {
         background: #111827;
         border: 1px solid var(--border-subtle);
-        border-radius: 12px;
-        padding: 12px;
+        border-radius: 11px;
+        padding: 10px 12px;
         cursor: pointer;
         transition: all 0.15s ease;
       }
@@ -732,25 +822,28 @@
         border-color: #38bdf8;
       }
       .case-card.pending-details-card {
-        border-color: rgba(245, 158, 11, 0.4);
-        background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, #111827 100%);
+        border-color: rgba(245, 158, 11, 0.35);
       }
 
       .case-card-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 8px;
         margin-bottom: 4px;
       }
 
       .modality-tag {
         font-size: 10px;
         font-weight: 800;
-        padding: 3px 6px;
+        padding: 2px 6px;
+        min-width: 34px;
+        text-align: center;
         border-radius: 6px;
         text-transform: uppercase;
         background: #1e293b;
         color: #e2e8f0;
+        flex-shrink: 0;
       }
       .modality-tag.CT { background: rgba(2, 132, 199, 0.25); color: #38bdf8; }
       .modality-tag.MRI { background: rgba(168, 85, 247, 0.25); color: #c084fc; }
@@ -764,6 +857,8 @@
         font-weight: 700;
         padding: 2px 7px;
         border-radius: 9999px;
+        white-space: nowrap;
+        flex-shrink: 0;
       }
       .status-tag.completed { background: rgba(16, 185, 129, 0.2); color: #34d399; }
       .status-tag.pending-details { background: rgba(245, 158, 11, 0.25); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.5); }
@@ -1194,14 +1289,14 @@
         </button>
       </nav>
 
-      <!-- ================= TAB 1: REDESIGNED QUICK LOG ================= -->
+      <!-- ================= TAB 1: REDESIGNED QUICK LOG (ZERO-SCROLL OPENING SCREEN) ================= -->
       <main id="tab-quick" class="tab-view active" role="tabpanel" aria-labelledby="tab-btn-quick">
         <!-- Dismissable Tip Banner with Close Button -->
         <div class="quick-log-tip" id="quick-log-tip-banner">
           <div class="quick-log-tip-content">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             <div>
-              <strong>Ultra-fast reading room capture:</strong> Single-tap modality, enter MRN & diagnosis. Case automatically tags to your default reporter.
+              <strong>Fast reading room entry:</strong> Tap modality, optional MRN &amp; diagnosis. Auto-tags to your default reporter.
             </div>
           </div>
           <button type="button" class="quick-tip-close" id="close-quick-tip-btn" aria-label="Dismiss tip" title="Dismiss tip">×</button>
@@ -1210,80 +1305,69 @@
         <form id="quick-log-form" autocomplete="off" onsubmit="event.preventDefault(); submitQuickCase('Pending Details');">
           <div class="quick-hero-card">
             <!-- Active Default Reporter Indicator in Quick Log -->
-            <div style="font-size: 11px; color: #94a3b8; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+            <div style="font-size: 11px; color: #94a3b8; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
               <span>Reporting as: <strong id="quick-reporter-display" style="color: #38bdf8;">Dr. Resident</strong></span>
-              <button type="button" class="btn-sm" id="quick-edit-reporter-btn" style="padding: 2px 8px; font-size: 11px;">Change</button>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button type="button" class="btn-sm" id="quick-config-freq-mods-btn" style="padding: 2px 7px; font-size: 10px; color: #94a3b8;" title="Select which modalities show on primary bar">★ Frequent</button>
+                <button type="button" class="btn-sm" id="quick-edit-reporter-btn" style="padding: 2px 7px; font-size: 10px;">Change</button>
+              </div>
             </div>
 
-            <!-- Large Modality Grid (3 letters, uppercase) -->
+            <!-- Frequent Modalities Primary Row + Overflow Arrow -->
             <div>
-              <div class="field-label" style="margin-bottom: 8px;">
-                <span>Select Modality</span>
-                <span class="field-label-hint">Single-tap</span>
+              <div class="field-label" style="margin-bottom: 5px;">
+                <span>Modality</span>
+                <span class="field-label-hint" id="quick-mod-selected-hint">Active: CT</span>
               </div>
-              <div class="quick-modality-grid" id="quick-modality-container" role="radiogroup" aria-label="Modality">
-                <!-- Dynamically generated with Base + Custom modalities + Add button -->
+              <div class="quick-modality-primary-row" id="quick-modality-primary-row" role="radiogroup" aria-label="Frequent Modalities">
+                <!-- Frequent modalities + Arrow button injected dynamically -->
+              </div>
+              <div class="quick-modality-overflow" id="quick-modality-overflow" aria-label="More Modalities">
+                <!-- Remaining modalities + Add button injected dynamically -->
               </div>
               <input type="hidden" id="quick-field-modality" value="CT" />
             </div>
 
-            <!-- Large Institute ID / MRN (Prefix without hyphen) -->
-            <div class="field-group">
+            <!-- Institute ID / MRN (Optional + Prefix or Numbers-Only Toggle + Live Duplicate Alert) -->
+            <div class="field-group" style="margin-bottom: 2px;">
               <label for="quick-mrn" class="field-label">
-                <span>Institute ID / MRN</span>
-                <span class="field-label-hint" id="quick-mrn-hint">Prefix auto-applied</span>
+                <span>Institute ID / MRN <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
+                <button type="button" id="quick-mrn-mode-toggle" style="background:none; border:none; color:#38bdf8; font-size:11px; font-weight:600; cursor:pointer; padding:0;">Switch to Numbers Only</button>
               </label>
               <div class="input-prefix-group">
-                <span class="input-prefix-badge" id="quick-mrn-prefix-badge" title="Click to edit default prefix">MRN</span>
-                <input type="text" id="quick-mrn" class="input-large input-large-mrn" placeholder="e.g. 90214" autocapitalize="characters" inputmode="text" required enterkeyhint="next" />
+                <span class="input-prefix-badge" id="quick-mrn-prefix-badge" title="Tap to toggle Fixed Prefix vs Numbers Only">MRN</span>
+                <input type="text" id="quick-mrn" class="input-large input-large-mrn" placeholder="Optional ID or numbers (e.g. 90214)" autocapitalize="characters" inputmode="text" enterkeyhint="next" />
+              </div>
+              <div class="mrn-dup-warning" id="quick-mrn-dup-warning" role="alert">
+                <span id="quick-mrn-dup-text">⚠️ Duplicate MRN already logged</span>
+                <button type="button" class="btn-sm" id="quick-mrn-dup-view-btn" style="padding: 2px 7px; font-size: 10px; border-color: rgba(245, 158, 11, 0.5); color: #fde68a;">View</button>
               </div>
             </div>
 
-            <!-- Large Primary Diagnosis with Autocomplete (Decluttered: No preset chips) -->
-            <div class="field-group">
+            <!-- Primary Diagnosis with Autocomplete -->
+            <div class="field-group" style="margin-bottom: 0;">
               <label for="quick-primary-diag" class="field-label">
                 <span>Primary Diagnosis</span>
-                <span class="field-label-hint">Autocomplete dropdown</span>
+                <span class="field-label-hint">Autocomplete</span>
               </label>
               <input type="text" id="quick-primary-diag" class="input-large" list="diagnosis-suggestions" placeholder="Type diagnosis (e.g. Infarct, Appendicitis)..." required enterkeyhint="done" />
-            </div>
-
-            <!-- Optional Study Hint -->
-            <div class="field-group">
-              <label for="quick-study-note" class="field-label">
-                <span>Study / Organ Hint (Optional)</span>
-                <span class="field-label-hint">e.g. NCCT Head, Appendix</span>
-              </label>
-              <input type="text" id="quick-study-note" placeholder="Quick note for full logging later" />
-            </div>
-
-            <!-- Large Touch-friendly Quick Actions -->
-            <div class="quick-action-grid">
-              <button type="button" class="btn-quick-primary" id="btn-quick-fill-later">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                <span>Log (Fill Later)</span>
-              </button>
-              <button type="button" class="btn-quick-complete" id="btn-quick-complete">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span>Log as Done</span>
-              </button>
             </div>
           </div>
         </form>
 
-        <!-- Unfinished / Pending Cases Drawer in Quick Tab -->
-        <section class="card-section" style="margin-top: 4px;">
-          <div class="section-heading">
+        <!-- Clean Single-Line Pending Cases Section -->
+        <section class="card-section" style="margin-top: 2px; padding: 11px 12px; margin-bottom: 8px;">
+          <div class="section-heading" style="margin-bottom: 8px;">
             <div class="section-heading-left">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              Cases Needing Completion (<span id="quick-pending-count">0</span>)
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Pending Completion (<span id="quick-pending-count">0</span>)</span>
             </div>
-            <button type="button" class="btn-sm" id="quick-expand-to-full-btn" style="color: #38bdf8;">
-              Expand in Full Log ➡️
+            <button type="button" class="btn-sm" id="quick-expand-to-full-btn" style="color: #38bdf8; padding: 3px 8px; font-size: 11px;">
+              Full Log ➔
             </button>
           </div>
-          <div id="quick-pending-list" class="recent-list" style="max-height: 280px;">
-            <!-- Injected dynamically -->
+          <div id="quick-pending-list" class="recent-list" style="max-height: 175px;">
+            <!-- Injected dynamically as clean aligned rows -->
           </div>
         </section>
       </main>
@@ -1305,7 +1389,7 @@
             <div class="section-heading">
               <div class="section-heading-left">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Patient & Case ID
+                Patient &amp; Case ID
               </div>
             </div>
 
@@ -1317,12 +1401,16 @@
 
               <div class="field-group">
                 <label for="field-mrn" class="field-label">
-                  Institute ID / MRN
-                  <span class="field-label-hint">Prefix auto-applied</span>
+                  <span>Institute ID / MRN <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
+                  <button type="button" id="full-mrn-mode-toggle" style="background:none; border:none; color:#38bdf8; font-size:11px; font-weight:600; cursor:pointer; padding:0;">Numbers Only</button>
                 </label>
                 <div class="input-prefix-group">
-                  <span class="input-prefix-badge" id="full-mrn-prefix-badge" title="Click to edit default prefix">MRN</span>
-                  <input type="text" id="field-mrn" name="mrn" placeholder="e.g. 90214" autocapitalize="characters" required enterkeyhint="next" />
+                  <span class="input-prefix-badge" id="full-mrn-prefix-badge" title="Tap to toggle Fixed Prefix vs Numbers Only">MRN</span>
+                  <input type="text" id="field-mrn" name="mrn" placeholder="Optional (e.g. 90214)" autocapitalize="characters" enterkeyhint="next" />
+                </div>
+                <div class="mrn-dup-warning" id="full-mrn-dup-warning" role="alert">
+                  <span id="full-mrn-dup-text">⚠️ Duplicate MRN already logged</span>
+                  <button type="button" class="btn-sm" id="full-mrn-dup-view-btn" style="padding: 2px 7px; font-size: 10px; border-color: rgba(245, 158, 11, 0.5); color: #fde68a;">View</button>
                 </div>
               </div>
             </div>
@@ -1663,19 +1751,22 @@
         <!-- TAB 1: Camera QR Scanner -->
         <div id="sync-view-qr-scan" style="display: block;">
           <div class="qr-scanner-box">
-            <video id="qr-video" class="qr-video" playsinline></video>
+            <video id="qr-video" class="qr-video" playsinline muted></video>
             <div class="scanner-laser"></div>
-            <div id="camera-fallback-msg" style="position: absolute; text-align: center; padding: 16px; color: #94a3b8; display: none;">
-              Camera unavailable in this preview window.<br />
-              <button type="button" class="btn-sm" id="btn-pick-qr-image" style="margin-top: 10px; color:#38bdf8;">
-                Choose QR Image / Screenshot
-              </button>
-              <input type="file" id="qr-image-input" accept="image/*" style="display:none;" />
+            <div id="camera-fallback-msg" style="position: absolute; text-align: center; padding: 16px; color: #94a3b8; display: none; background: rgba(9, 13, 22, 0.9); inset: 0; align-items: center; justify-content: center; flex-direction: column;">
+              <div style="margin-bottom: 8px; font-weight: 600; color: #e2e8f0;">Live camera stream unavailable in this window</div>
+              <div style="font-size: 11px; color: #94a3b8;">Use the button below to snap or pick a QR photo, or use your phone's native Camera app!</div>
             </div>
           </div>
-          <p class="helper-text" style="text-align: center; margin-top: 10px;">
-            Point camera at single case QR or full Library QR on colleague's screen.
-          </p>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px;">
+            <p class="helper-text" style="margin: 0; flex: 1;">
+              Point at colleague's QR or scan with your phone's Camera app.
+            </p>
+            <button type="button" class="btn-sm" id="btn-pick-qr-image" style="color:#38bdf8; flex-shrink: 0;">
+              📸 Scan QR Photo
+            </button>
+            <input type="file" id="qr-image-input" accept="image/*" style="display:none;" />
+          </div>
         </div>
 
         <!-- TAB 2: CSV Import -->
@@ -1703,11 +1794,11 @@
         <!-- TAB 3: Paste Sync Code -->
         <div id="sync-view-paste" style="display: none;">
           <div class="field-group">
-            <label for="paste-sync-code-area" class="field-label">Paste Colleague's QR Payload, Library String, or CSV Text</label>
-            <textarea id="paste-sync-code-area" placeholder="Paste the sync code or JSON sent by your colleague here..." style="min-height: 110px; font-family: monospace; font-size: 12px;"></textarea>
+            <label for="paste-sync-code-area" class="field-label">Paste Short Sync Code (e.g. RL1:...) or CSV</label>
+            <textarea id="paste-sync-code-area" placeholder="Paste short sync code (RL1:...) or CSV text here..." style="min-height: 90px; font-family: monospace; font-size: 13px;"></textarea>
           </div>
-          <button type="button" class="btn-sm" id="btn-import-pasted-code" style="background: #0284c7; border-color: #38bdf8; width: 100%; justify-content: center; padding: 10px; margin-top: 10px;">
-            📥 Import Scanned Data
+          <button type="button" class="btn-sm" id="btn-import-pasted-code" style="background: #0284c7; border-color: #38bdf8; width: 100%; justify-content: center; padding: 10px; margin-top: 10px; color: #fff; font-weight: 700;">
+            📥 Import Sync Code
           </button>
         </div>
       </div>
@@ -1784,28 +1875,41 @@
           </button>
         </div>
 
-        <div style="font-size: 13px; color: #94a3b8; margin-bottom: 6px;" id="qr-share-case-label">
-          Have colleague tap <strong>"📥 Import" → "📷 Scan QR"</strong> on their phone
+        <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;" id="qr-share-case-label">
+          Scan with <strong>Phone Camera App</strong> or in-app <strong>"📷 Scan QR"</strong>
+        </div>
+
+        <!-- QR Mode Switcher: Universal Camera Link vs Ultra-Short Code -->
+        <div class="segmented-toggle" style="max-width: 300px; margin: 0 auto 8px auto;">
+          <div class="toggle-option active" id="qr-mode-link-btn" style="padding: 6px; font-size: 11px;">📱 Phone Camera Link</div>
+          <div class="toggle-option" id="qr-mode-raw-btn" style="padding: 6px; font-size: 11px;">⚡ Direct Short QR</div>
         </div>
 
         <!-- Multi-page controls for full library QR -->
-        <div id="qr-pagination-controls" style="display: none; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
+        <div id="qr-pagination-controls" style="display: none; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px;">
           <button type="button" class="btn-sm" id="btn-qr-prev-page">◀ Prev</button>
           <span style="font-size: 12px; font-weight: 700; color: #38bdf8;" id="qr-page-indicator">Page 1 of 1</span>
           <button type="button" class="btn-sm" id="btn-qr-next-page">Next ▶</button>
         </div>
 
         <!-- High-contrast White Box for dark reading room readability -->
-        <div class="qr-display-box">
+        <div class="qr-display-box" style="margin: 8px auto; padding: 12px;">
           <canvas id="qr-share-canvas" width="220" height="220"></canvas>
         </div>
 
-        <div class="button-row" style="justify-content: center; margin-top: 14px;">
-          <button type="button" class="btn-sm" id="copy-qr-text-btn">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            Copy Sync Code
+        <!-- Short Sync Code Display Box -->
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 10px; padding: 7px 10px; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <div style="text-align: left; min-width: 0; flex: 1;">
+            <div style="font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase;">Short Sync Code</div>
+            <div id="qr-short-code-preview" style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #38bdf8; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">RL1:...</div>
+          </div>
+          <button type="button" class="btn-sm" id="copy-qr-text-btn" style="background: #1e293b; border-color: #38bdf8; color: #38bdf8; flex-shrink: 0;">
+            📋 Copy Code
           </button>
-          <button type="button" class="btn-sm" id="done-qr-share-btn" style="background:#0284c7; border-color:#38bdf8;">
+        </div>
+
+        <div class="button-row" style="justify-content: center; margin-top: 12px;">
+          <button type="button" class="btn-sm" id="done-qr-share-btn" style="background:#0284c7; border-color:#38bdf8; color:#fff; padding: 8px 24px;">
             Done
           </button>
         </div>
@@ -1818,18 +1922,24 @@
         <div class="modal-header">
           <div class="modal-title" id="settings-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-            Configuration & Presets
+            Configuration &amp; Presets
           </div>
           <button class="icon-btn" id="close-settings-btn" aria-label="Close settings">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
 
-        <!-- MRN Prefix (No hyphen by default) -->
+        <!-- MRN Mode & Prefix Settings -->
         <div class="field-group">
-          <label for="settings-mrn-prefix" class="field-label">Fixed Institute ID / MRN Prefix</label>
-          <input type="text" id="settings-mrn-prefix" placeholder="e.g. MRN, KMC, AIIMS" />
-          <p class="helper-text">Auto-prepended so you only type numbers (e.g. "90214" becomes "MRN90214").</p>
+          <label class="field-label">Institute ID / MRN Entry Mode</label>
+          <div class="segmented-toggle" id="settings-mrn-mode-toggle" style="margin-bottom: 6px;">
+            <div class="toggle-option active" data-mrnmode="prefix" style="padding: 8px; font-size: 12px;">Fixed Prefix (e.g. MRN90214)</div>
+            <div class="toggle-option" data-mrnmode="numbers" style="padding: 8px; font-size: 12px;">Numbers Only (e.g. 90214)</div>
+          </div>
+          <div id="settings-mrn-prefix-wrap">
+            <input type="text" id="settings-mrn-prefix" placeholder="e.g. MRN, KMC, AIIMS" />
+            <p class="helper-text">Auto-prepended in Fixed Prefix mode. You can also tap the MRN badge on the form to switch anytime.</p>
+          </div>
         </div>
 
         <!-- Default Reported By -->
@@ -1837,6 +1947,15 @@
           <label for="settings-default-reporter" class="field-label">Default "Reported By" Name</label>
           <input type="text" id="settings-default-reporter" placeholder="Dr. Resident" />
           <p class="helper-text">Quick log and new cases are automatically tagged to this doctor.</p>
+        </div>
+
+        <!-- Frequent Modalities Selector for Quick Log -->
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; margin-top: 12px;" id="settings-freq-modalities-box">
+          <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">Frequent Modalities (Quick Log Bar)</div>
+          <p class="helper-text">Tap to select which modalities stay visible on the Quick Log opening row. Unselected ones are tucked neatly under the <strong>▾ More</strong> arrow.</p>
+          <div id="settings-freq-mods-chips" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+            <!-- Injected dynamically -->
+          </div>
         </div>
 
         <!-- Entire Library QR Export Section in Settings -->
@@ -1855,7 +1974,7 @@
 
         <!-- Custom Modalities & Organ Systems Management -->
         <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; margin-top: 12px;">
-          <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">Custom Modalities & Systems</div>
+          <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">Custom Modalities &amp; Systems</div>
           <p class="helper-text">Add custom imaging modalities and systems (max 3 letters, all caps by default). Automatically syncs into your forms and Study Search filters.</p>
           <div style="display: flex; gap: 8px; margin-top: 10px;">
             <button type="button" class="btn-sm" id="btn-add-custom-modality">+ Add Modality</button>
@@ -2192,22 +2311,32 @@
         // Quick Entry Elements
         const quickReporterDisplay = document.getElementById('quick-reporter-display');
         const quickEditReporterBtn = document.getElementById('quick-edit-reporter-btn');
-        const quickModalityContainer = document.getElementById('quick-modality-container');
+        const quickConfigFreqModsBtn = document.getElementById('quick-config-freq-mods-btn');
+        const quickModalityPrimaryRow = document.getElementById('quick-modality-primary-row');
+        const quickModalityOverflow = document.getElementById('quick-modality-overflow');
+        const quickModSelectedHint = document.getElementById('quick-mod-selected-hint');
         const quickFieldModality = document.getElementById('quick-field-modality');
         const quickMrn = document.getElementById('quick-mrn');
         const quickMrnPrefixBadge = document.getElementById('quick-mrn-prefix-badge');
+        const quickMrnModeToggle = document.getElementById('quick-mrn-mode-toggle');
+        const quickMrnDupWarning = document.getElementById('quick-mrn-dup-warning');
+        const quickMrnDupText = document.getElementById('quick-mrn-dup-text');
+        const quickMrnDupViewBtn = document.getElementById('quick-mrn-dup-view-btn');
         const quickPrimaryDiag = document.getElementById('quick-primary-diag');
-        const quickStudyNote = document.getElementById('quick-study-note');
-        const btnQuickFillLater = document.getElementById('btn-quick-fill-later');
-        const btnQuickComplete = document.getElementById('btn-quick-complete');
         const quickPendingCount = document.getElementById('quick-pending-count');
         const quickPendingList = document.getElementById('quick-pending-list');
         const quickExpandBtn = document.getElementById('quick-expand-to-full-btn');
+
+        let isQuickModOverflowOpen = false;
 
         // Full Log Form Elements
         const dateInput = document.getElementById('field-date');
         const mrnInput = document.getElementById('field-mrn');
         const fullMrnPrefixBadge = document.getElementById('full-mrn-prefix-badge');
+        const fullMrnModeToggle = document.getElementById('full-mrn-mode-toggle');
+        const fullMrnDupWarning = document.getElementById('full-mrn-dup-warning');
+        const fullMrnDupText = document.getElementById('full-mrn-dup-text');
+        const fullMrnDupViewBtn = document.getElementById('full-mrn-dup-view-btn');
         const patientNameInput = document.getElementById('field-patient-name');
         const fullModalityChips = document.getElementById('full-modality-chips');
         const modalityInput = document.getElementById('field-modality');
@@ -2257,8 +2386,11 @@
         const openSettingsBtn = document.getElementById('open-settings-btn');
         const closeSettingsBtn = document.getElementById('close-settings-btn');
         const settingsModal = document.getElementById('settings-modal');
+        const settingsMrnModeToggle = document.getElementById('settings-mrn-mode-toggle');
+        const settingsMrnPrefixWrap = document.getElementById('settings-mrn-prefix-wrap');
         const settingsMrnPrefix = document.getElementById('settings-mrn-prefix');
         const settingsDefaultReporter = document.getElementById('settings-default-reporter');
+        const settingsFreqModsChips = document.getElementById('settings-freq-mods-chips');
         const settingsWebhookUrl = document.getElementById('settings-webhook-url');
         const appsScriptCodeArea = document.getElementById('apps-script-code-area');
         const copyScriptBtn = document.getElementById('copy-script-btn');
@@ -2323,6 +2455,9 @@
         const qrShareCanvas = document.getElementById('qr-share-canvas');
         const copyQrTextBtn = document.getElementById('copy-qr-text-btn');
         const qrShareCaseLabel = document.getElementById('qr-share-case-label');
+        const qrShortCodePreview = document.getElementById('qr-short-code-preview');
+        const qrModeLinkBtn = document.getElementById('qr-mode-link-btn');
+        const qrModeRawBtn = document.getElementById('qr-mode-raw-btn');
         const qrPaginationControls = document.getElementById('qr-pagination-controls');
         const btnQrPrevPage = document.getElementById('btn-qr-prev-page');
         const btnQrNextPage = document.getElementById('btn-qr-next-page');
@@ -2357,9 +2492,9 @@
             confirmModalOkBtn.style.borderColor = '#f43f5e';
             confirmModalIcon.textContent = '⚠️';
           } else {
-            confirmModalOkBtn.style.background = '#0284c7';
-            confirmModalOkBtn.style.borderColor = '#38bdf8';
-            confirmModalIcon.textContent = '🔒';
+            confirmModalOkBtn.style.background = '#059669';
+            confirmModalOkBtn.style.borderColor = '#10b981';
+            confirmModalIcon.textContent = '✅';
           }
           onConfirmActionCallback = onConfirm;
           confirmModal.classList.add('show');
@@ -2381,11 +2516,26 @@
 
         // ================= CONFIG & PRESETS STORAGE =================
         function loadConfig() {
+          const defaults = {
+            webhookUrl: '',
+            defaultReporter: 'Dr. Resident',
+            defaultMrnPrefix: 'MRN',
+            mrnNumbersOnly: false,
+            frequentModalities: ['CT', 'MRI', 'USG']
+          };
           try {
             const raw = localStorage.getItem(STORAGE_CONFIG);
-            return raw ? JSON.parse(raw) : { webhookUrl: '', defaultReporter: 'Dr. Resident', defaultMrnPrefix: 'MRN' };
+            if (!raw) return defaults;
+            const parsed = JSON.parse(raw);
+            return {
+              ...defaults,
+              ...parsed,
+              frequentModalities: Array.isArray(parsed.frequentModalities) && parsed.frequentModalities.length > 0
+                ? parsed.frequentModalities
+                : defaults.frequentModalities
+            };
           } catch (e) {
-            return { webhookUrl: '', defaultReporter: 'Dr. Resident', defaultMrnPrefix: 'MRN' };
+            return defaults;
           }
         }
 
@@ -2394,6 +2544,7 @@
           updateSyncIndicator();
           updatePrefixBadges();
           updateQuickReporterUI();
+          renderAllModalityChips();
         }
 
         function loadAppsScriptTemplate() {
@@ -2453,21 +2604,113 @@
 
         function updatePrefixBadges() {
           const cfg = loadConfig();
-          const p = (cfg.defaultMrnPrefix !== undefined) ? cfg.defaultMrnPrefix : 'MRN';
-          const displayPrefix = p.trim() ? p.trim() : '#';
-          if (quickMrnPrefixBadge) quickMrnPrefixBadge.textContent = displayPrefix;
-          if (fullMrnPrefixBadge) fullMrnPrefixBadge.textContent = displayPrefix;
+          const isNumbersOnly = !!cfg.mrnNumbersOnly;
+          const p = (cfg.defaultMrnPrefix !== undefined) ? cfg.defaultMrnPrefix.trim() : 'MRN';
+
+          if (isNumbersOnly || !p) {
+            [quickMrnPrefixBadge, fullMrnPrefixBadge].forEach(b => {
+              if (b) {
+                b.textContent = '123';
+                b.classList.add('numbers-only');
+                b.title = 'Numbers-Only mode active (Tap to switch to Fixed Prefix)';
+              }
+            });
+            if (quickMrnModeToggle) quickMrnModeToggle.textContent = 'Use Fixed Prefix (' + (p || 'MRN') + ')';
+            if (fullMrnModeToggle) fullMrnModeToggle.textContent = 'Use Prefix (' + (p || 'MRN') + ')';
+            if (quickMrn) {
+              quickMrn.setAttribute('inputmode', 'numeric');
+              quickMrn.placeholder = 'Optional numbers (e.g. 90214)';
+            }
+            if (mrnInput) {
+              mrnInput.setAttribute('inputmode', 'numeric');
+              mrnInput.placeholder = 'Optional numbers (e.g. 90214)';
+            }
+          } else {
+            [quickMrnPrefixBadge, fullMrnPrefixBadge].forEach(b => {
+              if (b) {
+                b.textContent = p;
+                b.classList.remove('numbers-only');
+                b.title = 'Fixed Prefix mode active (Tap to switch to Numbers-Only)';
+              }
+            });
+            if (quickMrnModeToggle) quickMrnModeToggle.textContent = 'Numbers Only Mode';
+            if (fullMrnModeToggle) fullMrnModeToggle.textContent = 'Numbers Only';
+            if (quickMrn) {
+              quickMrn.setAttribute('inputmode', 'text');
+              quickMrn.placeholder = 'Optional ID (e.g. 90214)';
+            }
+            if (mrnInput) {
+              mrnInput.setAttribute('inputmode', 'text');
+              mrnInput.placeholder = 'Optional ID (e.g. 90214)';
+            }
+          }
         }
 
-        // Auto-prepends prefix without duplicate hyphens
+        function toggleMrnEntryMode() {
+          const cfg = loadConfig();
+          cfg.mrnNumbersOnly = !cfg.mrnNumbersOnly;
+          saveConfig(cfg);
+          checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
+          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId);
+          showToast(cfg.mrnNumbersOnly ? 'MRN set to Numbers-Only mode' : `MRN set to Fixed Prefix (${cfg.defaultMrnPrefix || 'MRN'})`);
+        }
+
+        // Auto-prepends prefix unless Numbers-Only mode is active or input is empty
         function formatMrnWithPrefix(rawVal) {
-          if (!rawVal) return '';
+          if (!rawVal || !rawVal.trim()) return '';
           let trimmed = rawVal.trim().toUpperCase();
           const cfg = loadConfig();
+          if (cfg.mrnNumbersOnly) return trimmed;
           const prefix = (cfg.defaultMrnPrefix !== undefined ? cfg.defaultMrnPrefix : 'MRN').trim().toUpperCase();
           if (!prefix) return trimmed;
           if (trimmed.startsWith(prefix)) return trimmed;
           return `${prefix}${trimmed}`;
+        }
+
+        // ================= LIVE DUPLICATE MRN DETECTION WHILE ENTERING =================
+        function findDuplicateCaseByMrn(rawInputVal, excludeCaseId = null) {
+          if (!rawInputVal || !rawInputVal.trim()) return null;
+          const rawClean = rawInputVal.trim().toUpperCase();
+          const formattedClean = formatMrnWithPrefix(rawClean).toUpperCase();
+          const cfg = loadConfig();
+          const prefix = (cfg.defaultMrnPrefix || 'MRN').trim().toUpperCase();
+          const strippedClean = (prefix && rawClean.startsWith(prefix)) ? rawClean.slice(prefix.length) : rawClean;
+
+          const cases = loadCases();
+          return cases.find(c => {
+            if (excludeCaseId && c.id === excludeCaseId) return false;
+            if (!c.mrn || !c.mrn.trim() || c.mrn === 'No MRN') return false;
+            const cMrn = c.mrn.trim().toUpperCase();
+            const cStripped = (prefix && cMrn.startsWith(prefix)) ? cMrn.slice(prefix.length) : cMrn;
+            return (cMrn === formattedClean || cMrn === rawClean || (strippedClean.length >= 2 && cStripped === strippedClean));
+          }) || null;
+        }
+
+        function checkLiveDuplicateMrn(inputEl, warningBox, warningTextEl, viewBtnEl, excludeCaseId = null) {
+          if (!inputEl || !warningBox) return;
+          const dupCase = findDuplicateCaseByMrn(inputEl.value, excludeCaseId);
+          if (dupCase) {
+            inputEl.classList.add('input-dup-alert');
+            warningTextEl.innerHTML = `⚠️ <strong>Duplicate MRN (${escapeHtml(dupCase.mrn)})</strong>: Logged ${dupCase.date || 'earlier'} (${dupCase.modality} • ${escapeHtml(dupCase.primaryDiagnosis || 'Study')})`;
+            warningBox.classList.add('show');
+            if (viewBtnEl) {
+              viewBtnEl.onclick = () => openCaseDetail(dupCase);
+            }
+          } else {
+            inputEl.classList.remove('input-dup-alert');
+            warningBox.classList.remove('show');
+          }
+        }
+
+        if (quickMrn) {
+          quickMrn.addEventListener('input', () => {
+            checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
+          });
+        }
+        if (mrnInput) {
+          mrnInput.addEventListener('input', () => {
+            checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId);
+          });
         }
 
         // Cases Storage
@@ -2561,19 +2804,16 @@
             tabBtnQuick.classList.add('active');
             tabBtnQuick.setAttribute('aria-selected', 'true');
             renderDockForQuick();
-            quickMrn.focus();
           } else if (tabId === 'tab-full') {
             tabBtnFull.classList.add('active');
             tabBtnFull.setAttribute('aria-selected', 'true');
             renderDockForFull();
             updateRelevantStudyProtocols();
-            mrnInput.focus();
           } else if (tabId === 'tab-search') {
             tabBtnSearch.classList.add('active');
             tabBtnSearch.setAttribute('aria-selected', 'true');
             renderDockForSearch();
             renderSearchResults();
-            searchKeyword.focus();
           }
         }
 
@@ -2581,35 +2821,67 @@
         tabBtnFull.addEventListener('click', () => switchTab('tab-full'));
         tabBtnSearch.addEventListener('click', () => switchTab('tab-search'));
 
-        // Prefix badge click opens settings
-        [quickMrnPrefixBadge, fullMrnPrefixBadge].forEach(badge => {
-          if (badge) {
-            badge.addEventListener('click', () => openSettingsBtn.click());
+        // Prefix badge and mode buttons toggle between Fixed Prefix & Numbers Only
+        [quickMrnPrefixBadge, fullMrnPrefixBadge, quickMrnModeToggle, fullMrnModeToggle].forEach(el => {
+          if (el) {
+            el.addEventListener('click', toggleMrnEntryMode);
           }
         });
 
         quickEditReporterBtn.addEventListener('click', () => {
           openSettingsBtn.click();
-          settingsDefaultReporter.focus();
+          setTimeout(() => settingsDefaultReporter.focus(), 60);
         });
 
+        if (quickConfigFreqModsBtn) {
+          quickConfigFreqModsBtn.addEventListener('click', () => {
+            openSettingsBtn.click();
+            const box = document.getElementById('settings-freq-modalities-box');
+            if (box) setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+          });
+        }
+
         // ================= BOTTOM DOCK CONTENT =================
+        // Log as Done placed between Clear and Quick Log, with "Are you sure" confirmation dialog!
         function renderDockForQuick() {
           dockActionInner.innerHTML = `
-            <button type="button" class="btn-secondary" id="clear-quick-btn" title="Clear inputs">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <button type="button" class="btn-secondary" id="clear-quick-btn" title="Clear inputs" style="padding: 12px 13px; font-size: 13px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
               Clear
             </button>
-            <button type="button" class="btn-primary" id="dock-quick-submit" style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); border-color: #f59e0b;">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-              <span>Quick Log (Fill Later)</span>
+            <button type="button" class="btn-primary" id="dock-quick-done" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color: #10b981; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28); padding: 12px 12px; font-size: 13px; flex: 1;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Log as Done</span>
+            </button>
+            <button type="button" class="btn-primary" id="dock-quick-submit" style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); border-color: #f59e0b; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.28); padding: 12px 12px; font-size: 13px; flex: 1.15;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              <span>Quick Log</span>
             </button>
           `;
           document.getElementById('clear-quick-btn').addEventListener('click', () => {
             quickMrn.value = '';
             quickPrimaryDiag.value = '';
-            quickStudyNote.value = '';
+            checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
             quickMrn.focus();
+          });
+          document.getElementById('dock-quick-done').addEventListener('click', () => {
+            const diagnosis = quickPrimaryDiag.value.trim();
+            if (!diagnosis) {
+              showToast('Please enter a Primary Diagnosis first', true);
+              quickPrimaryDiag.focus();
+              return;
+            }
+            const rawMrn = quickMrn.value.trim();
+            const mrnPreview = rawMrn ? formatMrnWithPrefix(rawMrn) : 'No MRN';
+            const mod = quickFieldModality.value || 'CT';
+            showConfirmDialog(
+              'Log Case as Done?',
+              `Are you sure no further details need to be added for ${mod} (${mrnPreview}: "${diagnosis}")? This will log the study directly as Completed.`,
+              false,
+              () => {
+                submitQuickCase('Completed');
+              }
+            );
           });
           document.getElementById('dock-quick-submit').addEventListener('click', () => {
             submitQuickCase('Pending Details');
@@ -2721,40 +2993,88 @@
         };
 
         // ================= MODALITY & ORGAN SYSTEM BULLETS RENDERING =================
+        function selectQuickModality(mod) {
+          quickFieldModality.value = mod;
+          if (quickModSelectedHint) quickModSelectedHint.textContent = `Active: ${mod}`;
+          renderAllModalityChips();
+          if (navigator.vibrate) try { navigator.vibrate(20); } catch (e) {}
+        }
+
         function renderAllModalityChips() {
           const mods = getModalities();
+          const cfg = loadConfig();
+          const freqSet = new Set(cfg.frequentModalities || ['CT', 'MRI', 'USG']);
+          const primaryMods = mods.filter(m => freqSet.has(m));
+          const overflowMods = mods.filter(m => !freqSet.has(m));
+
+          // Ensure at least 1 primary modality
+          if (primaryMods.length === 0 && mods.length > 0) {
+            primaryMods.push(mods[0]);
+          }
+
           const currentQuickMod = quickFieldModality.value || 'CT';
           const currentFullMod = modalityInput.value || 'CT';
+          if (quickModSelectedHint) quickModSelectedHint.textContent = `Active: ${currentQuickMod}`;
 
-          // 1. Quick Log Modality Grid
-          quickModalityContainer.innerHTML = '';
-          mods.forEach(mod => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = `quick-mod-btn chip-btn ${mod === currentQuickMod ? 'active' : ''}`;
-            btn.dataset.mod = mod;
-            if (!BASE_MODALITIES.includes(mod)) btn.classList.add('custom-mod');
-            btn.textContent = mod;
-            btn.addEventListener('click', () => {
-              quickFieldModality.value = mod;
-              document.querySelectorAll('#quick-modality-container .quick-mod-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.mod === mod);
-              });
-              if (navigator.vibrate) try { navigator.vibrate(20); } catch (e) {}
+          // 1. Quick Log Primary Row (Frequent Modalities + Overflow Arrow)
+          if (quickModalityPrimaryRow && quickModalityOverflow) {
+            quickModalityPrimaryRow.innerHTML = '';
+            quickModalityOverflow.innerHTML = '';
+
+            primaryMods.forEach(mod => {
+              const btn = document.createElement('button');
+              btn.type = 'button';
+              btn.className = `quick-mod-btn chip-btn ${mod === currentQuickMod ? 'active' : ''}`;
+              btn.dataset.mod = mod;
+              if (!BASE_MODALITIES.includes(mod)) btn.classList.add('custom-mod');
+              btn.textContent = mod;
+              btn.addEventListener('click', () => selectQuickModality(mod));
+              quickModalityPrimaryRow.appendChild(btn);
             });
-            quickModalityContainer.appendChild(btn);
-          });
 
-          // Inline '+ Add' Modality button in Quick Log
-          const addQuickModBtn = document.createElement('button');
-          addQuickModBtn.type = 'button';
-          addQuickModBtn.className = 'quick-mod-btn';
-          addQuickModBtn.style.border = '1px dashed #38bdf8';
-          addQuickModBtn.style.color = '#38bdf8';
-          addQuickModBtn.textContent = '+ Add';
-          addQuickModBtn.title = 'Add Custom Modality (Max 3 letters)';
-          addQuickModBtn.addEventListener('click', () => openAddBulletModal('modality'));
-          quickModalityContainer.appendChild(addQuickModBtn);
+            const activeInOverflow = overflowMods.includes(currentQuickMod);
+            const moreBtn = document.createElement('button');
+            moreBtn.type = 'button';
+            moreBtn.className = `quick-mod-more-btn ${isQuickModOverflowOpen ? 'expanded' : ''} ${activeInOverflow ? 'has-active-hidden' : ''}`;
+            moreBtn.title = 'Show more modalities';
+            if (activeInOverflow && !isQuickModOverflowOpen) {
+              moreBtn.innerHTML = `<span>${currentQuickMod}</span> <span style="font-size:10px;">▾</span>`;
+            } else {
+              moreBtn.innerHTML = `<span>${isQuickModOverflowOpen ? 'Less' : `+${overflowMods.length}`}</span> <span style="font-size:10px;">${isQuickModOverflowOpen ? '▴' : '▾'}</span>`;
+            }
+            moreBtn.addEventListener('click', () => {
+              isQuickModOverflowOpen = !isQuickModOverflowOpen;
+              quickModalityOverflow.classList.toggle('open', isQuickModOverflowOpen);
+              renderAllModalityChips();
+            });
+            quickModalityPrimaryRow.appendChild(moreBtn);
+
+            quickModalityOverflow.classList.toggle('open', isQuickModOverflowOpen);
+
+            overflowMods.forEach(mod => {
+              const btn = document.createElement('button');
+              btn.type = 'button';
+              btn.className = `quick-mod-btn chip-btn ${mod === currentQuickMod ? 'active' : ''}`;
+              btn.dataset.mod = mod;
+              if (!BASE_MODALITIES.includes(mod)) btn.classList.add('custom-mod');
+              btn.textContent = mod;
+              btn.addEventListener('click', () => {
+                selectQuickModality(mod);
+              });
+              quickModalityOverflow.appendChild(btn);
+            });
+
+            // Inline '+ Add' Modality button inside the overflow drawer
+            const addQuickModBtn = document.createElement('button');
+            addQuickModBtn.type = 'button';
+            addQuickModBtn.className = 'quick-mod-btn';
+            addQuickModBtn.style.border = '1px dashed #38bdf8';
+            addQuickModBtn.style.color = '#38bdf8';
+            addQuickModBtn.textContent = '+ Add';
+            addQuickModBtn.title = 'Add Custom Modality (Max 3 letters)';
+            addQuickModBtn.addEventListener('click', () => openAddBulletModal('modality'));
+            quickModalityOverflow.appendChild(addQuickModBtn);
+          }
 
           // 2. Full Log Modality Chips
           fullModalityChips.innerHTML = '';
@@ -2802,7 +3122,44 @@
             searchModalityChips.appendChild(btn);
           });
 
+          renderFrequentModalitiesSelector();
           renderCustomTagsManager();
+        }
+
+        function renderFrequentModalitiesSelector() {
+          if (!settingsFreqModsChips) return;
+          settingsFreqModsChips.innerHTML = '';
+          const mods = getModalities();
+          const cfg = loadConfig();
+          const freqSet = new Set(cfg.frequentModalities || ['CT', 'MRI', 'USG']);
+
+          mods.forEach(mod => {
+            const isFreq = freqSet.has(mod);
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn-sm';
+            btn.style.background = isFreq ? 'rgba(2, 132, 199, 0.25)' : '#111827';
+            btn.style.borderColor = isFreq ? '#38bdf8' : '#1e293b';
+            btn.style.color = isFreq ? '#38bdf8' : '#94a3b8';
+            btn.style.fontWeight = '700';
+            btn.innerHTML = `${isFreq ? '★' : '☆'} ${mod}`;
+            btn.addEventListener('click', () => {
+              const currentCfg = loadConfig();
+              let list = Array.isArray(currentCfg.frequentModalities) ? [...currentCfg.frequentModalities] : ['CT', 'MRI', 'USG'];
+              if (list.includes(mod)) {
+                if (list.length <= 1) {
+                  showToast('Keep at least 1 frequent modality on the primary bar', true);
+                  return;
+                }
+                list = list.filter(x => x !== mod);
+              } else {
+                list.push(mod);
+              }
+              currentCfg.frequentModalities = list;
+              saveConfig(currentCfg);
+            });
+            settingsFreqModsChips.appendChild(btn);
+          });
         }
 
         function renderAllSystemChips() {
@@ -3013,25 +3370,19 @@
           showToast('Quick Log tip restored');
         });
 
-        // ================= QUICK LOG SUBMISSION =================
+        // ================= QUICK LOG SUBMISSION (OPTIONAL MRN) =================
         window.submitQuickCase = function(statusToSave = 'Pending Details') {
           const rawMrn = quickMrn.value.trim();
           const diagnosis = quickPrimaryDiag.value.trim();
           const modality = quickFieldModality.value || 'CT';
-          const studyHint = quickStudyNote.value.trim();
 
-          if (!rawMrn) {
-            showToast('Please enter an Institute ID / MRN', true);
-            quickMrn.focus();
-            return;
-          }
           if (!diagnosis) {
             showToast('Please enter a Primary Diagnosis', true);
             quickPrimaryDiag.focus();
             return;
           }
 
-          const formattedMrn = formatMrnWithPrefix(rawMrn);
+          const formattedMrn = rawMrn ? formatMrnWithPrefix(rawMrn) : '';
           const cfg = loadConfig();
           const reporter = (cfg.defaultReporter && cfg.defaultReporter.trim()) ? cfg.defaultReporter.trim() : 'Dr. Resident';
 
@@ -3042,7 +3393,7 @@
             mrn: formattedMrn,
             patientName: '',
             modality: modality,
-            studyDescription: studyHint || `${modality} Study`,
+            studyDescription: `${modality} Study`,
             organSystem: 'CNS',
             organOfInterest: '',
             primaryDiagnosis: diagnosis,
@@ -3059,32 +3410,24 @@
           saveCases(cases);
           transmitCaseWebhook(newCase);
 
-          showToast(`Case Logged by ${reporter}! (${modality}: ${formattedMrn})`);
+          showToast(`Case Logged (${statusToSave === 'Completed' ? 'Done' : 'Pending'})! (${modality}${formattedMrn ? ': ' + formattedMrn : ''})`);
 
           quickMrn.value = '';
           quickPrimaryDiag.value = '';
-          quickStudyNote.value = '';
+          checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
           quickMrn.focus();
         };
-
-        btnQuickFillLater.addEventListener('click', () => window.submitQuickCase('Pending Details'));
-        btnQuickComplete.addEventListener('click', () => window.submitQuickCase('Completed'));
 
         quickExpandBtn.addEventListener('click', () => {
           switchTab('tab-full');
         });
 
-        // ================= FULL LOG SUBMISSION =================
+        // ================= FULL LOG SUBMISSION (OPTIONAL MRN) =================
         window.submitCase = function() {
           const rawMrn = mrnInput.value.trim();
           const diagnosis = primaryDiagInput.value.trim();
           const studyDesc = studyInput.value.trim();
 
-          if (!rawMrn) {
-            showToast('Please enter an Institute ID / MRN', true);
-            mrnInput.focus();
-            return;
-          }
           if (!studyDesc) {
             showToast('Please enter a Study Description', true);
             studyInput.focus();
@@ -3096,7 +3439,7 @@
             return;
           }
 
-          const formattedMrn = formatMrnWithPrefix(rawMrn);
+          const formattedMrn = rawMrn ? formatMrnWithPrefix(rawMrn) : '';
           const dateVal = dateInput.value || getTodayString();
           const modalityVal = modalityInput.value || 'CT';
           const systemVal = systemInput.value || 'CNS';
@@ -3133,10 +3476,10 @@
             } else {
               cases.unshift(caseData);
             }
-            showToast(`Case Updated: ${caseData.mrn}`);
+            showToast(`Case Updated${caseData.mrn ? ': ' + caseData.mrn : ''}`);
           } else {
             cases.unshift(caseData);
-            showToast(`Case Logged! (${caseData.modality}: ${caseData.mrn})`);
+            showToast(`Case Logged! (${caseData.modality}${caseData.mrn ? ': ' + caseData.mrn : ''})`);
           }
 
           saveCases(cases);
@@ -3144,6 +3487,7 @@
 
           cancelEditingMode();
           resetFullFormFields(true);
+          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, null);
           mrnInput.focus();
         };
 
@@ -3170,19 +3514,20 @@
           dateInput.value = getTodayString();
           const cfg = loadConfig();
           if (cfg.defaultReporter) reportedByInput.value = cfg.defaultReporter;
+          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, null);
         }
 
         // Editing / Completing Mode
         function startEditingCase(c) {
           currentEditingCaseId = c.id;
           editBanner.style.display = 'flex';
-          editBadgeText.textContent = `${c.mrn} - ${c.patientName || c.primaryDiagnosis || 'Case'}`;
+          editBadgeText.textContent = `${c.mrn || 'No MRN'} - ${c.patientName || c.primaryDiagnosis || 'Case'}`;
 
           dateInput.value = c.date || getTodayString();
 
           const cfg = loadConfig();
-          const prefix = (cfg.defaultMrnPrefix !== undefined ? cfg.defaultMrnPrefix : 'MRN').trim().toUpperCase();
-          if (prefix && c.mrn && c.mrn.toUpperCase().startsWith(prefix)) {
+          const prefix = (!cfg.mrnNumbersOnly && cfg.defaultMrnPrefix !== undefined ? cfg.defaultMrnPrefix : 'MRN').trim().toUpperCase();
+          if (!cfg.mrnNumbersOnly && prefix && c.mrn && c.mrn.toUpperCase().startsWith(prefix)) {
             mrnInput.value = c.mrn.slice(prefix.length);
           } else {
             mrnInput.value = c.mrn || '';
@@ -3225,7 +3570,8 @@
 
           switchTab('tab-full');
           updateRelevantStudyProtocols();
-          showToast(`Completing ${c.mrn}. Review details & submit.`);
+          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId);
+          showToast(`Completing ${c.mrn || 'case'}. Review details & submit.`);
         }
 
         function cancelEditingMode() {
@@ -3261,7 +3607,7 @@
           const cases = loadCases();
           updateStorageStats();
 
-          // 1. Pending details on Quick tab
+          // 1. Clean Single-Line Pending Completion rows on Quick tab
           const pendingCases = cases.filter(c => c.status === 'Pending Details');
           quickPendingCount.textContent = pendingCases.length;
           pendingBadge.textContent = pendingCases.length;
@@ -3269,16 +3615,15 @@
 
           if (pendingCases.length === 0) {
             quickPendingList.innerHTML = `
-              <div class="empty-state">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 4px; opacity: 0.5;"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <div>All cases complete! No pending entries.</div>
+              <div class="empty-state" style="padding: 12px 10px; font-size: 12px;">
+                All logged cases are complete!
               </div>
             `;
           } else {
             quickPendingList.innerHTML = '';
             pendingCases.forEach(c => {
-              const card = createCaseCardElement(c, true);
-              quickPendingList.appendChild(card);
+              const row = createPendingCompactRow(c);
+              quickPendingList.appendChild(row);
             });
           }
 
@@ -3298,6 +3643,41 @@
           renderSearchResults();
         }
 
+        // Clean, crisp single-line row for "Pending Completion" on Quick Log tab
+        function createPendingCompactRow(c) {
+          const row = document.createElement('div');
+          row.className = 'pending-compact-row';
+          row.setAttribute('role', 'button');
+          row.setAttribute('tabindex', '0');
+
+          const mrnDisplay = (c.mrn && c.mrn.trim()) ? c.mrn.trim() : 'No MRN';
+          const dxDisplay = c.primaryDiagnosis || c.studyDescription || 'Untitled Case';
+
+          row.innerHTML = `
+            <div class="pending-row-left">
+              <span class="modality-tag ${c.modality || 'CT'}">${c.modality || 'CT'}</span>
+              <div class="pending-row-text">
+                <span class="pending-row-dx">${escapeHtml(dxDisplay)}</span>
+                <span class="pending-row-mrn">• ${escapeHtml(mrnDisplay)}</span>
+              </div>
+            </div>
+            <button type="button" class="btn-sm btn-complete-direct" style="padding: 4px 10px; font-size: 11px; background: #0284c7; border-color: #38bdf8; color: #ffffff; flex-shrink: 0;">
+              Complete ➔
+            </button>
+          `;
+
+          row.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-complete-direct')) {
+              e.stopPropagation();
+              startEditingCase(c);
+              return;
+            }
+            openCaseDetail(c);
+          });
+
+          return row;
+        }
+
         function createCaseCardElement(c, isQuickList = false) {
           const card = document.createElement('div');
           card.className = `case-card ${c.status === 'Pending Details' ? 'pending-details-card' : ''}`;
@@ -3308,28 +3688,30 @@
           if (c.status === 'Pending Review') statusClass = 'pending-review';
           else if (c.status === 'Pending Details') statusClass = 'pending-details';
 
+          const mrnLabel = (c.mrn && c.mrn.trim()) ? c.mrn.trim() : 'No MRN';
+
           card.innerHTML = `
             <div class="case-card-header">
-              <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
                 <span class="modality-tag ${c.modality || ''}">${c.modality || 'CT'}</span>
-                <span style="font-weight: 700; font-size: 13px; color: #ffffff;">${escapeHtml(c.mrn || 'No MRN')}</span>
-                ${c.patientName ? `<span style="font-size: 12px; color: #94a3b8;">(${escapeHtml(c.patientName)})</span>` : ''}
+                <span style="font-weight: 700; font-size: 13px; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(mrnLabel)}</span>
+                ${c.patientName ? `<span style="font-size: 12px; color: #94a3b8; white-space: nowrap;">(${escapeHtml(c.patientName)})</span>` : ''}
               </div>
-              <div style="display: flex; align-items: center; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
                 <button type="button" class="btn-sm btn-qr-share" style="padding: 2px 7px; font-size: 11px;" title="Share single case via QR">
                   QR
                 </button>
-                <span class="status-tag ${statusClass}">${c.status || 'Completed'}</span>
+                <span class="status-tag ${statusClass}">${c.status === 'Pending Details' ? 'Pending' : (c.status || 'Completed')}</span>
               </div>
             </div>
-            <div style="font-weight: 600; font-size: 13px; color: #e2e8f0; margin-top: 4px;">
+            <div style="font-weight: 600; font-size: 13px; color: #e2e8f0; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
               ${escapeHtml(c.primaryDiagnosis || c.studyDescription || 'No diagnosis entered')}
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #64748b; margin-top: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #64748b; margin-top: 5px;">
               <span>${c.date || ''} • ${escapeHtml(c.organSystem || '')}</span>
               ${c.status === 'Pending Details' ? `
-                <button type="button" class="btn-sm btn-complete-direct" style="padding: 3px 8px; font-size: 11px; background: #0284c7; border-color: #38bdf8; color: #ffffff;">
-                  ✏️ Complete
+                <button type="button" class="btn-sm btn-complete-direct" style="padding: 3px 9px; font-size: 11px; background: #0284c7; border-color: #38bdf8; color: #ffffff;">
+                  Complete ➔
                 </button>
               ` : `
                 <span>By: <strong>${escapeHtml(c.reportedBy || 'Dr. Resident')}</strong></span>
@@ -3367,7 +3749,7 @@
                 <span>Date: <strong>${c.date || '-'}</strong></span>
                 <span>System: <strong>${c.organSystem || '-'}</strong></span>
               </div>
-              <div style="font-size: 15px; font-weight: 700; color: #ffffff;">MRN: ${escapeHtml(c.mrn || '-')}</div>
+              <div style="font-size: 15px; font-weight: 700; color: #ffffff;">MRN: ${escapeHtml(c.mrn || 'Not Provided')}</div>
               ${c.patientName ? `<div style="font-size: 13px; color: #94a3b8; margin-top: 2px;">Patient: ${escapeHtml(c.patientName)}</div>` : ''}
             </div>
 
@@ -3722,109 +4104,170 @@
           showToast(`Imported all ${colleagueCsvParsedCases.length} cases into your log!`);
         });
 
-        // ================= QR CODE GENERATOR (COMPACT OFFLINE ENCODER) =================
-        function drawQRCodeToCanvas(canvas, textString) {
-          const ctx = canvas.getContext('2d');
-          const size = canvas.width || 220;
+        // ================= ULTRA-SHORT SYNC CODE CODEC (RL1 / RLL) & REAL ISO QR GENERATOR =================
+        let qrEncodeAsCameraUrl = true;
+        let currentShortSyncCode = '';
+        let currentQrEncodedText = '';
 
-          try {
-            const qr = generateQRMatrix(textString);
-            const count = qr.length;
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, size, size);
-            ctx.fillStyle = '#090d16';
+        function packCaseToShortToken(c) {
+          const today = getTodayString();
+          const dtToken = (!c.date || c.date === today) ? 'T' : c.date.replace(/-/g, '').slice(2); // e.g. 261020 or T
+          const mod = (c.modality || 'CT').trim();
+          const mrn = (c.mrn || '').trim();
+          const dxRaw = (c.primaryDiagnosis || '').trim();
+          const stdIdx = STANDARD_DIAGNOSES.findIndex(d => d.toLowerCase() === dxRaw.toLowerCase());
+          const dxToken = stdIdx !== -1 ? `#${stdIdx}` : dxRaw.replace(/[|;~]/g, ' ');
+          const sys = (c.organSystem && c.organSystem !== 'CNS') ? c.organSystem : '';
+          const stFlag = c.status === 'Pending Details' ? 'P' : (c.status === 'Pending Review' ? 'R' : '');
+          const fFlag = c.finding === 'Normal' ? 'N' : '';
+          const flags = (stFlag || fFlag) ? `${stFlag}${fFlag}` : '';
+          const by = (c.reportedBy && c.reportedBy !== 'Dr. Resident') ? c.reportedBy.replace(/[|;~]/g, ' ') : '';
 
-            const margin = 12;
-            const cellSize = (size - margin * 2) / count;
-
-            for (let r = 0; r < count; r++) {
-              for (let c = 0; c < count; c++) {
-                if (qr[r][c]) {
-                  ctx.fillRect(
-                    Math.round(margin + c * cellSize),
-                    Math.round(margin + r * cellSize),
-                    Math.ceil(cellSize),
-                    Math.ceil(cellSize)
-                  );
-                }
-              }
-            }
-          } catch (e) {
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, size, size);
-            ctx.fillStyle = '#090d16';
-            ctx.font = '12px sans-serif';
-            ctx.fillText('Sync Payload Ready', 20, 40);
-            ctx.font = '10px monospace';
-            ctx.fillText('Use "Copy Sync Code" below', 20, 70);
+          // Trim trailing empty fields so the code stays as short as possible (often 16-26 chars!)
+          const parts = [mod, mrn, dxToken, dtToken, sys, flags, by];
+          while (parts.length > 3 && !parts[parts.length - 1]) {
+            parts.pop();
           }
+          return parts.join('|');
         }
 
-        // Lightweight QR Matrix algorithm
-        function generateQRMatrix(text) {
-          const len = text.length;
-          const size = len > 120 ? 33 : (len > 60 ? 29 : 25);
-          const matrix = Array.from({ length: size }, () => Array(size).fill(false));
-
-          function drawFinder(r0, c0) {
-            for (let r = 0; r < 7; r++) {
-              for (let c = 0; c < 7; c++) {
-                if (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
-                  matrix[r0 + r][c0 + c] = true;
-                }
-              }
+        function unpackShortTokenToCase(token, index = 0) {
+          const parts = token.split('|');
+          const mod = (parts[0] || 'CT').trim().toUpperCase();
+          const mrn = (parts[1] || '').trim();
+          const dxToken = (parts[2] || '').trim();
+          let primaryDiagnosis = dxToken;
+          if (dxToken.startsWith('#')) {
+            const idx = parseInt(dxToken.slice(1), 10);
+            if (!isNaN(idx) && STANDARD_DIAGNOSES[idx]) {
+              primaryDiagnosis = STANDARD_DIAGNOSES[idx];
             }
           }
-          drawFinder(0, 0);
-          drawFinder(0, size - 7);
-          drawFinder(size - 7, 0);
-
-          for (let i = 8; i < size - 8; i++) {
-            matrix[6][i] = (i % 2 === 0);
-            matrix[i][6] = (i % 2 === 0);
+          const dtRaw = (parts[3] || 'T').trim();
+          let dateStr = getTodayString();
+          if (dtRaw !== 'T' && dtRaw.length === 6) {
+            dateStr = `20${dtRaw.slice(0, 2)}-${dtRaw.slice(2, 4)}-${dtRaw.slice(4, 6)}`;
+          } else if (dtRaw.includes('-')) {
+            dateStr = dtRaw;
           }
+          const sys = (parts[4] || 'CNS').trim().toUpperCase();
+          const flags = (parts[5] || '').trim();
+          const by = (parts[6] || 'Dr. Colleague').trim();
 
-          let hash = 0;
-          for (let i = 0; i < text.length; i++) {
-            hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
-          }
-
-          for (let r = 8; r < size; r++) {
-            for (let c = 8; c < size; c++) {
-              if (matrix[r][c]) continue;
-              const charIdx = (r * size + c) % text.length;
-              const bit = (text.charCodeAt(charIdx) ^ (hash >> ((r + c) % 8))) & 1;
-              matrix[r][c] = (bit === 1);
-            }
-          }
-          return matrix;
-        }
-
-        let currentSharePayloadString = '';
-
-        // Share Single Case via QR
-        function openSingleQrShareModal(caseObj) {
-          const compact = {
-            radlog: 1,
-            case: {
-              mrn: caseObj.mrn,
-              mod: caseObj.modality,
-              date: caseObj.date,
-              study: caseObj.studyDescription,
-              sys: caseObj.organSystem,
-              organ: caseObj.organOfInterest,
-              dx: caseObj.primaryDiagnosis,
-              diff: caseObj.differentialDiagnoses,
-              find: caseObj.finding,
-              stat: caseObj.status,
-              by: caseObj.reportedBy
-            }
+          return {
+            id: 'case_sync_' + Date.now() + '_' + index + '_' + Math.random().toString(36).substr(2, 3),
+            timestamp: new Date().toISOString(),
+            date: dateStr,
+            mrn: mrn,
+            patientName: '',
+            modality: mod,
+            studyDescription: `${mod} Study`,
+            organSystem: sys || 'CNS',
+            organOfInterest: '',
+            primaryDiagnosis: primaryDiagnosis || `${mod} Study`,
+            differentialDiagnoses: '',
+            finding: flags.includes('N') ? 'Normal' : 'Abnormal',
+            status: flags.includes('P') ? 'Pending Details' : (flags.includes('R') ? 'Pending Review' : 'Completed'),
+            reportedBy: by || 'Dr. Colleague',
+            checkedBy: '',
+            confirmationFollowup: ''
           };
+        }
 
+        function buildQrTargetPayload(shortCode) {
+          currentShortSyncCode = shortCode;
+          if (qrShortCodePreview) {
+            qrShortCodePreview.textContent = shortCode;
+            qrShortCodePreview.title = shortCode;
+          }
+          if (qrEncodeAsCameraUrl) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            currentQrEncodedText = `${baseUrl}?sync=${encodeURIComponent(shortCode)}`;
+          } else {
+            currentQrEncodedText = shortCode;
+          }
+          return currentQrEncodedText;
+        }
+
+        async function drawQRCodeToCanvas(canvas, textString) {
+          const size = canvas.width || 220;
+          const ctx = canvas.getContext('2d');
+
+          // 1. Primary: Installed 'qrcode' npm package (ISO/IEC 18004 standard)
+          if (window.__QRCodeLib && typeof window.__QRCodeLib.toCanvas === 'function') {
+            try {
+              await window.__QRCodeLib.toCanvas(canvas, textString, {
+                width: size,
+                margin: 2,
+                errorCorrectionLevel: 'M',
+                color: {
+                  dark: '#090d16',
+                  light: '#ffffff'
+                }
+              });
+              return;
+            } catch (err) {
+              console.warn('QRCode.toCanvas fallback:', err);
+            }
+          }
+
+          // 2. Secondary fallback: qrcode-generator global if loaded from CDN
+          if (typeof window.qrcode === 'function') {
+            try {
+              const qr = window.qrcode(0, 'M');
+              qr.addData(textString);
+              qr.make();
+              const count = qr.getModuleCount();
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(0, 0, size, size);
+              ctx.fillStyle = '#090d16';
+              const margin = 10;
+              const cellSize = (size - margin * 2) / count;
+              for (let r = 0; r < count; r++) {
+                for (let c = 0; c < count; c++) {
+                  if (qr.isDark(r, c)) {
+                    ctx.fillRect(
+                      Math.floor(margin + c * cellSize),
+                      Math.floor(margin + r * cellSize),
+                      Math.ceil(cellSize),
+                      Math.ceil(cellSize)
+                    );
+                  }
+                }
+              }
+              return;
+            } catch (err) {
+              console.warn('qrcode-generator fallback error:', err);
+            }
+          }
+        }
+
+        if (qrModeLinkBtn && qrModeRawBtn) {
+          qrModeLinkBtn.addEventListener('click', () => {
+            qrEncodeAsCameraUrl = true;
+            qrModeLinkBtn.classList.add('active');
+            qrModeRawBtn.classList.remove('active');
+            if (currentShortSyncCode) {
+              drawQRCodeToCanvas(qrShareCanvas, buildQrTargetPayload(currentShortSyncCode));
+            }
+          });
+          qrModeRawBtn.addEventListener('click', () => {
+            qrEncodeAsCameraUrl = false;
+            qrModeRawBtn.classList.add('active');
+            qrModeLinkBtn.classList.remove('active');
+            if (currentShortSyncCode) {
+              drawQRCodeToCanvas(qrShareCanvas, buildQrTargetPayload(currentShortSyncCode));
+            }
+          });
+        }
+
+        // Share Single Case via QR (Ultra-Short Code)
+        function openSingleQrShareModal(caseObj) {
+          const shortCode = `RL1:${packCaseToShortToken(caseObj)}`;
           qrPaginationControls.style.display = 'none';
-          currentSharePayloadString = JSON.stringify(compact);
-          qrShareCaseLabel.innerHTML = `Case: <strong>${escapeHtml(caseObj.mrn)}</strong> (${caseObj.modality}) - ${escapeHtml(caseObj.primaryDiagnosis)}`;
-          drawQRCodeToCanvas(qrShareCanvas, currentSharePayloadString);
+          qrShareCaseLabel.innerHTML = `Case: <strong>${escapeHtml(caseObj.mrn || 'No MRN')}</strong> (${caseObj.modality}) • ${escapeHtml(caseObj.primaryDiagnosis)}`;
+          const qrPayload = buildQrTargetPayload(shortCode);
+          drawQRCodeToCanvas(qrShareCanvas, qrPayload);
           qrShareModal.classList.add('show');
         }
 
@@ -3836,30 +4279,10 @@
             return;
           }
 
-          const cfg = loadConfig();
-
-          const compactCases = cases.map(c => ({
-            id: c.id,
-            dt: c.date,
-            mrn: c.mrn,
-            pt: c.patientName || '',
-            m: c.modality,
-            s: c.studyDescription,
-            sys: c.organSystem,
-            og: c.organOfInterest || '',
-            dx: c.primaryDiagnosis,
-            df: c.differentialDiagnoses || '',
-            f: c.finding === 'Normal' ? 'N' : 'A',
-            st: c.status === 'Completed' ? 'C' : (c.status === 'Pending Details' ? 'P' : 'R'),
-            by: c.reportedBy || cfg.defaultReporter || 'Dr. Resident',
-            ck: c.checkedBy || '',
-            cf: c.confirmationFollowup || ''
-          }));
-
-          const CHUNK_SIZE = 10;
+          const CHUNK_SIZE = 8;
           libraryQrChunks = [];
-          for (let i = 0; i < compactCases.length; i += CHUNK_SIZE) {
-            libraryQrChunks.push(compactCases.slice(i, i + CHUNK_SIZE));
+          for (let i = 0; i < cases.length; i += CHUNK_SIZE) {
+            libraryQrChunks.push(cases.slice(i, i + CHUNK_SIZE));
           }
 
           libraryQrCurrentPage = 0;
@@ -3869,32 +4292,26 @@
 
         function renderLibraryQrPage() {
           const totalPages = libraryQrChunks.length;
-          const chunk = libraryQrChunks[libraryQrCurrentPage];
+          const chunk = libraryQrChunks[libraryQrCurrentPage] || [];
           const cases = loadCases();
 
-          const payload = {
-            radlib: 1,
-            v: 1,
-            ts: new Date().toISOString(),
-            page: libraryQrCurrentPage + 1,
-            totalPages: totalPages,
-            cases: chunk
-          };
-
-          currentSharePayloadString = JSON.stringify(payload);
+          const packedTokens = chunk.map(c => packCaseToShortToken(c)).join(';');
+          const pagePrefix = totalPages > 1 ? `RLL${libraryQrCurrentPage + 1}/${totalPages}:` : 'RLL:';
+          const shortCode = `${pagePrefix}${packedTokens}`;
 
           if (totalPages > 1) {
             qrPaginationControls.style.display = 'flex';
-            qrPageIndicator.textContent = `Page ${libraryQrCurrentPage + 1} of ${totalPages} (${cases.length} total studies)`;
+            qrPageIndicator.textContent = `Page ${libraryQrCurrentPage + 1} of ${totalPages} (${cases.length} total)`;
             btnQrPrevPage.disabled = (libraryQrCurrentPage === 0);
             btnQrNextPage.disabled = (libraryQrCurrentPage === totalPages - 1);
-            qrShareCaseLabel.innerHTML = `Entire Library (Page ${libraryQrCurrentPage + 1}/${totalPages}) • <strong>${cases.length} Studies</strong>`;
+            qrShareCaseLabel.innerHTML = `Library Batch ${libraryQrCurrentPage + 1}/${totalPages} • <strong>${chunk.length} Studies</strong>`;
           } else {
             qrPaginationControls.style.display = 'none';
             qrShareCaseLabel.innerHTML = `Entire Library • <strong>${cases.length} Studies</strong> (Duplicates auto-flagged)`;
           }
 
-          drawQRCodeToCanvas(qrShareCanvas, currentSharePayloadString);
+          const qrPayload = buildQrTargetPayload(shortCode);
+          drawQRCodeToCanvas(qrShareCanvas, qrPayload);
         }
 
         btnQrPrevPage.addEventListener('click', () => {
@@ -3926,10 +4343,11 @@
           openPeerSyncBtn.click();
         });
 
+        // Copy always copies the ultra-short sync code (e.g. RL1:CT|90214|#0)
         copyQrTextBtn.addEventListener('click', () => {
-          if (!currentSharePayloadString) return;
-          navigator.clipboard.writeText(currentSharePayloadString).then(() => {
-            showToast('Sync code copied to clipboard!');
+          if (!currentShortSyncCode) return;
+          navigator.clipboard.writeText(currentShortSyncCode).then(() => {
+            showToast(`Short sync code copied (${currentShortSyncCode.length} chars)!`);
           }).catch(() => {
             showToast('Failed to copy', true);
           });
@@ -3938,23 +4356,27 @@
         closeQrShareBtn.addEventListener('click', () => qrShareModal.classList.remove('show'));
         doneQrShareBtn.addEventListener('click', () => qrShareModal.classList.remove('show'));
 
-        // ================= QR CAMERA SCANNER & DECODER =================
+        // ================= REAL CROSS-BROWSER QR CAMERA SCANNER & IMAGE DECODER (jsQR + BarcodeDetector) =================
+        const qrDecodeCanvas = document.createElement('canvas');
+        const qrDecodeCtx = qrDecodeCanvas.getContext('2d', { willReadFrequently: true });
+
         async function startQrCamera() {
           cameraFallbackMsg.style.display = 'none';
+          stopQrCamera();
           try {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
               throw new Error('Camera API not available');
             }
             const stream = await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } }
+              video: { facingMode: { ideal: 'environment' }, width: { ideal: 640 }, height: { ideal: 480 } }
             });
             qrScannerStream = stream;
             qrVideo.srcObject = stream;
             await qrVideo.play();
-            scanQrFrame();
+            qrScannerAnimationId = requestAnimationFrame(scanQrFrame);
           } catch (e) {
             console.warn('Camera stream error:', e);
-            cameraFallbackMsg.style.display = 'block';
+            cameraFallbackMsg.style.display = 'flex';
           }
         }
 
@@ -3970,44 +4392,131 @@
         }
 
         async function scanQrFrame() {
-          if (!qrScannerStream || qrVideo.readyState < qrVideo.HAVE_CURRENT_DATA) {
-            qrScannerAnimationId = requestAnimationFrame(scanQrFrame);
-            return;
-          }
+          if (!qrScannerStream) return;
+          if (qrVideo.readyState >= qrVideo.HAVE_ENOUGH_DATA && qrVideo.videoWidth > 0) {
+            const w = qrVideo.videoWidth;
+            const h = qrVideo.videoHeight;
+            qrDecodeCanvas.width = w;
+            qrDecodeCanvas.height = h;
+            qrDecodeCtx.drawImage(qrVideo, 0, 0, w, h);
 
-          if (window.BarcodeDetector) {
-            try {
-              const detector = new BarcodeDetector({ formats: ['qr_code'] });
-              const barcodes = await detector.detect(qrVideo);
-              if (barcodes.length > 0) {
-                const code = barcodes[0].rawValue;
-                handleDecodedSyncPayload(code);
-                return;
-              }
-            } catch (e) {}
+            // 1. Use jsQR (works across iOS Safari, Android Chrome, and all desktop browsers)
+            const jsQrFn = window.__jsQRLib || window.jsQR;
+            if (typeof jsQrFn === 'function') {
+              try {
+                const imgData = qrDecodeCtx.getImageData(0, 0, w, h);
+                const qrResult = jsQrFn(imgData.data, imgData.width, imgData.height, {
+                  inversionAttempts: 'attemptBoth'
+                });
+                if (qrResult && qrResult.data) {
+                  handleDecodedSyncPayload(qrResult.data);
+                  return;
+                }
+              } catch (err) {}
+            }
+
+            // 2. Fallback to native BarcodeDetector if available
+            if (window.BarcodeDetector) {
+              try {
+                const detector = new BarcodeDetector({ formats: ['qr_code'] });
+                const barcodes = await detector.detect(qrDecodeCanvas);
+                if (barcodes.length > 0 && barcodes[0].rawValue) {
+                  handleDecodedSyncPayload(barcodes[0].rawValue);
+                  return;
+                }
+              } catch (e) {}
+            }
           }
           qrScannerAnimationId = requestAnimationFrame(scanQrFrame);
         }
 
-        // ================= DECODE & FLAG DUPLICATE STUDIES =================
-        function handleDecodedSyncPayload(codeString) {
-          try {
-            const data = JSON.parse(codeString.trim());
+        // ================= DECODE SHORT SYNC CODE, URL, OR LEGACY JSON & FLAG DUPLICATES =================
+        function extractSyncCodeFromInput(rawString) {
+          let str = (rawString || '').trim();
+          // If scanned from a Camera Link URL (?sync=...)
+          if (str.includes('?sync=') || str.includes('&sync=')) {
+            try {
+              const urlObj = new URL(str, window.location.origin);
+              const syncParam = urlObj.searchParams.get('sync');
+              if (syncParam) return decodeURIComponent(syncParam).trim();
+            } catch (e) {
+              const match = str.match(/[?&]sync=([^&#]+)/);
+              if (match && match[1]) return decodeURIComponent(match[1]).trim();
+            }
+          }
+          return str;
+        }
 
-            // 1. Check if Full Library QR Payload (data.radlib === 1)
+        function handleDecodedSyncPayload(rawInputString) {
+          const codeString = extractSyncCodeFromInput(rawInputString);
+          if (!codeString) {
+            showToast('Empty sync code', true);
+            return;
+          }
+
+          // 1. Check Ultra-Short Single Case Code (RL1:...)
+          if (codeString.startsWith('RL1:')) {
+            const token = codeString.slice(4);
+            const incomingCase = unpackShortTokenToCase(token, 0);
+            const currentCases = loadCases();
+            const isDuplicate = currentCases.some(item =>
+              item.mrn && incomingCase.mrn &&
+              item.mrn.toUpperCase() === incomingCase.mrn.toUpperCase() &&
+              item.date === incomingCase.date &&
+              item.modality.toUpperCase() === incomingCase.modality.toUpperCase()
+            );
+
+            if (isDuplicate) {
+              handleLibrarySyncReconciliation([incomingCase], 1, 1);
+            } else {
+              currentCases.unshift(incomingCase);
+              saveCases(currentCases);
+              peerSyncModal.classList.remove('show');
+              stopQrCamera();
+              showToast(`Imported ${incomingCase.modality}${incomingCase.mrn ? ': ' + incomingCase.mrn : ''} from colleague!`);
+              openCaseDetail(incomingCase);
+            }
+            return;
+          }
+
+          // 2. Check Ultra-Short Library Batch Code (RLL: or RLL1/2:)
+          if (codeString.startsWith('RLL')) {
+            const colonIdx = codeString.indexOf(':');
+            if (colonIdx !== -1) {
+              const headerPart = codeString.slice(3, colonIdx); // "" or "1/2"
+              let page = 1;
+              let totalPages = 1;
+              if (headerPart.includes('/')) {
+                const [p, t] = headerPart.split('/').map(Number);
+                if (!isNaN(p)) page = p;
+                if (!isNaN(t)) totalPages = t;
+              }
+              const bodyPart = codeString.slice(colonIdx + 1);
+              const tokens = bodyPart.split(';').filter(Boolean);
+              const incomingList = tokens.map((tok, idx) => unpackShortTokenToCase(tok, idx));
+              if (incomingList.length > 0) {
+                handleLibrarySyncReconciliation(incomingList, page, totalPages);
+                return;
+              }
+            }
+          }
+
+          // 3. Backwards compatibility with JSON payloads
+          try {
+            const data = JSON.parse(codeString);
+
             if (data && data.radlib === 1 && Array.isArray(data.cases)) {
               handleLibrarySyncReconciliation(data.cases, data.page, data.totalPages);
               return;
             }
 
-            // 2. Check if Single Case QR Payload (data.radlog === 1)
             if (data && data.radlog && data.case) {
               const c = data.case;
               const incomingCase = {
                 id: 'case_peer_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
                 timestamp: new Date().toISOString(),
                 date: c.date || getTodayString(),
-                mrn: c.mrn || 'MRN-PEER',
+                mrn: c.mrn || '',
                 patientName: c.patient || '',
                 modality: c.mod || 'CT',
                 studyDescription: c.study || '',
@@ -4022,12 +4531,12 @@
                 confirmationFollowup: ''
               };
 
-              // Check if duplicate of single study
               const currentCases = loadCases();
-              const isDuplicate = currentCases.some(item => 
-                (item.mrn && item.mrn.toUpperCase() === incomingCase.mrn.toUpperCase() &&
-                 item.date === incomingCase.date &&
-                 item.modality.toUpperCase() === incomingCase.modality.toUpperCase())
+              const isDuplicate = currentCases.some(item =>
+                item.mrn && incomingCase.mrn &&
+                item.mrn.toUpperCase() === incomingCase.mrn.toUpperCase() &&
+                item.date === incomingCase.date &&
+                item.modality.toUpperCase() === incomingCase.modality.toUpperCase()
               );
 
               if (isDuplicate) {
@@ -4037,16 +4546,30 @@
                 saveCases(currentCases);
                 peerSyncModal.classList.remove('show');
                 stopQrCamera();
-                showToast(`Imported ${incomingCase.modality}: ${incomingCase.mrn} from colleague!`);
+                showToast(`Imported ${incomingCase.modality}: ${incomingCase.mrn || 'Case'} from colleague!`);
                 openCaseDetail(incomingCase);
               }
               return;
             }
+          } catch (e) {}
 
-            showToast('Invalid QR Code format for RadLog', true);
-          } catch (e) {
-            showToast('Unable to parse sync payload: ' + e.message, true);
-          }
+          showToast('Unrecognized QR or Sync Code format', true);
+        }
+
+        // Check if app was opened via native phone Camera QR link (?sync=...)
+        function checkUrlSyncImport() {
+          try {
+            const params = new URLSearchParams(window.location.search);
+            const syncParam = params.get('sync');
+            if (syncParam) {
+              // Clean the URL bar without reloading so it doesn't re-trigger on refresh
+              const cleanUrl = window.location.origin + window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+              setTimeout(() => {
+                handleDecodedSyncPayload(syncParam);
+              }, 150);
+            }
+          } catch (e) {}
         }
 
         // Library Sync Reconciliation & Duplicate Flagging
@@ -4055,8 +4578,11 @@
           const existingMap = new Map();
 
           currentCases.forEach(c => {
-            const key = `${c.mrn.trim()}_${c.date}_${c.modality}`.toUpperCase();
-            existingMap.set(key, c);
+            const mrnKey = (c.mrn || '').trim().toUpperCase();
+            if (mrnKey) {
+              const key = `${mrnKey}_${c.date}_${c.modality}`.toUpperCase();
+              existingMap.set(key, c);
+            }
             if (c.id) existingMap.set(c.id, c);
           });
 
@@ -4068,10 +4594,10 @@
               id: raw.id || ('case_sync_' + Date.now() + '_' + i + '_' + Math.random().toString(36).substr(2, 3)),
               timestamp: raw.timestamp || raw.ts || new Date().toISOString(),
               date: raw.date || raw.dt || getTodayString(),
-              mrn: raw.mrn || 'MRN-SYNC',
+              mrn: raw.mrn !== undefined ? raw.mrn : '',
               patientName: raw.patientName || raw.pt || '',
               modality: (raw.modality || raw.m || 'CT').toUpperCase(),
-              studyDescription: raw.studyDescription || raw.s || '',
+              studyDescription: raw.studyDescription || raw.s || `${(raw.modality || raw.m || 'CT').toUpperCase()} Study`,
               organSystem: (raw.organSystem || raw.sys || 'CNS').toUpperCase(),
               organOfInterest: raw.organOfInterest || raw.og || '',
               primaryDiagnosis: raw.primaryDiagnosis || raw.dx || '',
@@ -4083,9 +4609,10 @@
               confirmationFollowup: raw.confirmationFollowup || raw.cf || ''
             };
 
-            const key = `${c.mrn.trim()}_${c.date}_${c.modality}`.toUpperCase();
-            if (existingMap.has(key) || existingMap.has(c.id)) {
-              duplicateCases.push({ incoming: c, existing: existingMap.get(key) || existingMap.get(c.id) });
+            const mrnKey = (c.mrn || '').trim().toUpperCase();
+            const key = mrnKey ? `${mrnKey}_${c.date}_${c.modality}`.toUpperCase() : null;
+            if ((key && existingMap.has(key)) || existingMap.has(c.id)) {
+              duplicateCases.push({ incoming: c, existing: (key && existingMap.get(key)) || existingMap.get(c.id) });
             } else {
               newCases.push(c);
             }
@@ -4116,7 +4643,7 @@
               div.className = 'duplicate-flag-card';
               div.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; color:#ffffff;">
-                  <span>${d.modality} • ${escapeHtml(d.mrn)}</span>
+                  <span>${d.modality} • ${escapeHtml(d.mrn || 'No MRN')}</span>
                   <span class="status-tag" style="background:#f59e0b; color:#0f172a;">DUPLICATE FLAGGED</span>
                 </div>
                 <div style="color:#e2e8f0; margin-top:2px;">${escapeHtml(d.primaryDiagnosis || d.studyDescription || 'Study')}</div>
@@ -4217,11 +4744,12 @@
         btnImportPastedCode.addEventListener('click', () => {
           const val = pasteSyncCodeArea.value.trim();
           if (!val) {
-            showToast('Please paste a sync code, library string, or CSV text first', true);
+            showToast('Please paste a sync code (RL1:...) or CSV text first', true);
             return;
           }
-          if (val.startsWith('{') && (val.includes('radlib') || val.includes('radlog'))) {
-            handleDecodedSyncPayload(val);
+          const extracted = extractSyncCodeFromInput(val);
+          if (extracted.startsWith('RL1:') || extracted.startsWith('RLL') || (extracted.startsWith('{') && (extracted.includes('radlib') || extracted.includes('radlog')))) {
+            handleDecodedSyncPayload(extracted);
           } else if (val.includes(',') || val.includes('\n')) {
             const parsed = parseCSVToCases(val);
             if (parsed.length > 0) {
@@ -4230,45 +4758,101 @@
               showToast('Unrecognized CSV format', true);
             }
           } else {
-            showToast('Unrecognized format', true);
+            showToast('Unrecognized sync code format', true);
           }
         });
 
+        // Photo / Screenshot QR Decoder using jsQR + BarcodeDetector
         btnPickQrImage.addEventListener('click', () => qrImageInput.click());
         qrImageInput.addEventListener('change', (e) => {
           if (e.target.files && e.target.files[0]) {
-            showToast('Image selected. Processing QR barcode...');
-            if (window.BarcodeDetector) {
-              const img = new Image();
-              img.onload = async () => {
-                try {
+            const file = e.target.files[0];
+            const img = new Image();
+            img.onload = async () => {
+              try {
+                const maxDim = 1024;
+                let w = img.naturalWidth || img.width;
+                let h = img.naturalHeight || img.height;
+                if (w > maxDim || h > maxDim) {
+                  const scale = maxDim / Math.max(w, h);
+                  w = Math.round(w * scale);
+                  h = Math.round(h * scale);
+                }
+                qrDecodeCanvas.width = w;
+                qrDecodeCanvas.height = h;
+                qrDecodeCtx.drawImage(img, 0, 0, w, h);
+
+                const jsQrFn = window.__jsQRLib || window.jsQR;
+                if (typeof jsQrFn === 'function') {
+                  const imageData = qrDecodeCtx.getImageData(0, 0, w, h);
+                  const result = jsQrFn(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: 'attemptBoth'
+                  });
+                  if (result && result.data) {
+                    handleDecodedSyncPayload(result.data);
+                    URL.revokeObjectURL(img.src);
+                    qrImageInput.value = '';
+                    return;
+                  }
+                }
+
+                if (window.BarcodeDetector) {
                   const detector = new BarcodeDetector({ formats: ['qr_code'] });
                   const codes = await detector.detect(img);
-                  if (codes.length > 0) handleDecodedSyncPayload(codes[0].rawValue);
-                  else showToast('No QR barcode found in image', true);
-                } catch (err) {
-                  showToast('Error scanning image barcode', true);
+                  if (codes.length > 0 && codes[0].rawValue) {
+                    handleDecodedSyncPayload(codes[0].rawValue);
+                    URL.revokeObjectURL(img.src);
+                    qrImageInput.value = '';
+                    return;
+                  }
                 }
-              };
-              img.src = URL.createObjectURL(e.target.files[0]);
-            } else {
-              showToast('Please paste text code instead', true);
-            }
+
+                showToast('No valid QR code detected in image. Try a clearer photo or paste the short sync code.', true);
+              } catch (err) {
+                showToast('Error decoding QR photo', true);
+              } finally {
+                URL.revokeObjectURL(img.src);
+                qrImageInput.value = '';
+              }
+            };
+            img.src = URL.createObjectURL(file);
           }
         });
 
-        // ================= SETTINGS MODAL & BUTTON LOCK SYSTEMS =================
-        let isWebhookUnlocked = false;
-        let isScriptCodeUnlocked = false;
+        // ================= SETTINGS MODAL =================
+        let tempSettingsMrnNumbersOnly = false;
+
+        function syncSettingsMrnModeUI(isNumbersOnly) {
+          tempSettingsMrnNumbersOnly = !!isNumbersOnly;
+          if (settingsMrnModeToggle) {
+            settingsMrnModeToggle.querySelectorAll('.toggle-option').forEach(opt => {
+              const mode = opt.dataset.mrnmode;
+              opt.classList.toggle('active', (isNumbersOnly && mode === 'numbers') || (!isNumbersOnly && mode === 'prefix'));
+            });
+          }
+          if (settingsMrnPrefixWrap) {
+            settingsMrnPrefixWrap.style.opacity = isNumbersOnly ? '0.5' : '1';
+          }
+        }
+
+        if (settingsMrnModeToggle) {
+          settingsMrnModeToggle.querySelectorAll('.toggle-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+              syncSettingsMrnModeUI(opt.dataset.mrnmode === 'numbers');
+            });
+          });
+        }
 
         openSettingsBtn.addEventListener('click', () => {
           const cfg = loadConfig();
           settingsWebhookUrl.value = cfg.webhookUrl || '';
           settingsDefaultReporter.value = cfg.defaultReporter || 'Dr. Resident';
           settingsMrnPrefix.value = (cfg.defaultMrnPrefix !== undefined) ? cfg.defaultMrnPrefix : 'MRN';
+          syncSettingsMrnModeUI(!!cfg.mrnNumbersOnly);
           appsScriptCodeArea.value = loadAppsScriptTemplate();
 
           updateStorageStats();
+          renderFrequentModalitiesSelector();
           renderCustomTagsManager();
           settingsModal.classList.add('show');
         });
@@ -4286,15 +4870,18 @@
         });
 
         saveSettingsBtn.addEventListener('click', () => {
+          const currentCfg = loadConfig();
           const cfg = {
+            ...currentCfg,
             webhookUrl: settingsWebhookUrl.value.trim(),
             defaultReporter: settingsDefaultReporter.value.trim() || 'Dr. Resident',
-            defaultMrnPrefix: settingsMrnPrefix.value.trim() || 'MRN'
+            defaultMrnPrefix: settingsMrnPrefix.value.trim(),
+            mrnNumbersOnly: tempSettingsMrnNumbersOnly
           };
           saveConfig(cfg);
           saveAppsScriptTemplate(appsScriptCodeArea.value);
           settingsModal.classList.remove('show');
-          showToast('Settings, default reporter & MRN prefix saved!');
+          showToast('Settings saved!');
         });
 
         testWebhookBtn.addEventListener('click', async () => {
@@ -4390,6 +4977,7 @@
           renderDockForQuick();
           renderAllViews();
           updateSyncIndicator();
+          checkUrlSyncImport();
 
           quickMrn.focus();
         }
