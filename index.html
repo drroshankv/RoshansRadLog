@@ -973,6 +973,12 @@
         z-index: 100;
         padding: 16px;
       }
+      #confirm-modal {
+        z-index: 2500 !important;
+      }
+      #confirm-modal .modal-card {
+        z-index: 2501 !important;
+      }
 
       .modal-backdrop.show {
         display: flex;
@@ -1693,7 +1699,13 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
             Editing: <span id="edit-case-badge-text">Case</span>
           </div>
-          <button type="button" class="btn-sm" id="cancel-edit-btn">Cancel Edit</button>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-sm btn-danger" id="btn-delete-editing-case" title="Delete this case permanently from library">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              Delete
+            </button>
+            <button type="button" class="btn-sm" id="cancel-edit-btn">Cancel Edit</button>
+          </div>
         </div>
 
         <form id="case-log-form" autocomplete="off" onsubmit="event.preventDefault(); submitCase();">
@@ -1757,13 +1769,13 @@
               <input type="hidden" id="field-modality" name="modality" value="CT" />
             </div>
 
-            <!-- Organ System chips (Includes custom systems + Add button; tap again to leave blank) -->
+            <!-- Organ System chips (Includes custom systems + Add button; multi-select) -->
             <div class="field-group">
               <label class="field-label">
-                <span>Organ System <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
-                <span class="field-label-hint">Tap to select / deselect</span>
+                <span>Organ System <span style="font-weight:400; color:#64748b;">(Optional • Multi-select)</span></span>
+                <span class="field-label-hint">Tap to select multiple</span>
               </label>
-              <div class="systems-grid" id="full-system-chips" role="radiogroup" aria-label="Organ System">
+              <div class="systems-grid" id="full-system-chips" role="group" aria-label="Organ System Multi-Select">
                 <!-- Dynamically populated -->
               </div>
               <input type="hidden" id="field-system" name="organSystem" value="" />
@@ -3093,6 +3105,7 @@
         const editBanner = document.getElementById('edit-case-banner');
         const editBadgeText = document.getElementById('edit-case-badge-text');
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const btnDeleteEditingCase = document.getElementById('btn-delete-editing-case');
 
         // Drawer
         const drawerHeader = document.getElementById('drawer-toggle-btn');
@@ -4079,8 +4092,13 @@
             }
             list.push(clean);
             saveCustomSystems(list);
-            systemInput.value = clean;
+            let selected = (systemInput.value || '').split(',').map(s => s.trim()).filter(Boolean);
+            if (!selected.some(s => s.toUpperCase() === clean.toUpperCase())) {
+              selected.push(clean);
+            }
+            systemInput.value = selected.join(', ');
             renderAllSystemChips();
+            updateRelevantStudyProtocols();
             closeAddBulletModal();
             showToast(`Added ${clean} to organ systems!`);
           }
@@ -4256,24 +4274,40 @@
 
         function renderAllSystemChips() {
           const systems = getOrganSystems();
-          const currentSys = systemInput.value || '';
+          const currentSysRaw = systemInput.value || '';
+          const currentSysList = currentSysRaw.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
 
-          // 1. Full Log Organ System Chips (Optional: tap to select, tap again to clear)
+          // 1. Full Log Organ System Chips (Multi-select: tap multiple to combine into a comma-separated list)
           fullSystemChips.innerHTML = '';
           systems.forEach(sys => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = `chip-btn ${sys === currentSys ? 'active' : ''}`;
+            const isSelected = currentSysList.includes(sys.toUpperCase());
+            btn.className = `chip-btn ${isSelected ? 'active' : ''}`;
             btn.dataset.sys = sys;
             btn.textContent = sys;
+            btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
             btn.addEventListener('click', () => {
-              if (systemInput.value === sys) {
-                systemInput.value = '';
+              let selected = (systemInput.value || '')
+                .split(',')
+                .map(s => s.trim())
+                .filter(Boolean);
+
+              const existingIdx = selected.findIndex(s => s.toUpperCase() === sys.toUpperCase());
+              if (existingIdx !== -1) {
+                // Deselect if already in list
+                selected.splice(existingIdx, 1);
               } else {
-                systemInput.value = sys;
+                // Select and append to comma-separated list
+                selected.push(sys);
               }
+              systemInput.value = selected.join(', ');
+
+              const updatedUpper = selected.map(s => s.toUpperCase());
               document.querySelectorAll('#full-system-chips .chip-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.sys === systemInput.value);
+                const active = updatedUpper.includes((b.dataset.sys || '').toUpperCase());
+                b.classList.toggle('active', active);
+                b.setAttribute('aria-pressed', active ? 'true' : 'false');
               });
               updateRelevantStudyProtocols();
               if (navigator.vibrate) try { navigator.vibrate(20); } catch (e) {}
@@ -4405,19 +4439,22 @@
           }
 
           // 2. Active Organ System studies for this modality
-          if (sys && STUDY_MATRIX[mod] && STUDY_MATRIX[mod][sys]) {
-            STUDY_MATRIX[mod][sys].forEach(st => {
-              if (!seen.has(st) && !isDropdownItemDeleted('study', st)) {
-                seen.add(st);
-                results.push({ label: st, badge: `${mod} • ${sys}` });
-              }
-            });
-          }
+          const activeSysList = sys.split(',').map(s => s.trim()).filter(Boolean);
+          activeSysList.forEach(activeSys => {
+            if (STUDY_MATRIX[mod] && STUDY_MATRIX[mod][activeSys]) {
+              STUDY_MATRIX[mod][activeSys].forEach(st => {
+                if (!seen.has(st) && !isDropdownItemDeleted('study', st)) {
+                  seen.add(st);
+                  results.push({ label: st, badge: `${mod} • ${activeSys}` });
+                }
+              });
+            }
+          });
 
           // 3. Other Organ Systems for this modality
           if (STUDY_MATRIX[mod]) {
             Object.keys(STUDY_MATRIX[mod]).forEach(k => {
-              if (k !== sys) {
+              if (!activeSysList.some(as => as.toUpperCase() === k.toUpperCase())) {
                 STUDY_MATRIX[mod][k].forEach(st => {
                   if (!seen.has(st) && !isDropdownItemDeleted('study', st)) {
                     seen.add(st);
@@ -4771,7 +4808,7 @@
         function initAllCustomAutocompletes() {
           attachCustomAutocomplete(quickPrimaryDiag, getDiagnosisSuggestions, 'diagnosis');
           attachCustomAutocomplete(studyInput, () => getStudySuggestionsForActiveModality(false), 'study');
-          attachCustomAutocomplete(organInput, getOrganSuggestions, 'organ');
+          attachCustomAutocomplete(organInput, getOrganSuggestions, 'organ', null, true);
           attachCustomAutocomplete(primaryDiagInput, getDiagnosisSuggestions, 'diagnosis');
           attachCustomAutocomplete(diffInput, getDifferentialSuggestions, 'differential', null, true);
           attachCustomAutocomplete(reportedByInput, getDoctorSuggestions, 'doctor');
@@ -5027,8 +5064,11 @@
 
           const sys = c.organSystem || '';
           systemInput.value = sys;
+          const selectedSystems = sys.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
           document.querySelectorAll('#full-system-chips .chip-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.sys === sys);
+            const active = selectedSystems.includes((b.dataset.sys || '').toUpperCase());
+            b.classList.toggle('active', active);
+            b.setAttribute('aria-pressed', active ? 'true' : 'false');
           });
 
           const isPlaceholderStudy = c.studyDescription && c.studyDescription === `${mod} Study`;
@@ -5074,6 +5114,32 @@
           resetFullFormFields(false);
           showToast('Cancelled edit mode.');
         });
+
+        if (btnDeleteEditingCase) {
+          btnDeleteEditingCase.addEventListener('click', () => {
+            if (!currentEditingCaseId) return;
+            const targetId = currentEditingCaseId;
+            const currentCases = loadCases();
+            const targetCase = currentCases.find(c => c.id === targetId);
+            const label = targetCase ? (targetCase.mrn || targetCase.primaryDiagnosis || 'this case') : 'this case';
+
+            showConfirmDialog(
+              'Delete Case?',
+              `Delete entry "${label}" permanently from your local library?`,
+              true,
+              () => {
+                let cases = loadCases();
+                cases = cases.filter(c => c.id !== targetId);
+                saveCases(cases);
+                cancelEditingMode();
+                resetFullFormFields(false);
+                renderAllViews();
+                triggerHaptic('success');
+                showToast(`Entry ${label} deleted from library`);
+              }
+            );
+          });
+        }
 
         // Clean payload helper: exports only entered details (strips legacy auto-generated placeholders)
         function getEnteredDetailsPayload(c, isEdit = false) {
@@ -5503,16 +5569,38 @@
 
         deleteCaseBtn.addEventListener('click', () => {
           if (!currentActiveCase) return;
+          const targetCase = currentActiveCase;
+          const targetId = targetCase.id;
+          const targetMrn = (targetCase.mrn || '').trim();
+          const targetDate = targetCase.date;
+          const targetMod = (targetCase.modality || '').trim();
+          const label = targetMrn || targetCase.primaryDiagnosis || 'this case';
+
           showConfirmDialog(
             'Delete Case?',
-            `Delete entry ${currentActiveCase.mrn} from your local log?`,
+            `Delete entry "${label}" permanently from your local library?`,
             true,
             () => {
               let cases = loadCases();
-              cases = cases.filter(item => item.id !== currentActiveCase.id);
+              cases = cases.filter(item => {
+                if (targetId && item.id) {
+                  return item.id !== targetId;
+                }
+                if (item.id === targetId) return false;
+                if (targetMrn && item.mrn && item.mrn.trim().toUpperCase() === targetMrn.toUpperCase() && item.date === targetDate && (item.modality || '').toUpperCase() === targetMod.toUpperCase()) {
+                  return false;
+                }
+                return true;
+              });
               saveCases(cases);
               closeDetailModal();
-              showToast('Entry deleted');
+              if (currentEditingCaseId && currentEditingCaseId === targetId) {
+                cancelEditingMode();
+                resetFullFormFields(false);
+              }
+              renderAllViews();
+              triggerHaptic('success');
+              showToast(`Entry ${label} deleted from library`);
             }
           );
         });
@@ -5548,7 +5636,11 @@
               if (!fullText.includes(kw)) return false;
             }
             if (searchFilters.modality !== 'ALL' && (c.modality || '').toUpperCase() !== searchFilters.modality) return false;
-            if (searchFilters.system !== 'ALL' && (c.organSystem || '').toUpperCase() !== searchFilters.system) return false;
+            if (searchFilters.system !== 'ALL') {
+              const filterSys = searchFilters.system.toUpperCase();
+              const caseSystems = (c.organSystem || '').split(',').map(s => s.trim().toUpperCase());
+              if (!caseSystems.includes(filterSys)) return false;
+            }
             if (mrnF && !(c.mrn || '').toLowerCase().includes(mrnF)) return false;
             if (nameF && !(c.patientName || '').toLowerCase().includes(nameF)) return false;
             if (studyF && !(c.studyDescription || '').toLowerCase().includes(studyF)) return false;
