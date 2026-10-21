@@ -2481,13 +2481,22 @@
         <!-- DROPDOWN 2: Google Apps Script Backend Code -->
         <details class="settings-accordion" id="accordion-script-code">
           <summary>
-            <span>▶ Google Apps Script Code &amp; Setup</span>
+            <span>▶ Google Apps Script Code &amp; Setup (v2 In-Place Update)</span>
           </summary>
           <div class="settings-accordion-content">
+            <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 10px; padding: 10px; margin-bottom: 10px;">
+              <div style="font-size: 12px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                Smart Row Update &amp; Deduplication (v2)
+              </div>
+              <p class="helper-text" style="margin-top: 4px; margin-bottom: 0;">
+                Prevents duplicate rows: when editing and completing a study, the script finds and updates the existing row in place in your spreadsheet.
+              </p>
+            </div>
             <p class="helper-text" style="margin-bottom: 6px;">
-              Create a Google Sheet, click <strong>Extensions → Apps Script</strong>, paste this code, and deploy as Web App (Execute as: Me, Access: Anyone):
+              In your Google Sheet, open <strong>Extensions → Apps Script</strong>, replace the code with this script, and click <strong>Deploy → Manage Deployments → Edit (✏️) → Version: New version → Deploy</strong>:
             </p>
-            <textarea id="apps-script-code-area" style="font-family: monospace; font-size: 11px; min-height: 140px; color: #93c5fd; line-height: 1.35; white-space: pre;"></textarea>
+            <textarea id="apps-script-code-area" style="font-family: monospace; font-size: 11px; min-height: 155px; color: #93c5fd; line-height: 1.35; white-space: pre;"></textarea>
             
             <div class="button-row" style="margin-top: 10px; justify-content: flex-end;">
               <button type="button" class="btn-sm" id="copy-script-btn">
@@ -2505,6 +2514,15 @@
             <span id="cache-count-summary" style="font-size:11px; color:#94a3b8; font-weight:600;">0 cases</span>
           </summary>
           <div class="settings-accordion-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #1e293b;">
+              <div>
+                <div style="font-size: 13px; font-weight: 600; color: #f8fafc;">Clean Duplicates</div>
+                <div class="helper-text">Merge duplicate studies in local library (keeps completed over pending)</div>
+              </div>
+              <button type="button" class="btn-sm" id="btn-dedupe-library" style="border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">
+                🧹 Clean Duplicates
+              </button>
+            </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
               <div>
                 <div style="font-size: 13px; font-weight: 600; color: #f8fafc;">Offline Storage</div>
@@ -2622,41 +2640,159 @@
         const STORAGE_CUSTOM_MODS = 'radlog_custom_modalities_v1';
         const STORAGE_CUSTOM_SYSTEMS = 'radlog_custom_systems_v1';
         const STORAGE_HIDE_TIP = 'radlog_hide_quick_tip';
-        const STORAGE_APPS_SCRIPT = 'radlog_apps_script_template_v1';
+        const STORAGE_APPS_SCRIPT = 'radlog_apps_script_template_v2';
 
         // Standard Baseline Modalities & Organ Systems
         const BASE_MODALITIES = ['DR', 'MG', 'CT', 'MRI', 'USG', 'IR'];
         const BASE_SYSTEMS = ['CNS', 'MSK', 'GIT', 'GUT', 'CVS', 'ENT', 'RS'];
 
-        // Default Google Apps Script Template
+        // Default Google Apps Script Template (v2: In-Place Row Update & Deduplication)
         const DEFAULT_APPS_SCRIPT_CODE = `function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      "Timestamp", "Date", "MRN", "Patient", "Modality",
+  var lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(15000);
+  } catch (err) {}
+
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var contents = (e && e.postData && e.postData.contents) ? e.postData.contents : "{}";
+    var data = JSON.parse(contents);
+
+    var standardHeaders = [
+      "Case ID", "Timestamp", "Date", "MRN", "Patient", "Modality",
       "Study", "System", "Organ", "Diagnosis", "Differentials",
-      "Finding", "Status", "ReportedBy", "CheckedBy", "Confirmation"
-    ]);
+      "Finding", "Status", "ReportedBy", "CheckedBy", "Confirmation", "Favorite"
+    ];
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(standardHeaders);
+    }
+
+    var lastRow = sheet.getLastRow();
+    var lastCol = sheet.getLastColumn();
+    var headerRow = sheet.getRange(1, 1, 1, Math.max(lastCol, 1)).getValues()[0];
+
+    // Build header map for flexible column mapping
+    var headerMap = {};
+    for (var c = 0; c < headerRow.length; c++) {
+      var hName = String(headerRow[c] || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (hName) headerMap[hName] = c;
+    }
+
+    function findCol(aliases) {
+      for (var i = 0; i < aliases.length; i++) {
+        var key = aliases[i].toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (headerMap.hasOwnProperty(key)) return headerMap[key];
+      }
+      return -1;
+    }
+
+    var colId = findCol(["caseid", "id", "case"]);
+    var colMrn = findCol(["mrn", "instituteid", "patientid", "uhid"]);
+    var colMod = findCol(["modality", "mod"]);
+    var colDate = findCol(["date"]);
+    var colStatus = findCol(["status"]);
+
+    // If "Case ID" is missing in older sheets, add it to the header row
+    if (colId === -1) {
+      var newColIdx = headerRow.length;
+      sheet.getRange(1, newColIdx + 1).setValue("Case ID");
+      headerMap["caseid"] = newColIdx;
+      colId = newColIdx;
+      lastCol = sheet.getLastColumn();
+    }
+
+    var targetRowIndex = -1; // 1-based row index in sheet
+
+    if (lastRow > 1) {
+      var allData = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+      var incomingId = String(data.id || "").trim();
+      var incomingMrn = String(data.mrn || "").trim().toUpperCase();
+      var incomingMod = String(data.modality || "").trim().toUpperCase();
+      var incomingDate = String(data.date || "").trim();
+
+      // 1. Search by exact Case ID
+      if (incomingId && colId !== -1) {
+        for (var r = 0; r < allData.length; r++) {
+          var rowValId = String(allData[r][colId] || "").trim();
+          if (rowValId && rowValId === incomingId) {
+            targetRowIndex = r + 2;
+            break;
+          }
+        }
+      }
+
+      // 2. Fallback: Search by MRN + Modality (especially for completing pending cases)
+      if (targetRowIndex === -1 && incomingMrn && colMrn !== -1) {
+        var bestCandidate = -1;
+        for (var r = allData.length - 1; r >= 0; r--) {
+          var rowMrn = String(allData[r][colMrn] || "").trim().toUpperCase();
+          if (rowMrn === incomingMrn) {
+            var rowMod = (colMod !== -1) ? String(allData[r][colMod] || "").trim().toUpperCase() : "";
+            var rowDate = (colDate !== -1) ? String(allData[r][colDate] || "").trim() : "";
+            var rowStatus = (colStatus !== -1) ? String(allData[r][colStatus] || "").trim().toLowerCase() : "";
+
+            // Prioritize matching row that was "Pending Details"
+            if (rowStatus.indexOf("pending") !== -1 && (!incomingMod || rowMod === incomingMod)) {
+              bestCandidate = r + 2;
+              break;
+            }
+            if ((!incomingMod || rowMod === incomingMod) && (!incomingDate || rowDate === incomingDate)) {
+              bestCandidate = r + 2;
+              break;
+            }
+            if (!incomingMod || rowMod === incomingMod) {
+              if (bestCandidate === -1) bestCandidate = r + 2;
+            }
+          }
+        }
+        if (bestCandidate !== -1 && (data.action === "update" || data.isEdit || data.status !== "Pending Details")) {
+          targetRowIndex = bestCandidate;
+        }
+      }
+    }
+
+    var rowValues = [];
+    var fullHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+
+    for (var i = 0; i < fullHeaders.length; i++) {
+      var h = String(fullHeaders[i] || "").trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+      var val = "";
+      if (h.indexOf("caseid") !== -1 || h === "id") val = data.id || "";
+      else if (h.indexOf("time") !== -1) val = Utilities.formatDate(new Date(), Session.getScriptTimeZone() || "GMT", "yyyy-MM-dd HH:mm:ss");
+      else if (h.indexOf("date") !== -1) val = data.date || "";
+      else if (h.indexOf("mrn") !== -1 || h.indexOf("institute") !== -1 || h.indexOf("uhid") !== -1) val = data.mrn || "";
+      else if (h.indexOf("patient") !== -1 || h.indexOf("name") !== -1) val = data.patientName || "";
+      else if (h.indexOf("mod") !== -1) val = data.modality || "";
+      else if (h.indexOf("study") !== -1 || h.indexOf("protocol") !== -1) val = data.studyDescription || "";
+      else if (h.indexOf("system") !== -1) val = data.organSystem || "";
+      else if (h.indexOf("organ") !== -1) val = data.organOfInterest || "";
+      else if (h.indexOf("diag") !== -1) val = data.primaryDiagnosis || "";
+      else if (h.indexOf("diff") !== -1) val = data.differentialDiagnoses || "";
+      else if (h.indexOf("find") !== -1) val = data.finding || "";
+      else if (h.indexOf("status") !== -1) val = data.status || "";
+      else if (h.indexOf("report") !== -1 || h.indexOf("resident") !== -1) val = data.reportedBy || "";
+      else if (h.indexOf("check") !== -1 || h.indexOf("consult") !== -1) val = data.checkedBy || "";
+      else if (h.indexOf("confirm") !== -1 || h.indexOf("histopath") !== -1 || h.indexOf("note") !== -1) val = data.confirmationFollowup || "";
+      else if (h.indexOf("fav") !== -1) val = data.isFavorite ? "YES" : "";
+      else val = "";
+      rowValues.push(val);
+    }
+
+    if (targetRowIndex > 1) {
+      // IN-PLACE UPDATE: updates existing row, NO duplicate created!
+      sheet.getRange(targetRowIndex, 1, 1, rowValues.length).setValues([rowValues]);
+      return ContentService.createTextOutput("UPDATED_ROW_" + targetRowIndex);
+    } else {
+      // NEW CASE: Append new row
+      sheet.appendRow(rowValues);
+      return ContentService.createTextOutput("CREATED_NEW_ROW_" + sheet.getLastRow());
+    }
+  } catch (err) {
+    return ContentService.createTextOutput("ERROR: " + err.toString());
+  } finally {
+    try { lock.releaseLock(); } catch (e) {}
   }
-  var data = JSON.parse(e.postData.contents);
-  sheet.appendRow([
-    new Date(),
-    data.date || "",
-    data.mrn || "",
-    data.patientName || "",
-    data.modality || "",
-    data.studyDescription || "",
-    data.organSystem || "",
-    data.organOfInterest || "",
-    data.primaryDiagnosis || "",
-    data.differentialDiagnoses || "",
-    data.finding || "",
-    data.status || "",
-    data.reportedBy || "",
-    data.checkedBy || "",
-    data.confirmationFollowup || ""
-  ]);
-  return ContentService.createTextOutput("OK");
 }`;
 
         // Intelligent Matrix of Relevant Studies based strictly on Modality
@@ -3433,7 +3569,9 @@
 
         function loadAppsScriptTemplate() {
           try {
-            return localStorage.getItem(STORAGE_APPS_SCRIPT) || DEFAULT_APPS_SCRIPT_CODE;
+            const saved = localStorage.getItem(STORAGE_APPS_SCRIPT);
+            if (saved && saved.includes('targetRowIndex')) return saved;
+            return DEFAULT_APPS_SCRIPT_CODE;
           } catch (e) {
             return DEFAULT_APPS_SCRIPT_CODE;
           }
@@ -3561,11 +3699,21 @@
           const dupCase = findDuplicateCaseByMrn(inputEl.value, excludeCaseId, usePrefix);
           if (dupCase) {
             inputEl.classList.add('input-dup-alert');
-            warningTextEl.innerHTML = `⚠️ <strong>Duplicate MRN (${escapeHtml(dupCase.mrn)})</strong>: Logged ${dupCase.date || 'earlier'} (${dupCase.modality} • ${escapeHtml(dupCase.primaryDiagnosis || 'Study')})`;
-            warningBox.classList.add('show');
-            if (viewBtnEl) {
-              viewBtnEl.onclick = () => openCaseDetail(dupCase);
+            const isPending = dupCase.status === 'Pending Details';
+            if (isPending) {
+              warningTextEl.innerHTML = `⚠️ <strong>Pending Study Found (${escapeHtml(dupCase.mrn)})</strong>: Logged ${dupCase.date || 'earlier'} (${dupCase.modality} • ${escapeHtml(dupCase.primaryDiagnosis || 'Study')})`;
+              if (viewBtnEl) {
+                viewBtnEl.textContent = 'Complete Existing Study ➔';
+                viewBtnEl.onclick = () => startEditingCase(dupCase);
+              }
+            } else {
+              warningTextEl.innerHTML = `⚠️ <strong>Duplicate MRN (${escapeHtml(dupCase.mrn)})</strong>: Logged ${dupCase.date || 'earlier'} (${dupCase.modality} • ${escapeHtml(dupCase.primaryDiagnosis || 'Study')})`;
+              if (viewBtnEl) {
+                viewBtnEl.textContent = 'View Existing Case';
+                viewBtnEl.onclick = () => openCaseDetail(dupCase);
+              }
             }
+            warningBox.classList.add('show');
           } else {
             inputEl.classList.remove('input-dup-alert');
             warningBox.classList.remove('show');
@@ -4790,15 +4938,29 @@
           };
 
           let cases = loadCases();
+          const isExistingEdit = Boolean(currentEditingCaseId);
+          let targetIndex = -1;
+
           if (currentEditingCaseId) {
-            const idx = cases.findIndex(c => c.id === currentEditingCaseId);
-            if (idx !== -1) {
-              cases[idx] = caseData;
-            } else {
-              cases.unshift(caseData);
+            targetIndex = cases.findIndex(c => c.id === currentEditingCaseId);
+            if (targetIndex === -1) {
+              // Fallback match: if ID was changed or missing, match by MRN and modality if status was Pending
+              targetIndex = cases.findIndex(c => c.mrn.toUpperCase() === formattedMrn && c.modality === modalityVal && c.status === 'Pending Details');
             }
+          } else {
+            // Safeguard: resident went to Full Log to complete an existing pending study for this MRN & modality
+            const pendingIdx = cases.findIndex(c => c.mrn.toUpperCase() === formattedMrn && c.modality === modalityVal && c.status === 'Pending Details');
+            if (pendingIdx !== -1) {
+              targetIndex = pendingIdx;
+              caseData.id = cases[pendingIdx].id; // Re-use exact same case ID!
+            }
+          }
+
+          if (targetIndex !== -1) {
+            caseData.id = cases[targetIndex].id; // Ensure consistent case ID
+            cases[targetIndex] = caseData;
             triggerHaptic('case_logged');
-            showToast(`Case Updated: ${caseData.mrn}`);
+            showToast(`Case Updated & Saved: ${caseData.mrn}`);
           } else {
             cases.unshift(caseData);
             triggerHaptic('case_logged');
@@ -4806,7 +4968,7 @@
           }
 
           saveCases(cases);
-          transmitCaseWebhook(caseData);
+          transmitCaseWebhook(caseData, (targetIndex !== -1 || isExistingEdit));
 
           cancelEditingMode();
           resetFullFormFields(true);
@@ -4914,7 +5076,7 @@
         });
 
         // Clean payload helper: exports only entered details (strips legacy auto-generated placeholders)
-        function getEnteredDetailsPayload(c) {
+        function getEnteredDetailsPayload(c, isEdit = false) {
           const mod = c.modality || '';
           const rawStudy = (c.studyDescription || '').trim();
           const cleanStudy = (rawStudy === `${mod} Study`) ? '' : rawStudy;
@@ -4922,6 +5084,8 @@
           const cleanSys = isQuickPending && c.organSystem === 'CNS' ? '' : (c.organSystem || '');
           return {
             id: c.id || '',
+            action: isEdit ? 'update' : 'upsert',
+            isEdit: Boolean(isEdit),
             timestamp: c.timestamp || '',
             date: c.date || '',
             mrn: c.mrn || '',
@@ -4942,11 +5106,11 @@
         }
 
         // Webhook Transmit & Manual Google Sheet Sync
-        async function transmitCaseWebhook(caseData) {
+        async function transmitCaseWebhook(caseData, isEdit = false) {
           const cfg = loadConfig();
           if (!cfg.webhookUrl || !cfg.webhookUrl.trim().startsWith('http')) return false;
           try {
-            const cleanData = getEnteredDetailsPayload(caseData);
+            const cleanData = getEnteredDetailsPayload(caseData, isEdit);
             await fetch(cfg.webhookUrl.trim(), {
               method: 'POST',
               body: JSON.stringify(cleanData),
@@ -5679,6 +5843,7 @@
           const rawHeader = parseCSVLine(lines[0]);
           const header = rawHeader.map(h => h.trim().toLowerCase().replace(/[^a-z0-9]/g, ''));
 
+          const idxId = header.findIndex(h => h === 'id' || h === 'caseid');
           const idxDate = header.findIndex(h => h.includes('date'));
           const idxMrn = header.findIndex(h => h.includes('mrn') || h.includes('institute') || h.includes('patientid'));
           const idxName = header.findIndex(h => h.includes('patient') || h.includes('name'));
@@ -5712,8 +5877,10 @@
             const isFavVal = favRaw === 'YES' || favRaw === 'TRUE' || favRaw === '1' || favRaw === '★';
             const { studyDescription, organSystem } = sanitizeImportedStudyAndSystem(modVal, rawStudyVal, rawSysVal, rawStatusVal);
 
+            const existingCaseId = (idxId !== -1 && cols[idxId]) ? cols[idxId].trim() : '';
+
             parsedCases.push({
-              id: 'case_imp_' + Date.now() + '_' + i + '_' + Math.random().toString(36).substr(2, 3),
+              id: existingCaseId || ('case_imp_' + Date.now() + '_' + i + '_' + Math.random().toString(36).substr(2, 3)),
               timestamp: new Date().toISOString(),
               date: (idxDate !== -1 && cols[idxDate]) ? cols[idxDate].trim() : '',
               mrn: mrnVal,
@@ -5796,10 +5963,30 @@
         btnConfirmImportNew.addEventListener('click', () => {
           if (colleagueCsvParsedCases.length === 0) return;
           const currentCases = loadCases();
-          const existingKeys = new Set(currentCases.map(c => `${c.mrn}_${c.date}_${c.modality}`.toUpperCase()));
-          const newCases = colleagueCsvParsedCases.filter(c => !existingKeys.has(`${c.mrn}_${c.date}_${c.modality}`.toUpperCase()));
+          const existingMap = new Map();
+          currentCases.forEach((c, idx) => {
+            if (c.id) existingMap.set(c.id, idx);
+            existingMap.set(`${c.mrn}_${c.date}_${c.modality}`.toUpperCase(), idx);
+          });
 
-          if (newCases.length === 0) {
+          let updatedCount = 0;
+          const newCases = [];
+          for (const incoming of colleagueCsvParsedCases) {
+            const keyById = incoming.id ? existingMap.get(incoming.id) : undefined;
+            const keyByMeta = existingMap.get(`${incoming.mrn}_${incoming.date}_${incoming.modality}`.toUpperCase());
+            const matchIdx = keyById !== undefined ? keyById : keyByMeta;
+            if (matchIdx !== undefined) {
+              const current = currentCases[matchIdx];
+              if (current.status === 'Pending Details' && incoming.status !== 'Pending Details') {
+                currentCases[matchIdx] = { ...current, ...incoming, id: current.id };
+                updatedCount++;
+              }
+            } else {
+              newCases.push(incoming);
+            }
+          }
+
+          if (newCases.length === 0 && updatedCount === 0) {
             showToast('All cases from CSV are already in your log');
             return;
           }
@@ -5807,7 +5994,7 @@
           saveCases(merged);
           peerSyncModal.classList.remove('show');
           stopQrCamera();
-          showToast(`Imported ${newCases.length} new cases from colleague!`);
+          showToast(`Imported ${newCases.length} new cases${updatedCount > 0 ? `, updated ${updatedCount} completed studies` : ''}!`);
         });
 
         btnConfirmImportAll.addEventListener('click', () => {
@@ -6788,6 +6975,63 @@
           const cases = loadCases();
           storageStatsText.textContent = `Cached locally: ${cases.length} case${cases.length === 1 ? '' : 's'}`;
           cacheCountSummary.textContent = `${cases.length} case${cases.length === 1 ? '' : 's'}`;
+        }
+
+        // Clean & Merge Duplicates in Local Library
+        const btnDedupeLibrary = document.getElementById('btn-dedupe-library');
+        if (btnDedupeLibrary) {
+          btnDedupeLibrary.addEventListener('click', () => {
+            const cases = loadCases();
+            if (cases.length === 0) {
+              showToast('No cases in local library to deduplicate.');
+              return;
+            }
+
+            const map = new Map();
+            let mergedCount = 0;
+
+            for (const c of cases) {
+              const exactId = c.id;
+              const metaKey = `${c.mrn}_${c.modality}_${c.date}`.toUpperCase();
+
+              if (exactId && map.has(exactId)) {
+                mergedCount++;
+                continue;
+              }
+
+              if (map.has(metaKey)) {
+                const existing = map.get(metaKey);
+                if (existing.status === 'Pending Details' && c.status !== 'Pending Details') {
+                  map.set(metaKey, c);
+                  if (exactId) map.set(exactId, c);
+                }
+                mergedCount++;
+                continue;
+              }
+
+              map.set(metaKey, c);
+              if (exactId) map.set(exactId, c);
+            }
+
+            const uniqueCases = [];
+            const seenIds = new Set();
+            for (const c of map.values()) {
+              const uKey = c.id || `${c.mrn}_${c.modality}_${c.date}`.toUpperCase();
+              if (!seenIds.has(uKey)) {
+                seenIds.add(uKey);
+                uniqueCases.push(c);
+              }
+            }
+
+            if (mergedCount > 0) {
+              saveCases(uniqueCases);
+              renderAllViews();
+              triggerHaptic('tap');
+              showToast(`Cleaned and merged ${mergedCount} duplicate stud${mergedCount === 1 ? 'y' : 'ies'}!`);
+            } else {
+              showToast('No duplicates found. Your library is clean!');
+            }
+          });
         }
 
         // Clear Local Cache with Prompts
