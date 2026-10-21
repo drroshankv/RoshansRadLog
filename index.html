@@ -1229,6 +1229,305 @@
         margin-bottom: 8px;
         font-size: 12px;
       }
+
+      /* Custom Reliable Autocomplete Dropdown (Mobile & Desktop) */
+      .ac-wrapper {
+        position: relative;
+        width: 100%;
+        z-index: 1;
+      }
+      .ac-wrapper.ac-open {
+        z-index: 95;
+      }
+      .ac-wrapper input,
+      .ac-wrapper textarea {
+        padding-right: 36px !important;
+      }
+      .ac-chevron-btn {
+        position: absolute;
+        right: 7px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        background: rgba(30, 41, 59, 0.85);
+        color: #94a3b8;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        z-index: 3;
+        transition: all 0.15s ease;
+      }
+      .ac-wrapper textarea + .ac-chevron-btn {
+        top: 18px;
+        transform: none;
+      }
+      .ac-chevron-btn:hover,
+      .ac-chevron-btn.open {
+        color: #38bdf8;
+        border-color: #38bdf8;
+        background: rgba(2, 132, 199, 0.28);
+      }
+      .ac-dropdown {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100% + 4px);
+        background: #0f172a;
+        border: 1.5px solid #38bdf8;
+        border-radius: 12px;
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.85);
+        max-height: 215px;
+        overflow-y: auto;
+        z-index: 130;
+        display: none;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+      .ac-dropdown.open {
+        display: block;
+        animation: fadeIn 0.12s ease-out;
+      }
+      .ac-item {
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #e2e8f0;
+        border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        line-height: 1.3;
+        user-select: none;
+      }
+      .ac-item:last-child {
+        border-bottom: none;
+      }
+      .ac-item:hover,
+      .ac-item.active,
+      .ac-item:active {
+        background: rgba(2, 132, 199, 0.28);
+        color: #ffffff;
+      }
+      .ac-match {
+        background: rgba(56, 189, 248, 0.25);
+        color: #7dd3fc;
+        font-weight: 700;
+        border-radius: 3px;
+        padding: 0 1px;
+      }
+      .ac-item-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 5px;
+        background: rgba(56, 189, 248, 0.15);
+        color: #38bdf8;
+        flex-shrink: 0;
+      }
+      .ac-item-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .ac-delete-btn {
+        background: rgba(244, 63, 94, 0.1);
+        border: 1px solid rgba(244, 63, 94, 0.3);
+        color: #fb7185;
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.15s ease;
+        flex-shrink: 0;
+      }
+      .ac-delete-btn:hover,
+      .ac-delete-btn:active {
+        background: #e11d48;
+        border-color: #f43f5e;
+        color: #ffffff;
+        transform: scale(1.06);
+      }
+      .ac-add-preset-item {
+        padding: 9px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #34d399;
+        background: rgba(16, 185, 129, 0.1);
+        border-top: 1px dashed rgba(16, 185, 129, 0.4);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .ac-add-preset-item:hover,
+      .ac-add-preset-item:active {
+        background: rgba(16, 185, 129, 0.22);
+      }
+      .ac-footer-add-bar {
+        padding: 8px 10px;
+        background: #0b1120;
+        border-top: 1px solid #1e293b;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        position: sticky;
+        bottom: 0;
+      }
+      .ac-footer-add-btn {
+        width: 100%;
+        background: rgba(2, 132, 199, 0.16);
+        border: 1px dashed rgba(56, 189, 248, 0.45);
+        color: #38bdf8;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 6px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.15s ease;
+      }
+      .ac-footer-add-btn:hover {
+        background: rgba(2, 132, 199, 0.28);
+        color: #ffffff;
+        border-color: #38bdf8;
+      }
+
+      /* Favorite Star Button */
+      .fav-star-btn {
+        background: #111827;
+        border: 1px solid #334155;
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.15s ease;
+        user-select: none;
+        flex-shrink: 0;
+      }
+      .fav-star-btn:hover {
+        border-color: #fbbf24;
+        color: #fde68a;
+      }
+      .fav-star-btn.active {
+        background: rgba(245, 158, 11, 0.2);
+        border-color: #f59e0b;
+        color: #fbbf24;
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+      }
+      .card-fav-icon-btn {
+        background: transparent;
+        border: 1px solid transparent;
+        color: #475569;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.15s ease;
+        flex-shrink: 0;
+      }
+      .card-fav-icon-btn:hover {
+        color: #fbbf24;
+        background: rgba(245, 158, 11, 0.12);
+      }
+      .card-fav-icon-btn.active {
+        color: #fbbf24;
+        text-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+      }
+
+      /* Radiopaedia Link Chip */
+      .radiopaedia-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 7px;
+        background: rgba(20, 184, 166, 0.16);
+        border: 1px solid rgba(20, 184, 166, 0.45);
+        color: #5eead4;
+        text-decoration: none;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .radiopaedia-link:hover {
+        background: rgba(20, 184, 166, 0.28);
+        border-color: #14b8a6;
+        color: #ffffff;
+      }
+      .radiopaedia-link.disabled {
+        opacity: 0.45;
+        pointer-events: none;
+        background: rgba(30, 41, 59, 0.5);
+        border-color: #334155;
+        color: #64748b;
+      }
+
+      /* Quick Study Note Chips */
+      .note-chips-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 5px;
+      }
+      .note-quick-chip {
+        background: #111827;
+        border: 1px solid #1e293b;
+        color: #94a3b8;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .note-quick-chip:hover {
+        background: #1e293b;
+        color: #38bdf8;
+        border-color: #38bdf8;
+      }
+
+      .btn-whatsapp {
+        background: rgba(37, 211, 102, 0.14);
+        border: 1px solid rgba(37, 211, 102, 0.45);
+        color: #4ade80;
+        text-decoration: none;
+      }
+      .btn-whatsapp:hover {
+        background: rgba(37, 211, 102, 0.24);
+        border-color: #25d366;
+        color: #ffffff;
+      }
     </style>
   </head>
   <body>
@@ -1255,13 +1554,13 @@
         </div>
 
         <div class="header-actions">
-          <div class="sync-pill" id="sync-pill" title="Webhook Sync Status">
+          <div class="sync-pill" id="sync-pill" title="Google Sheet Sync Status (Tap to open Sync Settings)">
             <span class="sync-dot" id="sync-dot"></span>
             <span id="sync-status-text">Local</span>
           </div>
 
-          <!-- Peer Import / Sync Button -->
-          <button class="icon-btn" id="open-peer-sync-btn" aria-label="Peer sync & import" title="Import from Colleague (QR & CSV)">
+          <!-- Share (Export & Import) Button -->
+          <button class="icon-btn" id="open-peer-sync-btn" aria-label="Share, Export & Import Studies" title="Share: Export & Import Studies (QR, Code, CSV & WhatsApp)">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
           </button>
 
@@ -1296,7 +1595,7 @@
           <div class="quick-log-tip-content">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             <div>
-              <strong>Fast reading room entry:</strong> Tap modality, optional MRN &amp; diagnosis. Auto-tags to your default reporter.
+              <strong>Fast reading room entry:</strong> Tap modality, enter MRN &amp; primary diagnosis. Auto-tags to your default reporter.
             </div>
           </div>
           <button type="button" class="quick-tip-close" id="close-quick-tip-btn" aria-label="Dismiss tip" title="Dismiss tip">×</button>
@@ -1304,19 +1603,26 @@
 
         <form id="quick-log-form" autocomplete="off" onsubmit="event.preventDefault(); submitQuickCase('Pending Details');">
           <div class="quick-hero-card">
-            <!-- Active Default Reporter Indicator in Quick Log -->
-            <div style="font-size: 11px; color: #94a3b8; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
-              <span>Reporting as: <strong id="quick-reporter-display" style="color: #38bdf8;">Dr. Resident</strong></span>
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <button type="button" class="btn-sm" id="quick-config-freq-mods-btn" style="padding: 2px 7px; font-size: 10px; color: #94a3b8;" title="Select which modalities show on primary bar">★ Frequent</button>
-                <button type="button" class="btn-sm" id="quick-edit-reporter-btn" style="padding: 2px 7px; font-size: 10px;">Change</button>
+            <!-- Active Default Reporter Indicator + 1-Tap Favorite Case Toggle -->
+            <div style="font-size: 11px; color: #94a3b8; display: flex; align-items: center; justify-content: space-between; gap: 7px; border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+              <div style="display: flex; align-items: center; gap: 7px;">
+                <span>Reporting as: <strong id="quick-reporter-display" style="color: #38bdf8;">Dr. Resident</strong></span>
+                <button type="button" class="btn-sm" id="quick-edit-reporter-btn" style="padding: 2px 7px; font-size: 10px; border-radius: 9999px; color: #cbd5e1;" title="Change Default Reporter Name">✎ Change</button>
               </div>
+              <button type="button" class="fav-star-btn" id="quick-fav-toggle-btn" title="Tag this case as a Favorite (Star)">
+                <span id="quick-fav-icon">☆</span>
+                <span id="quick-fav-label">Favorite</span>
+              </button>
+              <input type="hidden" id="quick-field-favorite" value="false" />
             </div>
 
-            <!-- Frequent Modalities Primary Row + Overflow Arrow -->
+            <!-- Frequent Modalities Primary Row + Overflow Arrow (Frequent bullet directly near Modality) -->
             <div>
-              <div class="field-label" style="margin-bottom: 5px;">
-                <span>Modality</span>
+              <div class="field-label" style="margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 7px;">
+                  <span>Modality</span>
+                  <button type="button" class="btn-sm" id="quick-config-freq-mods-btn" style="padding: 2px 7px; font-size: 10px; border-radius: 9999px; color: #38bdf8; text-transform: none; letter-spacing: 0;" title="Select which modalities show on primary bar">★ Frequent</button>
+                </div>
                 <span class="field-label-hint" id="quick-mod-selected-hint">Active: CT</span>
               </div>
               <div class="quick-modality-primary-row" id="quick-modality-primary-row" role="radiogroup" aria-label="Frequent Modalities">
@@ -1328,15 +1634,15 @@
               <input type="hidden" id="quick-field-modality" value="CT" />
             </div>
 
-            <!-- Institute ID / MRN (Optional + Prefix or Numbers-Only Toggle + Live Duplicate Alert) -->
+            <!-- Institute ID / MRN (Mandatory + Prefix or Numbers-Only Toggle + Live Duplicate Alert) -->
             <div class="field-group" style="margin-bottom: 2px;">
               <label for="quick-mrn" class="field-label">
-                <span>Institute ID / MRN <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
+                <span>Institute ID / MRN <span style="color:#f43f5e;">*</span></span>
                 <button type="button" id="quick-mrn-mode-toggle" style="background:none; border:none; color:#38bdf8; font-size:11px; font-weight:600; cursor:pointer; padding:0;">Switch to Numbers Only</button>
               </label>
               <div class="input-prefix-group">
                 <span class="input-prefix-badge" id="quick-mrn-prefix-badge" title="Tap to toggle Fixed Prefix vs Numbers Only">MRN</span>
-                <input type="text" id="quick-mrn" class="input-large input-large-mrn" placeholder="Optional ID or numbers (e.g. 90214)" autocapitalize="characters" inputmode="text" enterkeyhint="next" />
+                <input type="text" id="quick-mrn" class="input-large input-large-mrn" placeholder="Enter ID or numbers (e.g. 90214)" required autocapitalize="characters" inputmode="text" enterkeyhint="next" />
               </div>
               <div class="mrn-dup-warning" id="quick-mrn-dup-warning" role="alert">
                 <span id="quick-mrn-dup-text">⚠️ Duplicate MRN already logged</span>
@@ -1344,13 +1650,20 @@
               </div>
             </div>
 
-            <!-- Primary Diagnosis with Autocomplete -->
+            <!-- Primary Diagnosis with Custom Reliable Autocomplete Dropdown + Live Radiopaedia Link -->
             <div class="field-group" style="margin-bottom: 0;">
               <label for="quick-primary-diag" class="field-label">
-                <span>Primary Diagnosis</span>
-                <span class="field-label-hint">Autocomplete</span>
+                <span>Primary Diagnosis <span style="color:#f43f5e;">*</span></span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <a id="quick-radiopaedia-link" class="radiopaedia-link disabled" href="https://radiopaedia.org" target="_blank" rel="noopener noreferrer" title="Open Radiopaedia reference for entered diagnosis">📖 Radiopaedia ↗</a>
+                </div>
               </label>
-              <input type="text" id="quick-primary-diag" class="input-large" list="diagnosis-suggestions" placeholder="Type diagnosis (e.g. Infarct, Appendicitis)..." required enterkeyhint="done" />
+              <input type="text" id="quick-primary-diag" class="input-large" placeholder="Type diagnosis (e.g. Infarct, Appendicitis)..." required enterkeyhint="done" />
+              <!-- Last logged case quick Radiopaedia bar -->
+              <div id="quick-last-logged-radiopaedia" style="display: none; align-items: center; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 3px; padding: 3px 8px; background: rgba(20, 184, 166, 0.08); border: 1px solid rgba(20, 184, 166, 0.25); border-radius: 8px;">
+                <span id="quick-last-logged-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Logged: Case</span>
+                <a id="quick-last-logged-rp-anchor" href="https://radiopaedia.org" target="_blank" rel="noopener noreferrer" style="color: #5eead4; font-weight: 700; text-decoration: none; flex-shrink: 0; margin-left: 8px;">📖 View on Radiopaedia ↗</a>
+              </div>
             </div>
           </div>
         </form>
@@ -1391,6 +1704,11 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Patient &amp; Case ID
               </div>
+              <button type="button" class="fav-star-btn" id="full-fav-toggle-btn" title="Tag this case as a Favorite (Star)">
+                <span id="full-fav-icon">☆</span>
+                <span id="full-fav-label">Mark Favorite</span>
+              </button>
+              <input type="hidden" id="field-favorite" name="isFavorite" value="false" />
             </div>
 
             <div class="field-row">
@@ -1399,15 +1717,12 @@
                 <input type="date" id="field-date" name="date" required enterkeyhint="next" />
               </div>
 
+              <!-- Full Log MRN: Mandatory (No fixed prefix) -->
               <div class="field-group">
                 <label for="field-mrn" class="field-label">
-                  <span>Institute ID / MRN <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
-                  <button type="button" id="full-mrn-mode-toggle" style="background:none; border:none; color:#38bdf8; font-size:11px; font-weight:600; cursor:pointer; padding:0;">Numbers Only</button>
+                  <span>Institute ID / MRN <span style="color:#f43f5e;">*</span></span>
                 </label>
-                <div class="input-prefix-group">
-                  <span class="input-prefix-badge" id="full-mrn-prefix-badge" title="Tap to toggle Fixed Prefix vs Numbers Only">MRN</span>
-                  <input type="text" id="field-mrn" name="mrn" placeholder="Optional (e.g. 90214)" autocapitalize="characters" enterkeyhint="next" />
-                </div>
+                <input type="text" id="field-mrn" name="mrn" placeholder="Enter ID / MRN (e.g. 90214)" required autocapitalize="characters" enterkeyhint="next" />
                 <div class="mrn-dup-warning" id="full-mrn-dup-warning" role="alert">
                   <span id="full-mrn-dup-text">⚠️ Duplicate MRN already logged</span>
                   <button type="button" class="btn-sm" id="full-mrn-dup-view-btn" style="padding: 2px 7px; font-size: 10px; border-color: rgba(245, 158, 11, 0.5); color: #fde68a;">View</button>
@@ -1418,7 +1733,7 @@
             <div class="field-group">
               <label for="field-patient-name" class="field-label">
                 Patient Name / Initials
-                <span class="field-label-hint">e.g. J.D. or Jane Doe</span>
+                <span class="field-label-hint">Optional (e.g. J.D.)</span>
               </label>
               <input type="text" id="field-patient-name" name="patientName" placeholder="Patient initials or name" autocapitalize="words" enterkeyhint="next" />
             </div>
@@ -1429,7 +1744,7 @@
             <div class="section-heading">
               <div class="section-heading-left">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                Modality & Organ System
+                Modality &amp; Organ System
               </div>
             </div>
 
@@ -1442,23 +1757,25 @@
               <input type="hidden" id="field-modality" name="modality" value="CT" />
             </div>
 
-            <!-- Organ System chips (Includes custom systems + Add button) -->
+            <!-- Organ System chips (Includes custom systems + Add button; tap again to leave blank) -->
             <div class="field-group">
-              <label class="field-label">Organ System</label>
+              <label class="field-label">
+                <span>Organ System <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
+                <span class="field-label-hint">Tap to select / deselect</span>
+              </label>
               <div class="systems-grid" id="full-system-chips" role="radiogroup" aria-label="Organ System">
                 <!-- Dynamically populated -->
               </div>
-              <input type="hidden" id="field-system" name="organSystem" value="CNS" />
+              <input type="hidden" id="field-system" name="organSystem" value="" />
             </div>
 
             <!-- Study Description filtered strictly by Modality -->
             <div class="field-group">
               <label for="field-study" class="field-label">
-                Study Description
-                <span class="field-label-hint" id="study-protocol-hint">Strictly active modality</span>
+                <span>Study Description</span>
+                <span class="field-label-hint" id="study-protocol-hint" style="color:#38bdf8;">Strictly active modality (Add/Delete in dropdown)</span>
               </label>
-              <input type="text" id="field-study" name="studyDescription" placeholder="e.g. NCCT Head" list="study-suggestions" enterkeyhint="next" required />
-              <datalist id="study-suggestions"></datalist>
+              <input type="text" id="field-study" name="studyDescription" placeholder="Tap or type study (e.g. NCCT Head)" enterkeyhint="next" />
             </div>
           </div>
 
@@ -1467,31 +1784,35 @@
             <div class="section-heading">
               <div class="section-heading-left">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-                Anatomy & Diagnosis
+                Anatomy &amp; Diagnosis
               </div>
             </div>
 
             <div class="field-group">
               <label for="field-organ" class="field-label">
-                Organ of Interest
-                <span class="field-label-hint">Autocomplete dropdown</span>
+                <span>Organ of Interest <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
+                <span class="field-label-hint" style="color:#38bdf8;">Add / Delete in dropdown</span>
               </label>
-              <input type="text" id="field-organ" name="organOfInterest" placeholder="e.g. Appendix, Middle Cerebral Artery" list="organ-suggestions" enterkeyhint="next" />
-              <datalist id="organ-suggestions"></datalist>
+              <input type="text" id="field-organ" name="organOfInterest" placeholder="Tap or type organ (e.g. Appendix, Brain)" enterkeyhint="next" />
             </div>
 
             <div class="field-group">
               <label for="field-primary-diag" class="field-label">
-                Primary Diagnosis
-                <span class="field-label-hint">Autocomplete dropdown</span>
+                <span>Primary Diagnosis <span style="color:#f43f5e;">*</span></span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <a id="full-radiopaedia-link" class="radiopaedia-link disabled" href="https://radiopaedia.org" target="_blank" rel="noopener noreferrer" title="Open Radiopaedia reference for entered diagnosis">📖 Radiopaedia ↗</a>
+                </div>
               </label>
-              <input type="text" id="field-primary-diag" name="primaryDiagnosis" list="diagnosis-suggestions" placeholder="Type diagnosis (e.g. Infarct, Appendicitis)..." required enterkeyhint="next" />
-              <datalist id="diagnosis-suggestions"></datalist>
+              <input type="text" id="field-primary-diag" name="primaryDiagnosis" placeholder="Type diagnosis (e.g. Infarct, Appendicitis)..." required enterkeyhint="next" />
             </div>
 
             <div class="field-group">
-              <label for="field-differentials" class="field-label">Differential Diagnoses (Optional)</label>
-              <textarea id="field-differentials" name="differentialDiagnoses" placeholder="Comma-separated or notes, e.g. Glioma vs Brain Abscess, Mesenteric Adenitis"></textarea>
+              <label for="field-differentials" class="field-label">
+                <span>Differential Diagnoses <span style="font-weight:400; color:#64748b;">(Optional)</span></span>
+                <span class="field-label-hint" style="color:#38bdf8;">Comma-separated (Add / Delete in dropdown)</span>
+              </label>
+              <input type="text" id="field-differentials" name="differentialDiagnoses" placeholder="Tap or type differentials (e.g. Glioma, Brain Abscess)" enterkeyhint="next" />
+              <div id="full-diff-radiopaedia-links" style="display: none; flex-wrap: wrap; gap: 5px; margin-top: 4px;"></div>
             </div>
 
             <!-- Finding Toggle: Normal vs Abnormal -->
@@ -1516,7 +1837,7 @@
             <div class="section-heading">
               <div class="section-heading-left">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
-                Reviewers & Status
+                Reviewers, Study Notes &amp; Status
               </div>
             </div>
 
@@ -1528,14 +1849,23 @@
 
               <div class="field-group">
                 <label for="field-consultant" class="field-label">Checked By / Consultant</label>
-                <input type="text" id="field-consultant" name="checkedBy" placeholder="Dr. Consultant" list="consultant-suggestions" enterkeyhint="next" />
-                <datalist id="consultant-suggestions"></datalist>
+                <input type="text" id="field-consultant" name="checkedBy" placeholder="Dr. Consultant" enterkeyhint="next" />
               </div>
             </div>
 
             <div class="field-group">
-              <label for="field-confirmation" class="field-label">Confirmation / Histopath / Follow-up</label>
-              <input type="text" id="field-confirmation" name="confirmationFollowup" placeholder="e.g. Histopath confirmed, Surgery concordant" enterkeyhint="done" />
+              <label for="field-confirmation" class="field-label">
+                <span>Confirmation / Histopath / Study Notes</span>
+                <span class="field-label-hint">Pearls, follow-up &amp; study notes</span>
+              </label>
+              <textarea id="field-confirmation" name="confirmationFollowup" rows="2" placeholder="Add relevant study notes, teaching pearls, histopath results, or surgical follow-up..." style="min-height: 58px;"></textarea>
+              <div class="note-chips-row">
+                <button type="button" class="note-quick-chip" data-note="Histopath confirmed">+ Histopath Confirmed</button>
+                <button type="button" class="note-quick-chip" data-note="Surgery concordant">+ Surgery Concordant</button>
+                <button type="button" class="note-quick-chip" data-note="Classic imaging sign">+ Classic Sign</button>
+                <button type="button" class="note-quick-chip" data-note="Follow-up awaited">+ Follow-up Awaited</button>
+                <button type="button" class="note-quick-chip" data-note="Teaching / Viva case">+ Viva / Teaching</button>
+              </div>
             </div>
 
             <!-- Status Toggle: Completed vs Pending Review -->
@@ -1568,8 +1898,8 @@
               <button type="button" class="btn-sm" id="btn-export-lib-qr-drawer" title="Export Entire Library via QR Code" style="color: #38bdf8;">
                 📲 Library QR
               </button>
-              <button type="button" class="btn-sm" id="quick-export-csv" title="Download CSV backup">
-                CSV
+              <button type="button" class="btn-sm" id="quick-export-csv" title="Download CSV or Share via WhatsApp">
+                📄 CSV / WhatsApp
               </button>
               <svg id="drawer-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition: transform 0.2s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
@@ -1588,14 +1918,21 @@
           <div class="section-heading">
             <div class="section-heading-left">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              Search & Filter Studies
+              Search &amp; Filter Studies
             </div>
-            <button type="button" class="btn-sm" id="search-reset-btn">Reset</button>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <button type="button" class="fav-star-btn" id="search-fav-only-btn" title="Filter by Favorite (Starred) studies">
+                <span id="search-fav-icon">☆</span>
+                <span id="search-fav-text">Favorites Only</span>
+                <span id="search-fav-count" style="font-size: 10px; opacity: 0.85;">(0)</span>
+              </button>
+              <button type="button" class="btn-sm" id="search-reset-btn">Reset</button>
+            </div>
           </div>
 
           <!-- Keyword Search -->
           <div class="field-group">
-            <input type="search" id="search-keyword" placeholder="Search anything (MRN, diagnosis, study, organ)..." />
+            <input type="search" id="search-keyword" placeholder="Search anything (MRN, diagnosis, study, notes/histopath, organ)..." />
           </div>
 
           <!-- Modality Filter Chips (Dynamic: ALL + Base + Custom) -->
@@ -1636,15 +1973,16 @@
             <!-- Reported By Filter in Study Search -->
             <div class="field-group">
               <label for="search-reported-by" class="field-label">Reported By</label>
-              <input type="text" id="search-reported-by" list="consultant-suggestions" placeholder="Filter by Doctor (e.g. Dr. Resident)" />
+              <input type="text" id="search-reported-by" placeholder="Filter by Doctor (e.g. Dr. Resident)" />
             </div>
           </div>
 
           <div class="field-row">
             <div class="field-group">
-              <label for="search-status" class="field-label">Status</label>
+              <label for="search-status" class="field-label">Status / Favorites</label>
               <select id="search-status">
                 <option value="ALL">All Statuses</option>
+                <option value="FAVORITES">★ Favorites Only</option>
                 <option value="Completed">Completed</option>
                 <option value="Pending Details">Pending Details (Quick Logged)</option>
                 <option value="Pending Review">Pending Review</option>
@@ -1653,23 +1991,23 @@
 
             <div class="field-group">
               <label for="search-diagnosis" class="field-label">Primary Diagnosis</label>
-              <input type="text" id="search-diagnosis" list="diagnosis-suggestions" placeholder="e.g. Infarct, Appendicitis" />
+              <input type="text" id="search-diagnosis" placeholder="e.g. Infarct, Appendicitis" />
             </div>
           </div>
         </div>
 
         <!-- Search Results Count & Action Bar -->
-        <div style="display: flex; align-items: center; justify-content: space-between; margin: 10px 4px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin: 10px 4px; flex-wrap: wrap; gap: 6px;">
           <div style="font-size: 13px; font-weight: 700; color: #f1f5f9;">
             Found <span id="search-results-count" style="color: #38bdf8;">0</span> matching studies
           </div>
-          <div style="display: flex; gap: 8px;">
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <button type="button" class="btn-sm" id="search-import-csv-btn" title="Import Colleague CSV">
               📥 Import CSV
             </button>
-            <button type="button" class="btn-sm" id="search-export-csv-btn">
+            <button type="button" class="btn-sm" id="search-export-csv-btn" title="Download CSV or Share via WhatsApp">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Export CSV
+              Download CSV / WhatsApp
             </button>
           </div>
         </div>
@@ -1701,6 +2039,57 @@
       </div>
     </div>
 
+    <!-- ================= MODAL: CSV DOWNLOAD & WHATSAPP SHARE ================= -->
+    <div class="modal-backdrop" id="csv-export-modal" role="dialog" aria-modal="true" aria-labelledby="csv-export-modal-title">
+      <div class="modal-card" style="max-width: 400px;">
+        <div class="modal-header">
+          <div class="modal-title" id="csv-export-modal-title">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><polyline points="9 15 12 18 15 15"></polyline></svg>
+            Download CSV &amp; Share
+          </div>
+          <button class="icon-btn" id="close-csv-export-modal-btn" aria-label="Close modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <span style="font-size: 13px; font-weight: 700; color: #f8fafc;" id="csv-export-summary-title">All Logged Studies</span>
+            <span class="status-tag completed" id="csv-export-count-badge">0 studies</span>
+          </div>
+          <p class="helper-text" style="margin: 0;">
+            Includes only entered details (keeps unentered study descriptions &amp; organ systems blank).
+          </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- 1. Direct Download CSV File -->
+          <button type="button" class="btn-primary" id="btn-modal-download-csv" style="padding: 12px 16px; font-size: 14px; justify-content: center;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Download CSV File (.csv)</span>
+          </button>
+
+          <!-- 2. Share via WhatsApp (Direct Chat Message + CSV & Sync Link) -->
+          <a
+            id="btn-modal-whatsapp-chat"
+            href="https://wa.me/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-primary"
+            style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); border-color: #22c55e; box-shadow: 0 4px 14px rgba(34, 197, 94, 0.28); padding: 12px 16px; font-size: 14px; justify-content: center; text-decoration: none;"
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            <span>Share via WhatsApp</span>
+          </a>
+
+          <!-- 3. Native File Share (Attaches actual .csv file on mobile devices) -->
+          <button type="button" class="btn-sm btn-whatsapp" id="btn-modal-share-csv-file" style="justify-content: center; padding: 10px 14px; font-size: 12px; width: 100%;">
+            📎 Attach .CSV File to WhatsApp / Apps (Mobile)
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- ================= MODAL: IN-APP ADD BULLET / TAG MODAL ================= -->
     <div class="modal-backdrop" id="add-bullet-modal" role="dialog" aria-modal="true" aria-labelledby="add-bullet-title">
       <div class="modal-card" style="max-width: 380px; text-align: center;">
@@ -1728,29 +2117,59 @@
       </div>
     </div>
 
-    <!-- ================= MODAL: PEER IMPORT & SYNC (QR & CSV) ================= -->
+    <!-- ================= MODAL: SHARE HUB (BOTH EXPORT & IMPORT STUDIES) ================= -->
     <div class="modal-backdrop" id="peer-sync-modal" role="dialog" aria-modal="true" aria-labelledby="sync-modal-title">
       <div class="modal-card">
         <div class="modal-header">
           <div class="modal-title" id="sync-modal-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-            Import from Colleague
+            Share: Export &amp; Import Studies
           </div>
           <button class="icon-btn" id="close-peer-sync-btn" aria-label="Close modal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
 
+        <!-- SECTION A: EXPORT / SHARE YOUR STUDIES -->
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <div style="font-size: 12px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.4px;">📤 Export / Share Your Studies</div>
+            <span style="font-size: 11px; color: #94a3b8; font-weight: 600;" id="share-hub-case-count">0 studies</span>
+          </div>
+          <p class="helper-text" style="margin-top: 0; margin-bottom: 10px;">
+            Exports only the entered details of your logged studies via QR code, short sync code, CSV file, or WhatsApp.
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 7px;">
+            <button type="button" class="btn-sm" id="btn-hub-export-qr" style="background: #0284c7; border-color: #38bdf8; color: #ffffff; justify-content: center; padding: 9px 6px; font-weight: 700;">
+              📲 Library QR
+            </button>
+            <button type="button" class="btn-sm" id="btn-hub-copy-code" style="justify-content: center; padding: 9px 6px; color: #38bdf8; border-color: rgba(56, 189, 248, 0.4);">
+              📋 Copy Code
+            </button>
+            <button type="button" class="btn-sm" id="btn-hub-export-csv" style="justify-content: center; padding: 9px 6px; color: #34d399; border-color: rgba(16, 185, 129, 0.4);">
+              📄 Download CSV
+            </button>
+            <button type="button" class="btn-sm btn-whatsapp" id="btn-hub-share-whatsapp" style="justify-content: center; padding: 9px 6px; font-weight: 700;">
+              💬 Share WhatsApp
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION B: IMPORT STUDIES FROM COLLEAGUE -->
+        <div style="font-size: 12px; font-weight: 700; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px;">
+          📥 Import Studies from Colleague
+        </div>
+
         <!-- Mode Tabs: Camera Scan QR | Upload CSV | Paste Code -->
-        <div class="modal-tabs">
+        <div class="modal-tabs" style="margin-bottom: 12px;">
           <button type="button" class="modal-tab-btn active" id="tab-btn-qr-scan">📷 Scan QR</button>
           <button type="button" class="modal-tab-btn" id="tab-btn-csv-import">📄 File CSV</button>
-          <button type="button" class="modal-tab-btn" id="tab-btn-paste-sync">📋 Paste</button>
+          <button type="button" class="modal-tab-btn" id="tab-btn-paste-sync">📋 Paste Code</button>
         </div>
 
         <!-- TAB 1: Camera QR Scanner -->
         <div id="sync-view-qr-scan" style="display: block;">
-          <div class="qr-scanner-box">
+          <div class="qr-scanner-box" style="height: 205px;">
             <video id="qr-video" class="qr-video" playsinline muted></video>
             <div class="scanner-laser"></div>
             <div id="camera-fallback-msg" style="position: absolute; text-align: center; padding: 16px; color: #94a3b8; display: none; background: rgba(9, 13, 22, 0.9); inset: 0; align-items: center; justify-content: center; flex-direction: column;">
@@ -1760,7 +2179,7 @@
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px;">
             <p class="helper-text" style="margin: 0; flex: 1;">
-              Point at colleague's QR or scan with your phone's Camera app.
+              Point at colleague's QR or scan a QR photo.
             </p>
             <button type="button" class="btn-sm" id="btn-pick-qr-image" style="color:#38bdf8; flex-shrink: 0;">
               📸 Scan QR Photo
@@ -1771,13 +2190,13 @@
 
         <!-- TAB 2: CSV Import -->
         <div id="sync-view-csv-import" style="display: none;">
-          <div style="border: 2px dashed #334155; border-radius: 14px; padding: 24px 16px; text-align: center; background: #0b1120; cursor: pointer;" id="csv-drop-zone">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" style="margin-bottom: 8px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
+          <div style="border: 2px dashed #334155; border-radius: 14px; padding: 20px 16px; text-align: center; background: #0b1120; cursor: pointer;" id="csv-drop-zone">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" style="margin-bottom: 6px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
             <div style="font-weight: 700; color: #ffffff; font-size: 14px;">Tap to select Colleague's CSV file</div>
-            <p class="helper-text">Supports CSV exported from any colleague using this Radiology Tracker</p>
+            <p class="helper-text">Imports only entered details; keeps study details &amp; organ system empty</p>
           </div>
 
-          <div id="csv-preview-card" style="display: none; margin-top: 14px; background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 12px;">
+          <div id="csv-preview-card" style="display: none; margin-top: 12px; background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 12px;">
             <div style="font-weight: 700; color: #f8fafc; font-size: 13px; margin-bottom: 6px;">CSV Analysis</div>
             <div style="font-size: 12px; color: #94a3b8;" id="csv-summary-text">Found 0 cases</div>
             <div style="display: flex; gap: 8px; margin-top: 12px;">
@@ -1794,8 +2213,8 @@
         <!-- TAB 3: Paste Sync Code -->
         <div id="sync-view-paste" style="display: none;">
           <div class="field-group">
-            <label for="paste-sync-code-area" class="field-label">Paste Short Sync Code (e.g. RL1:...) or CSV</label>
-            <textarea id="paste-sync-code-area" placeholder="Paste short sync code (RL1:...) or CSV text here..." style="min-height: 90px; font-family: monospace; font-size: 13px;"></textarea>
+            <label for="paste-sync-code-area" class="field-label">Paste Short Sync Code (e.g. RL1:... / RLL:...) or CSV</label>
+            <textarea id="paste-sync-code-area" placeholder="Paste short sync code (RL1:...) or CSV text here..." style="min-height: 85px; font-family: monospace; font-size: 13px;"></textarea>
           </div>
           <button type="button" class="btn-sm" id="btn-import-pasted-code" style="background: #0284c7; border-color: #38bdf8; width: 100%; justify-content: center; padding: 10px; margin-top: 10px; color: #fff; font-weight: 700;">
             📥 Import Sync Code
@@ -1929,24 +2348,46 @@
           </button>
         </div>
 
-        <!-- MRN Mode & Prefix Settings -->
+        <!-- Default Reported By -->
         <div class="field-group">
-          <label class="field-label">Institute ID / MRN Entry Mode</label>
+          <label for="settings-default-reporter" class="field-label">Default "Reported By" Name</label>
+          <input type="text" id="settings-default-reporter" placeholder="Dr. Resident" />
+          <p class="helper-text">Quick log and new cases are automatically tagged to this doctor.</p>
+        </div>
+
+        <!-- Quick Log MRN Mode & Prefix Settings -->
+        <div class="field-group" style="margin-top: 10px;">
+          <label class="field-label">Quick Log MRN Entry Mode</label>
           <div class="segmented-toggle" id="settings-mrn-mode-toggle" style="margin-bottom: 6px;">
             <div class="toggle-option active" data-mrnmode="prefix" style="padding: 8px; font-size: 12px;">Fixed Prefix (e.g. MRN90214)</div>
             <div class="toggle-option" data-mrnmode="numbers" style="padding: 8px; font-size: 12px;">Numbers Only (e.g. 90214)</div>
           </div>
           <div id="settings-mrn-prefix-wrap">
             <input type="text" id="settings-mrn-prefix" placeholder="e.g. MRN, KMC, AIIMS" />
-            <p class="helper-text">Auto-prepended in Fixed Prefix mode. You can also tap the MRN badge on the form to switch anytime.</p>
+            <p class="helper-text">Auto-prepended in Quick Log Fixed Prefix mode. (Full Log MRN has no prefix and is optional).</p>
           </div>
         </div>
 
-        <!-- Default Reported By -->
-        <div class="field-group" style="margin-top: 10px;">
-          <label for="settings-default-reporter" class="field-label">Default "Reported By" Name</label>
-          <input type="text" id="settings-default-reporter" placeholder="Dr. Resident" />
-          <p class="helper-text">Quick log and new cases are automatically tagged to this doctor.</p>
+        <!-- Google Sheet Cloud Sync Action Box in Settings -->
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 12px; margin-top: 12px;" id="settings-gsheet-sync-box">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+            <div style="font-size: 13px; font-weight: 700; color: #34d399; display: flex; align-items: center; gap: 6px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              Google Sheet Sync
+            </div>
+            <span id="gsheet-sync-counter-badge" style="font-size: 11px; font-weight: 700; color: #a7f3d0;">0 / 0 synced</span>
+          </div>
+          <p class="helper-text" id="gsheet-sync-helper-msg" style="margin-top: 0;">
+            Push your logged studies (only entered details) directly to your Google Sheet.
+          </p>
+          <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <button type="button" class="btn-sm" id="btn-sync-unsynced-gsheet" style="background: #059669; border-color: #10b981; color: #ffffff; flex: 1; justify-content: center; font-weight: 700;">
+              ☁️ Sync Unsynced
+            </button>
+            <button type="button" class="btn-sm" id="btn-sync-all-gsheet" style="border-color: rgba(16, 185, 129, 0.5); color: #34d399; flex: 1; justify-content: center;">
+              🔄 Sync All to GSheet
+            </button>
+          </div>
         </div>
 
         <!-- Frequent Modalities Selector for Quick Log -->
@@ -1960,14 +2401,14 @@
 
         <!-- Entire Library QR Export Section in Settings -->
         <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; margin-top: 12px;">
-          <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">Entire Library QR Sync</div>
-          <p class="helper-text">Beam all your logged studies to a colleague's phone via QR code. Duplicate cases are flagged automatically.</p>
+          <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">Entire Library Share &amp; Sync</div>
+          <p class="helper-text">Export or import studies via QR code or CSV. Duplicate cases are flagged automatically.</p>
           <div style="display: flex; gap: 8px; margin-top: 10px;">
             <button type="button" class="btn-sm" id="btn-export-lib-qr-settings" style="background:#0284c7; border-color:#38bdf8; color:#fff;">
-              📲 Export Entire Library (QR)
+              📲 Export Library (QR)
             </button>
             <button type="button" class="btn-sm" id="btn-open-sync-from-settings">
-              📥 Scan / Import QR
+              📥 Import / Export Hub
             </button>
           </div>
         </div>
@@ -1983,13 +2424,46 @@
           <div id="custom-tags-list" style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px;"></div>
         </div>
 
-        <!-- DROPDOWN 1: Google Sheet Sync & Web App URL -->
-        <details class="settings-accordion" id="accordion-webhook">
+        <!-- Dropdown Options Manager (Add / Delete / Restore items for Diagnosis, Study, Organ, Differentials, Doctors) -->
+        <details class="settings-accordion" id="accordion-dropdown-options">
           <summary>
-            <span>▶ Google Sheet Sync & Web App URL</span>
+            <span>▶ Manage Dropdown Options (Add / Delete)</span>
           </summary>
           <div class="settings-accordion-content">
-            <p class="helper-text" style="margin-bottom: 8px;">Transmits logged cases directly to your Google Sheet spreadsheet.</p>
+            <p class="helper-text" style="margin-top: 0; margin-bottom: 8px;">
+              Add new items or delete unwanted items from any suggestion dropdown. (You can also tap <strong>×</strong> or <strong>+ Add</strong> directly inside any open dropdown).
+            </p>
+            <div class="field-group" style="margin-bottom: 8px;">
+              <label for="settings-dd-category" class="field-label">Dropdown Category</label>
+              <select id="settings-dd-category" style="padding: 9px 12px; font-size: 13px;">
+                <option value="diagnosis">Primary Diagnosis</option>
+                <option value="study">Study Description (Active Modality)</option>
+                <option value="organ">Organ of Interest</option>
+                <option value="differential">Differential Diagnoses</option>
+                <option value="doctor">Reported By / Consultant</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+              <input type="text" id="settings-dd-new-input" placeholder="Type new dropdown option..." style="padding: 8px 12px; font-size: 13px; flex: 1;" />
+              <button type="button" class="btn-sm" id="settings-dd-add-btn" style="background: #0284c7; border-color: #38bdf8; color: #ffffff; flex-shrink: 0;">+ Add</button>
+            </div>
+            <div id="settings-dd-items-list" style="max-height: 155px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 5px; padding: 8px; background: #070b13; border: 1px solid #1e293b; border-radius: 10px;">
+              <!-- Dynamically populated -->
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+              <span id="settings-dd-deleted-count" style="font-size: 11px; color: #64748b;">0 hidden defaults</span>
+              <button type="button" class="btn-sm" id="settings-dd-restore-btn" style="font-size: 11px; padding: 4px 8px;">Restore Deleted Defaults</button>
+            </div>
+          </div>
+        </details>
+
+        <!-- DROPDOWN 1: Google Sheet Web App URL Configuration -->
+        <details class="settings-accordion" id="accordion-webhook">
+          <summary>
+            <span>▶ Google Sheet Web App URL Setup</span>
+          </summary>
+          <div class="settings-accordion-content">
+            <p class="helper-text" style="margin-bottom: 8px;">Paste your deployed Google Apps Script Web App URL to enable automatic &amp; manual Google Sheet syncing.</p>
             <div class="field-group">
               <label for="settings-webhook-url" class="field-label">Google Apps Script Web App URL</label>
               <input type="text" id="settings-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" />
@@ -1998,7 +2472,7 @@
             <div class="button-row" style="margin-top: 10px; justify-content: flex-end;">
               <button type="button" class="btn-sm" id="test-webhook-btn">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                Test Webhook
+                Test Connection
               </button>
             </div>
           </div>
@@ -2007,7 +2481,7 @@
         <!-- DROPDOWN 2: Google Apps Script Backend Code -->
         <details class="settings-accordion" id="accordion-script-code">
           <summary>
-            <span>▶ Google Apps Script Code & Setup</span>
+            <span>▶ Google Apps Script Code &amp; Setup</span>
           </summary>
           <div class="settings-accordion-content">
             <p class="helper-text" style="margin-bottom: 6px;">
@@ -2027,7 +2501,7 @@
         <!-- DROPDOWN 3: Local Cache & Danger Zone (Hidden under Dropdown with Prompt) -->
         <details class="settings-accordion" id="accordion-cache">
           <summary>
-            <span>▶ Local Cache & Storage Options</span>
+            <span>▶ Local Cache &amp; Storage Options</span>
             <span id="cache-count-summary" style="font-size:11px; color:#94a3b8; font-weight:600;">0 cases</span>
           </summary>
           <div class="settings-accordion-content">
@@ -2070,6 +2544,30 @@
       </div>
     </div>
 
+    <!-- ================= MODAL: ADD DROPDOWN OPTION MODAL ================= -->
+    <div class="modal-backdrop" id="add-dropdown-item-modal" role="dialog" aria-modal="true" aria-labelledby="add-dd-item-title">
+      <div class="modal-card" style="max-width: 380px;">
+        <div class="modal-header">
+          <div class="modal-title" id="add-dd-item-title">Add Dropdown Option</div>
+          <button class="icon-btn" id="close-add-dd-item-btn" aria-label="Close modal">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <p class="helper-text" id="add-dd-item-help" style="margin-bottom: 12px;">
+          Enter a new option to save into this dropdown list:
+        </p>
+        <form id="add-dd-item-form" onsubmit="event.preventDefault(); submitAddDropdownOptionModal();">
+          <div class="field-group">
+            <input type="text" id="add-dd-item-input" required placeholder="Type new option..." />
+          </div>
+          <div class="button-row" style="margin-top: 16px; justify-content: flex-end; gap: 8px;">
+            <button type="button" class="btn-sm" id="cancel-add-dd-item-btn" style="padding: 9px 16px;">Cancel</button>
+            <button type="submit" class="btn-sm" style="background: #0284c7; border-color: #38bdf8; color: #ffffff; padding: 9px 20px; font-weight: 700;">+ Add Option</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- ================= MODAL: CASE DETAIL VIEW ================= -->
     <div class="modal-backdrop" id="case-detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title">
       <div class="modal-card">
@@ -2078,9 +2576,15 @@
             <span id="detail-modality-badge" class="modality-tag">CT</span>
             <span id="detail-heading-text">Case Details</span>
           </div>
-          <button class="icon-btn" id="close-detail-btn" aria-label="Close details">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button type="button" class="fav-star-btn" id="detail-fav-btn" title="Toggle Favorite">
+              <span id="detail-fav-icon">☆</span>
+              <span id="detail-fav-label">Favorite</span>
+            </button>
+            <button class="icon-btn" id="close-detail-btn" aria-label="Close details">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
         </div>
 
         <div id="detail-body-content" style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
@@ -2097,7 +2601,7 @@
               📱 QR Share
             </button>
             <button type="button" class="btn-sm" id="detail-complete-btn" style="background: #0284c7; border-color: #38bdf8; display:none;">
-              ✏️ Complete
+              ✏️ Edit / Complete
             </button>
             <button type="button" class="btn-sm" id="close-detail-action-btn">
               Done
@@ -2224,7 +2728,21 @@
           'Subarachnoid Hemorrhage',
           'Intussusception',
           'Distal Radius Fracture',
-          'Neck of Femur Fracture'
+          'Neck of Femur Fracture',
+          'Acute Pancreatitis',
+          'Liver Hemangioma',
+          'Hepatocellular Carcinoma (HCC)',
+          'Renal Cell Carcinoma (RCC)',
+          'Ovarian Dermoid Cyst / Teratoma',
+          'Ectopic Pregnancy',
+          'Pleural Effusion',
+          'Lobar Pneumonia',
+          'Pulmonary Tuberculosis',
+          'Glioblastoma Multiforme (GBM)',
+          'Brain Metastases',
+          'Cerebral Venous Sinus Thrombosis (CVST)',
+          'Rotator Cuff Supraspinatus Tear',
+          'Meniscal Tear (Medial / Lateral)'
         ];
 
         const STANDARD_ORGANS = [
@@ -2232,15 +2750,75 @@
           'Middle Cerebral Artery',
           'Gallbladder',
           'Right Knee',
+          'Left Knee',
           'L4-L5 Disc',
+          'L5-S1 Disc',
+          'Cervical Spine',
           'Right Lobe Liver',
+          'Left Lobe Liver',
+          'Common Bile Duct (CBD)',
           'Left Kidney',
           'Right Kidney',
+          'Ureter',
           'Lungs',
+          'Pleura',
+          'Mediastinum',
           'Brain',
+          'Cerebellum',
+          'Basal Ganglia',
           'Pancreas',
+          'Spleen',
+          'Small Bowel / Ileum',
+          'Colon / Rectum',
           'Thyroid',
-          'Urinary Bladder'
+          'Parotid Gland',
+          'Urinary Bladder',
+          'Prostate',
+          'Uterus',
+          'Right Ovary / Adnexa',
+          'Left Ovary / Adnexa',
+          'Shoulder Joint',
+          'Hip Joint',
+          'Thoracic Aorta',
+          'Abdominal Aorta'
+        ];
+
+        const STANDARD_DIFFERENTIALS = [
+          'Glioblastoma vs Brain Abscess',
+          'High-Grade Glioma',
+          'Solitary Brain Metastasis',
+          'Demyelinating Plaque (MS / ADEM)',
+          'Tuberculoma vs Neurocysticercosis (NCC)',
+          'Herpes Simplex Encephalitis',
+          'Mesenteric Adenitis',
+          'Meckel Diverticulitis',
+          'Epiploic Appendagitis',
+          'Omental Infarction',
+          'Right Ureteric Colic',
+          'Ileocecal Tuberculosis vs Crohn Disease',
+          'Focal Nodular Hyperplasia (FNH)',
+          'Hepatic Adenoma',
+          'Atypical Hemangioma',
+          'Hepatocellular Carcinoma (HCC)',
+          'Intrahepatic Cholangiocarcinoma',
+          'Hypervascular Metastasis',
+          'Renal Cell Carcinoma (RCC)',
+          'Renal Oncocytoma',
+          'Lipid-Poor Angiomyolipoma (AML)',
+          'Hemorrhagic Ovarian Cyst',
+          'Endometrioma (Chocolate Cyst)',
+          'Mature Cystic Teratoma (Dermoid)',
+          'Tubo-Ovarian Abscess',
+          'Fibroadenoma vs Phyllodes Tumor',
+          'Sarcoidosis vs Lymphoma',
+          'Tuberculous Mediastinal Lymphadenopathy',
+          'Septic Pulmonary Emboli',
+          'Fungal Pneumonia (Aspergillosis)',
+          'Cryptogenic Organizing Pneumonia (COP)',
+          'Osteomyelitis vs Ewing Sarcoma',
+          'Giant Cell Tumor (GCT)',
+          'Aneurysmal Bone Cyst (ABC)',
+          'Enchondroma vs Chondrosarcoma'
         ];
 
         // State
@@ -2264,6 +2842,7 @@
 
         // Custom Bullet Modal State ('modality' | 'system')
         let addBulletTargetType = 'modality';
+        let activeDropdownAddContext = null; // { category, selectValueFn, modality }
 
         // Search Filter State
         const searchFilters = {
@@ -2275,7 +2854,8 @@
           study: '',
           diagnosis: '',
           reportedBy: '',
-          status: 'ALL'
+          status: 'ALL',
+          favoritesOnly: false
         };
 
         // DOM Elements
@@ -2292,6 +2872,15 @@
         const confirmModalCancelBtn = document.getElementById('confirm-modal-cancel-btn');
         const confirmModalOkBtn = document.getElementById('confirm-modal-ok-btn');
         let onConfirmActionCallback = null;
+
+        // CSV Export & WhatsApp Share Modal Elements
+        const csvExportModal = document.getElementById('csv-export-modal');
+        const closeCsvExportModalBtn = document.getElementById('close-csv-export-modal-btn');
+        const csvExportSummaryTitle = document.getElementById('csv-export-summary-title');
+        const csvExportCountBadge = document.getElementById('csv-export-count-badge');
+        const btnModalDownloadCsv = document.getElementById('btn-modal-download-csv');
+        const btnModalWhatsappChat = document.getElementById('btn-modal-whatsapp-chat');
+        const btnModalShareCsvFile = document.getElementById('btn-modal-share-csv-file');
 
         // Tabs
         const tabBtnQuick = document.getElementById('tab-btn-quick');
@@ -2326,14 +2915,20 @@
         const quickPendingCount = document.getElementById('quick-pending-count');
         const quickPendingList = document.getElementById('quick-pending-list');
         const quickExpandBtn = document.getElementById('quick-expand-to-full-btn');
+        const quickFavToggleBtn = document.getElementById('quick-fav-toggle-btn');
+        const quickFavIcon = document.getElementById('quick-fav-icon');
+        const quickFavLabel = document.getElementById('quick-fav-label');
+        const quickFieldFavorite = document.getElementById('quick-field-favorite');
+        const quickRadiopaediaLink = document.getElementById('quick-radiopaedia-link');
+        const quickLastLoggedRadiopaedia = document.getElementById('quick-last-logged-radiopaedia');
+        const quickLastLoggedText = document.getElementById('quick-last-logged-text');
+        const quickLastLoggedRpAnchor = document.getElementById('quick-last-logged-rp-anchor');
 
         let isQuickModOverflowOpen = false;
 
         // Full Log Form Elements
         const dateInput = document.getElementById('field-date');
         const mrnInput = document.getElementById('field-mrn');
-        const fullMrnPrefixBadge = document.getElementById('full-mrn-prefix-badge');
-        const fullMrnModeToggle = document.getElementById('full-mrn-mode-toggle');
         const fullMrnDupWarning = document.getElementById('full-mrn-dup-warning');
         const fullMrnDupText = document.getElementById('full-mrn-dup-text');
         const fullMrnDupViewBtn = document.getElementById('full-mrn-dup-view-btn');
@@ -2352,6 +2947,12 @@
         const consultantInput = document.getElementById('field-consultant');
         const confirmationInput = document.getElementById('field-confirmation');
         const statusInput = document.getElementById('field-status');
+        const fullFavToggleBtn = document.getElementById('full-fav-toggle-btn');
+        const fullFavIcon = document.getElementById('full-fav-icon');
+        const fullFavLabel = document.getElementById('full-fav-label');
+        const fullFieldFavorite = document.getElementById('field-favorite');
+        const fullRadiopaediaLink = document.getElementById('full-radiopaedia-link');
+        const fullDiffRadiopaediaLinks = document.getElementById('full-diff-radiopaedia-links');
 
         const editBanner = document.getElementById('edit-case-banner');
         const editBadgeText = document.getElementById('edit-case-badge-text');
@@ -2377,6 +2978,9 @@
         const searchDiagnosis = document.getElementById('search-diagnosis');
         const searchStatus = document.getElementById('search-status');
         const searchResetBtn = document.getElementById('search-reset-btn');
+        const searchFavOnlyBtn = document.getElementById('search-fav-only-btn');
+        const searchFavIcon = document.getElementById('search-fav-icon');
+        const searchFavCount = document.getElementById('search-fav-count');
         const searchResultsCount = document.getElementById('search-results-count');
         const searchResultsList = document.getElementById('search-results-list');
         const searchExportCsvBtn = document.getElementById('search-export-csv-btn');
@@ -2404,6 +3008,25 @@
         const customTagsList = document.getElementById('custom-tags-list');
         const btnExportLibQrSettings = document.getElementById('btn-export-lib-qr-settings');
         const btnOpenSyncFromSettings = document.getElementById('btn-open-sync-from-settings');
+        const gsheetSyncCounterBadge = document.getElementById('gsheet-sync-counter-badge');
+        const gsheetSyncHelperMsg = document.getElementById('gsheet-sync-helper-msg');
+        const btnSyncUnsyncedGsheet = document.getElementById('btn-sync-unsynced-gsheet');
+        const btnSyncAllGsheet = document.getElementById('btn-sync-all-gsheet');
+
+        // Settings Dropdown Options Manager & Add Item Modal
+        const settingsDdCategory = document.getElementById('settings-dd-category');
+        const settingsDdNewInput = document.getElementById('settings-dd-new-input');
+        const settingsDdAddBtn = document.getElementById('settings-dd-add-btn');
+        const settingsDdItemsList = document.getElementById('settings-dd-items-list');
+        const settingsDdDeletedCount = document.getElementById('settings-dd-deleted-count');
+        const settingsDdRestoreBtn = document.getElementById('settings-dd-restore-btn');
+        const addDropdownItemModal = document.getElementById('add-dropdown-item-modal');
+        const addDdItemTitle = document.getElementById('add-dd-item-title');
+        const addDdItemHelp = document.getElementById('add-dd-item-help');
+        const addDdItemForm = document.getElementById('add-dd-item-form');
+        const addDdItemInput = document.getElementById('add-dd-item-input');
+        const closeAddDdItemBtn = document.getElementById('close-add-dd-item-btn');
+        const cancelAddDdItemBtn = document.getElementById('cancel-add-dd-item-btn');
 
         // Add Bullet In-App Modal Elements
         const addBulletModal = document.getElementById('add-bullet-modal');
@@ -2413,10 +3036,15 @@
         const addBulletHelp = document.getElementById('add-bullet-help');
         const addBulletInput = document.getElementById('add-bullet-input');
 
-        // Peer Sync Modal Elements
+        // Share Hub (Export & Import) Modal Elements
         const openPeerSyncBtn = document.getElementById('open-peer-sync-btn');
         const closePeerSyncBtn = document.getElementById('close-peer-sync-btn');
         const peerSyncModal = document.getElementById('peer-sync-modal');
+        const shareHubCaseCount = document.getElementById('share-hub-case-count');
+        const btnHubExportQr = document.getElementById('btn-hub-export-qr');
+        const btnHubCopyCode = document.getElementById('btn-hub-copy-code');
+        const btnHubExportCsv = document.getElementById('btn-hub-export-csv');
+        const btnHubShareWhatsapp = document.getElementById('btn-hub-share-whatsapp');
         const tabBtnQrScan = document.getElementById('tab-btn-qr-scan');
         const tabBtnCsvImport = document.getElementById('tab-btn-csv-import');
         const tabBtnPasteSync = document.getElementById('tab-btn-paste-sync');
@@ -2473,6 +3101,9 @@
         const detailBodyContent = document.getElementById('detail-body-content');
         const detailModalityBadge = document.getElementById('detail-modality-badge');
         const detailHeadingText = document.getElementById('detail-heading-text');
+        const detailFavBtn = document.getElementById('detail-fav-btn');
+        const detailFavIcon = document.getElementById('detail-fav-icon');
+        const detailFavLabel = document.getElementById('detail-fav-label');
 
         // Helper: Date string YYYY-MM-DD
         function getTodayString() {
@@ -2481,6 +3112,95 @@
           const month = String(now.getMonth() + 1).padStart(2, '0');
           const day = String(now.getDate()).padStart(2, '0');
           return `${year}-${month}-${day}`;
+        }
+
+        // Haptic Vibration Feedback Helper
+        function triggerHaptic(type = 'success') {
+          try {
+            if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+              if (type === 'qr_scanned') {
+                navigator.vibrate([70, 40, 120]);
+              } else if (type === 'case_logged') {
+                navigator.vibrate([50, 45, 95]);
+              } else if (type === 'tap') {
+                navigator.vibrate(25);
+              } else {
+                navigator.vibrate(50);
+              }
+            }
+          } catch (e) {
+            // Ignore on unsupported devices
+          }
+        }
+
+        // Radiopaedia URL Builder
+        function getRadiopaediaUrl(diagnosisText) {
+          const clean = String(diagnosisText || '').trim();
+          if (!clean) return 'https://radiopaedia.org/';
+          return `https://radiopaedia.org/search?q=${encodeURIComponent(clean)}&scope=articles`;
+        }
+
+        function updateLiveRadiopaediaLinks() {
+          if (quickPrimaryDiag && quickRadiopaediaLink) {
+            const val = quickPrimaryDiag.value.trim();
+            if (val.length >= 2) {
+              quickRadiopaediaLink.href = getRadiopaediaUrl(val);
+              quickRadiopaediaLink.title = `Look up "${val}" on Radiopaedia.org`;
+              quickRadiopaediaLink.style.display = 'inline-flex';
+            } else {
+              quickRadiopaediaLink.style.display = 'none';
+            }
+          }
+          if (primaryDiagInput && fullRadiopaediaLink) {
+            const val = primaryDiagInput.value.trim();
+            if (val.length >= 2) {
+              fullRadiopaediaLink.href = getRadiopaediaUrl(val);
+              fullRadiopaediaLink.title = `Look up "${val}" on Radiopaedia.org`;
+              fullRadiopaediaLink.style.display = 'inline-flex';
+            } else {
+              fullRadiopaediaLink.style.display = 'none';
+            }
+          }
+          if (diffInput && fullDiffRadiopaediaLinks) {
+            const raw = diffInput.value || '';
+            const terms = raw.split(',').map(s => s.trim()).filter(s => s.length >= 2);
+            if (terms.length > 0) {
+              fullDiffRadiopaediaLinks.innerHTML = terms.map(t => `
+                <a href="${escapeHtml(getRadiopaediaUrl(t))}" target="_blank" rel="noopener noreferrer" class="radiopaedia-link" title="Look up ${escapeHtml(t)} on Radiopaedia">
+                  <span>📖 ${escapeHtml(t.length > 22 ? t.slice(0, 20) + '…' : t)}</span>
+                  <span>↗</span>
+                </a>
+              `).join('');
+              fullDiffRadiopaediaLinks.style.display = 'flex';
+            } else {
+              fullDiffRadiopaediaLinks.innerHTML = '';
+              fullDiffRadiopaediaLinks.style.display = 'none';
+            }
+          }
+        }
+
+        function setFavoriteButtonState(btnEl, iconEl, labelEl, hiddenInputEl, isFav) {
+          if (hiddenInputEl) hiddenInputEl.value = isFav ? '1' : '0';
+          if (!btnEl || !iconEl) return;
+          btnEl.classList.toggle('active', !!isFav);
+          iconEl.textContent = isFav ? '★' : '☆';
+          if (labelEl) labelEl.textContent = isFav ? 'Favorited' : 'Favorite';
+        }
+
+        function toggleCaseFavoriteById(caseId, e) {
+          if (e) e.stopPropagation();
+          const cases = loadCases();
+          const idx = cases.findIndex(c => c.id === caseId);
+          if (idx === -1) return;
+          cases[idx].isFavorite = !cases[idx].isFavorite;
+          const nowFav = !!cases[idx].isFavorite;
+          triggerHaptic('tap');
+          saveCases(cases);
+          if (currentActiveCase && currentActiveCase.id === caseId) {
+            currentActiveCase.isFavorite = nowFav;
+            setFavoriteButtonState(detailFavBtn, detailFavIcon, detailFavLabel, null, nowFav);
+          }
+          showToast(nowFav ? `★ Tagged ${cases[idx].mrn || 'case'} as Favorite` : `Removed ${cases[idx].mrn || 'case'} from Favorites`);
         }
 
         // ================= IN-APP CONFIRMATION MODAL HELPER =================
@@ -2521,12 +3241,32 @@
             defaultReporter: 'Dr. Resident',
             defaultMrnPrefix: 'MRN',
             mrnNumbersOnly: false,
-            frequentModalities: ['CT', 'MRI', 'USG']
+            frequentModalities: ['CT', 'MRI', 'USG'],
+            customDiagnoses: [],
+            customDifferentials: [],
+            customOrgans: [],
+            customDoctors: [],
+            customStudies: {},
+            deletedDropdownItems: {
+              diagnosis: [],
+              study: [],
+              organ: [],
+              differential: [],
+              doctor: []
+            }
           };
           try {
             const raw = localStorage.getItem(STORAGE_CONFIG);
             if (!raw) return defaults;
             const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed.customDoctors)) parsed.customDoctors = [];
+            if (!parsed.deletedDropdownItems || typeof parsed.deletedDropdownItems !== 'object') {
+              parsed.deletedDropdownItems = { diagnosis: [], study: [], organ: [], differential: [], doctor: [] };
+            } else {
+              ['diagnosis', 'study', 'organ', 'differential', 'doctor'].forEach(k => {
+                if (!Array.isArray(parsed.deletedDropdownItems[k])) parsed.deletedDropdownItems[k] = [];
+              });
+            }
             return {
               ...defaults,
               ...parsed,
@@ -2545,6 +3285,150 @@
           updatePrefixBadges();
           updateQuickReporterUI();
           renderAllModalityChips();
+        }
+
+        function isDropdownItemDeleted(category, label) {
+          if (!category || !label) return false;
+          const cfg = loadConfig();
+          const deleted = (cfg.deletedDropdownItems && cfg.deletedDropdownItems[category]) || [];
+          const clean = String(label).trim().toLowerCase();
+          return deleted.some(item => String(item).trim().toLowerCase() === clean);
+        }
+
+        function addDropdownOptionToConfig(category, rawVal, targetModality = null) {
+          const clean = String(rawVal || '').trim();
+          if (!clean) return false;
+          const cfg = loadConfig();
+
+          // Remove from deleted list if previously deleted
+          if (cfg.deletedDropdownItems && Array.isArray(cfg.deletedDropdownItems[category])) {
+            cfg.deletedDropdownItems[category] = cfg.deletedDropdownItems[category].filter(
+              item => String(item).trim().toLowerCase() !== clean.toLowerCase()
+            );
+          }
+
+          if (category === 'diagnosis') {
+            cfg.customDiagnoses = Array.from(new Set([clean, ...(cfg.customDiagnoses || [])]));
+          } else if (category === 'differential') {
+            cfg.customDifferentials = Array.from(new Set([clean, ...(cfg.customDifferentials || [])]));
+          } else if (category === 'organ') {
+            cfg.customOrgans = Array.from(new Set([clean, ...(cfg.customOrgans || [])]));
+          } else if (category === 'doctor') {
+            cfg.customDoctors = Array.from(new Set([clean, ...(cfg.customDoctors || [])]));
+          } else if (category === 'study') {
+            const mod = targetModality || (modalityInput && modalityInput.value) || 'CT';
+            cfg.customStudies = cfg.customStudies || {};
+            cfg.customStudies[mod] = Array.from(new Set([clean, ...(cfg.customStudies[mod] || [])]));
+          }
+
+          saveConfig(cfg);
+          triggerHaptic('tap');
+          renderSettingsDropdownManager();
+          return true;
+        }
+
+        function deleteDropdownOptionFromConfig(category, rawVal) {
+          const clean = String(rawVal || '').trim();
+          if (!clean || !category) return;
+          const cfg = loadConfig();
+
+          if (category === 'diagnosis' && Array.isArray(cfg.customDiagnoses)) {
+            cfg.customDiagnoses = cfg.customDiagnoses.filter(x => x.toLowerCase() !== clean.toLowerCase());
+          } else if (category === 'differential' && Array.isArray(cfg.customDifferentials)) {
+            cfg.customDifferentials = cfg.customDifferentials.filter(x => x.toLowerCase() !== clean.toLowerCase());
+          } else if (category === 'organ' && Array.isArray(cfg.customOrgans)) {
+            cfg.customOrgans = cfg.customOrgans.filter(x => x.toLowerCase() !== clean.toLowerCase());
+          } else if (category === 'doctor' && Array.isArray(cfg.customDoctors)) {
+            cfg.customDoctors = cfg.customDoctors.filter(x => x.toLowerCase() !== clean.toLowerCase());
+          } else if (category === 'study' && cfg.customStudies) {
+            Object.keys(cfg.customStudies).forEach(m => {
+              if (Array.isArray(cfg.customStudies[m])) {
+                cfg.customStudies[m] = cfg.customStudies[m].filter(x => x.toLowerCase() !== clean.toLowerCase());
+              }
+            });
+          }
+
+          cfg.deletedDropdownItems = cfg.deletedDropdownItems || { diagnosis: [], study: [], organ: [], differential: [], doctor: [] };
+          if (!Array.isArray(cfg.deletedDropdownItems[category])) {
+            cfg.deletedDropdownItems[category] = [];
+          }
+          if (!cfg.deletedDropdownItems[category].some(x => x.toLowerCase() === clean.toLowerCase())) {
+            cfg.deletedDropdownItems[category].push(clean);
+          }
+
+          saveConfig(cfg);
+          triggerHaptic('tap');
+          renderSettingsDropdownManager();
+          showToast(`Removed "${clean}" from dropdown options`);
+        }
+
+        function openAddDropdownOptionModal(category, selectValueFn = null, initialText = '') {
+          if (!addDropdownItemModal || !addDdItemInput) return;
+          const mod = (modalityInput && modalityInput.value) || 'CT';
+          activeDropdownAddContext = { category, selectValueFn, modality: mod };
+          const titles = {
+            diagnosis: 'Add Primary Diagnosis Option',
+            study: `Add ${mod} Study Description`,
+            organ: 'Add Organ of Interest',
+            differential: 'Add Differential Diagnosis',
+            doctor: 'Add Resident / Consultant Name'
+          };
+          if (addDdItemTitle) addDdItemTitle.textContent = titles[category] || 'Add Dropdown Option';
+          if (addDdItemHelp) addDdItemHelp.textContent = 'This item will be saved to your dropdown suggestions for future cases.';
+          addDdItemInput.value = initialText || '';
+          addDropdownItemModal.classList.add('show');
+          setTimeout(() => addDdItemInput.focus(), 60);
+        }
+
+        function renderSettingsDropdownManager() {
+          if (!settingsDdCategory || !settingsDdItemsList) return;
+          const category = settingsDdCategory.value || 'diagnosis';
+          let items = [];
+          if (category === 'diagnosis') items = getDiagnosisSuggestions();
+          else if (category === 'study') items = getStudySuggestionsForActiveModality(false);
+          else if (category === 'organ') items = getOrganSuggestions();
+          else if (category === 'differential') items = getDifferentialSuggestions();
+          else if (category === 'doctor') items = getDoctorSuggestions();
+
+          const cfg = loadConfig();
+          const deletedList = (cfg.deletedDropdownItems && cfg.deletedDropdownItems[category]) || [];
+          if (settingsDdDeletedCount) {
+            settingsDdDeletedCount.textContent = `${items.length} active options • ${deletedList.length} deleted`;
+          }
+          if (settingsDdRestoreBtn) {
+            settingsDdRestoreBtn.style.display = deletedList.length > 0 ? 'inline-flex' : 'none';
+          }
+
+          if (items.length === 0) {
+            settingsDdItemsList.innerHTML = `<div style="font-size:11px; color:#64748b; padding:8px; text-align:center;">No options in this dropdown. Add one above.</div>`;
+            return;
+          }
+
+          settingsDdItemsList.innerHTML = items.slice(0, 80).map(item => `
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:5px 8px; background:#0b0f17; border:1px solid #1e293b; border-radius:6px;">
+              <div style="min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; color:#e2e8f0;">
+                ${escapeHtml(item.label)}
+                ${item.badge ? `<span style="font-size:10px; color:#38bdf8; margin-left:6px;">${escapeHtml(item.badge)}</span>` : ''}
+              </div>
+              <button
+                type="button"
+                data-dd-del-cat="${escapeHtml(category)}"
+                data-dd-del-label="${escapeHtml(item.label)}"
+                style="background:rgba(244,63,94,0.12); border:1px solid rgba(244,63,94,0.3); color:#fb7185; border-radius:5px; padding:2px 7px; font-size:11px; font-weight:700; cursor:pointer; flex-shrink:0;"
+                title="Remove from dropdown"
+              >
+                × Delete
+              </button>
+            </div>
+          `).join('');
+
+          settingsDdItemsList.querySelectorAll('[data-dd-del-label]').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const cat = btn.getAttribute('data-dd-del-cat');
+              const lbl = btn.getAttribute('data-dd-del-label');
+              deleteDropdownOptionFromConfig(cat, lbl);
+            });
+          });
         }
 
         function loadAppsScriptTemplate() {
@@ -2602,46 +3486,33 @@
           return [...BASE_SYSTEMS, ...loadCustomSystems()];
         }
 
+        // Quick Log uses the prefix badge; Full Log has no prefix; MRN is mandatory in both
         function updatePrefixBadges() {
           const cfg = loadConfig();
           const isNumbersOnly = !!cfg.mrnNumbersOnly;
           const p = (cfg.defaultMrnPrefix !== undefined) ? cfg.defaultMrnPrefix.trim() : 'MRN';
 
           if (isNumbersOnly || !p) {
-            [quickMrnPrefixBadge, fullMrnPrefixBadge].forEach(b => {
-              if (b) {
-                b.textContent = '123';
-                b.classList.add('numbers-only');
-                b.title = 'Numbers-Only mode active (Tap to switch to Fixed Prefix)';
-              }
-            });
+            if (quickMrnPrefixBadge) {
+              quickMrnPrefixBadge.textContent = '123';
+              quickMrnPrefixBadge.classList.add('numbers-only');
+              quickMrnPrefixBadge.title = 'Numbers-Only mode active (Tap to switch to Fixed Prefix)';
+            }
             if (quickMrnModeToggle) quickMrnModeToggle.textContent = 'Use Fixed Prefix (' + (p || 'MRN') + ')';
-            if (fullMrnModeToggle) fullMrnModeToggle.textContent = 'Use Prefix (' + (p || 'MRN') + ')';
             if (quickMrn) {
               quickMrn.setAttribute('inputmode', 'numeric');
-              quickMrn.placeholder = 'Optional numbers (e.g. 90214)';
-            }
-            if (mrnInput) {
-              mrnInput.setAttribute('inputmode', 'numeric');
-              mrnInput.placeholder = 'Optional numbers (e.g. 90214)';
+              quickMrn.placeholder = 'Enter numbers (e.g. 90214)';
             }
           } else {
-            [quickMrnPrefixBadge, fullMrnPrefixBadge].forEach(b => {
-              if (b) {
-                b.textContent = p;
-                b.classList.remove('numbers-only');
-                b.title = 'Fixed Prefix mode active (Tap to switch to Numbers-Only)';
-              }
-            });
+            if (quickMrnPrefixBadge) {
+              quickMrnPrefixBadge.textContent = p;
+              quickMrnPrefixBadge.classList.remove('numbers-only');
+              quickMrnPrefixBadge.title = 'Fixed Prefix mode active (Tap to switch to Numbers-Only)';
+            }
             if (quickMrnModeToggle) quickMrnModeToggle.textContent = 'Numbers Only Mode';
-            if (fullMrnModeToggle) fullMrnModeToggle.textContent = 'Numbers Only';
             if (quickMrn) {
               quickMrn.setAttribute('inputmode', 'text');
-              quickMrn.placeholder = 'Optional ID (e.g. 90214)';
-            }
-            if (mrnInput) {
-              mrnInput.setAttribute('inputmode', 'text');
-              mrnInput.placeholder = 'Optional ID (e.g. 90214)';
+              quickMrn.placeholder = 'Enter ID or numbers (e.g. 90214)';
             }
           }
         }
@@ -2651,11 +3522,10 @@
           cfg.mrnNumbersOnly = !cfg.mrnNumbersOnly;
           saveConfig(cfg);
           checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
-          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId);
-          showToast(cfg.mrnNumbersOnly ? 'MRN set to Numbers-Only mode' : `MRN set to Fixed Prefix (${cfg.defaultMrnPrefix || 'MRN'})`);
+          showToast(cfg.mrnNumbersOnly ? 'Quick Log MRN set to Numbers-Only mode' : `Quick Log MRN set to Fixed Prefix (${cfg.defaultMrnPrefix || 'MRN'})`);
         }
 
-        // Auto-prepends prefix unless Numbers-Only mode is active or input is empty
+        // Auto-prepends prefix in Quick Log unless Numbers-Only mode is active or input is empty
         function formatMrnWithPrefix(rawVal) {
           if (!rawVal || !rawVal.trim()) return '';
           let trimmed = rawVal.trim().toUpperCase();
@@ -2668,10 +3538,10 @@
         }
 
         // ================= LIVE DUPLICATE MRN DETECTION WHILE ENTERING =================
-        function findDuplicateCaseByMrn(rawInputVal, excludeCaseId = null) {
+        function findDuplicateCaseByMrn(rawInputVal, excludeCaseId = null, usePrefix = true) {
           if (!rawInputVal || !rawInputVal.trim()) return null;
           const rawClean = rawInputVal.trim().toUpperCase();
-          const formattedClean = formatMrnWithPrefix(rawClean).toUpperCase();
+          const formattedClean = usePrefix ? formatMrnWithPrefix(rawClean).toUpperCase() : rawClean;
           const cfg = loadConfig();
           const prefix = (cfg.defaultMrnPrefix || 'MRN').trim().toUpperCase();
           const strippedClean = (prefix && rawClean.startsWith(prefix)) ? rawClean.slice(prefix.length) : rawClean;
@@ -2686,9 +3556,9 @@
           }) || null;
         }
 
-        function checkLiveDuplicateMrn(inputEl, warningBox, warningTextEl, viewBtnEl, excludeCaseId = null) {
+        function checkLiveDuplicateMrn(inputEl, warningBox, warningTextEl, viewBtnEl, excludeCaseId = null, usePrefix = true) {
           if (!inputEl || !warningBox) return;
-          const dupCase = findDuplicateCaseByMrn(inputEl.value, excludeCaseId);
+          const dupCase = findDuplicateCaseByMrn(inputEl.value, excludeCaseId, usePrefix);
           if (dupCase) {
             inputEl.classList.add('input-dup-alert');
             warningTextEl.innerHTML = `⚠️ <strong>Duplicate MRN (${escapeHtml(dupCase.mrn)})</strong>: Logged ${dupCase.date || 'earlier'} (${dupCase.modality} • ${escapeHtml(dupCase.primaryDiagnosis || 'Study')})`;
@@ -2704,12 +3574,12 @@
 
         if (quickMrn) {
           quickMrn.addEventListener('input', () => {
-            checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
+            checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null, true);
           });
         }
         if (mrnInput) {
           mrnInput.addEventListener('input', () => {
-            checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId);
+            checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId, false);
           });
         }
 
@@ -2734,7 +3604,9 @@
                 status: 'Completed',
                 reportedBy: 'Dr. Resident',
                 checkedBy: 'Dr. Consultant',
-                confirmationFollowup: 'CT Angiography confirmed M1 cutoff'
+                confirmationFollowup: 'CT Angiography confirmed M1 cutoff. Classic hyperdense MCA sign.',
+                isFavorite: true,
+                syncedToSheet: false
               };
               localStorage.setItem(STORAGE_CASES, JSON.stringify([sampleCase]));
               return [sampleCase];
@@ -2747,7 +3619,6 @@
 
         function saveCases(cases) {
           localStorage.setItem(STORAGE_CASES, JSON.stringify(cases));
-          renderDiagnosisDatalist();
           renderAllViews();
         }
 
@@ -2777,15 +3648,36 @@
 
         function updateSyncIndicator() {
           const cfg = loadConfig();
+          const cases = loadCases();
+          const syncedCount = cases.filter(c => !!c.syncedToSheet).length;
+
+          if (gsheetSyncCounterBadge) {
+            gsheetSyncCounterBadge.textContent = `${syncedCount} / ${cases.length} synced`;
+          }
+
           if (cfg.webhookUrl && cfg.webhookUrl.trim().length > 10) {
             syncDot.classList.add('connected');
             syncStatusText.textContent = 'Sync ON';
             syncStatusText.style.color = '#34d399';
+            if (gsheetSyncHelperMsg) {
+              gsheetSyncHelperMsg.textContent = 'Google Sheet Web App connected. Sync unsynced or all studies anytime.';
+            }
           } else {
             syncDot.classList.remove('connected');
             syncStatusText.textContent = 'Local';
             syncStatusText.style.color = '#94a3b8';
+            if (gsheetSyncHelperMsg) {
+              gsheetSyncHelperMsg.textContent = 'Set your Google Apps Script Web App URL below to sync studies to Google Sheets.';
+            }
           }
+        }
+
+        const syncPill = document.getElementById('sync-pill');
+        if (syncPill) {
+          syncPill.style.cursor = 'pointer';
+          syncPill.addEventListener('click', () => {
+            openSettingsBtn.click();
+          });
         }
 
         // ================= TAB SWITCHING =================
@@ -2821,8 +3713,8 @@
         tabBtnFull.addEventListener('click', () => switchTab('tab-full'));
         tabBtnSearch.addEventListener('click', () => switchTab('tab-search'));
 
-        // Prefix badge and mode buttons toggle between Fixed Prefix & Numbers Only
-        [quickMrnPrefixBadge, fullMrnPrefixBadge, quickMrnModeToggle, fullMrnModeToggle].forEach(el => {
+        // Prefix badge and mode buttons in Quick Log toggle between Fixed Prefix & Numbers Only
+        [quickMrnPrefixBadge, quickMrnModeToggle].forEach(el => {
           if (el) {
             el.addEventListener('click', toggleMrnEntryMode);
           }
@@ -2841,8 +3733,55 @@
           });
         }
 
+        // Favorite Toggle Buttons in Quick Log, Full Log & Case Detail Modal
+        if (quickFavToggleBtn) {
+          quickFavToggleBtn.addEventListener('click', () => {
+            const cur = quickFieldFavorite && quickFieldFavorite.value === '1';
+            setFavoriteButtonState(quickFavToggleBtn, quickFavIcon, quickFavLabel, quickFieldFavorite, !cur);
+            triggerHaptic('tap');
+          });
+        }
+
+        if (fullFavToggleBtn) {
+          fullFavToggleBtn.addEventListener('click', () => {
+            const cur = fullFieldFavorite && fullFieldFavorite.value === '1';
+            setFavoriteButtonState(fullFavToggleBtn, fullFavIcon, fullFavLabel, fullFieldFavorite, !cur);
+            triggerHaptic('tap');
+          });
+        }
+
+        if (detailFavBtn) {
+          detailFavBtn.addEventListener('click', (e) => {
+            if (currentActiveCase && currentActiveCase.id) {
+              toggleCaseFavoriteById(currentActiveCase.id, e);
+            }
+          });
+        }
+
+        // Live Radiopaedia Link Listeners
+        if (quickPrimaryDiag) {
+          quickPrimaryDiag.addEventListener('input', updateLiveRadiopaediaLinks);
+        }
+        if (primaryDiagInput) {
+          primaryDiagInput.addEventListener('input', updateLiveRadiopaediaLinks);
+        }
+        if (diffInput) {
+          diffInput.addEventListener('input', updateLiveRadiopaediaLinks);
+        }
+
+        // Quick-insert Study Notes / Confirmation chips in Full Log
+        document.querySelectorAll('[data-note-chip]').forEach(chip => {
+          chip.addEventListener('click', () => {
+            if (!confirmationInput) return;
+            const textToInsert = chip.getAttribute('data-note-chip') || '';
+            const cur = confirmationInput.value.trim();
+            confirmationInput.value = cur ? `${cur}\n${textToInsert}` : textToInsert;
+            triggerHaptic('tap');
+            confirmationInput.focus();
+          });
+        });
+
         // ================= BOTTOM DOCK CONTENT =================
-        // Log as Done placed between Clear and Quick Log, with "Are you sure" confirmation dialog!
         function renderDockForQuick() {
           dockActionInner.innerHTML = `
             <button type="button" class="btn-secondary" id="clear-quick-btn" title="Clear inputs" style="padding: 12px 13px; font-size: 13px;">
@@ -2861,18 +3800,25 @@
           document.getElementById('clear-quick-btn').addEventListener('click', () => {
             quickMrn.value = '';
             quickPrimaryDiag.value = '';
-            checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
+            setFavoriteButtonState(quickFavToggleBtn, quickFavIcon, quickFavLabel, quickFieldFavorite, false);
+            updateLiveRadiopaediaLinks();
+            checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null, true);
             quickMrn.focus();
           });
           document.getElementById('dock-quick-done').addEventListener('click', () => {
+            const rawMrn = quickMrn.value.trim();
+            if (!rawMrn) {
+              showToast('Please enter Institute ID / MRN first', true);
+              quickMrn.focus();
+              return;
+            }
             const diagnosis = quickPrimaryDiag.value.trim();
             if (!diagnosis) {
               showToast('Please enter a Primary Diagnosis first', true);
               quickPrimaryDiag.focus();
               return;
             }
-            const rawMrn = quickMrn.value.trim();
-            const mrnPreview = rawMrn ? formatMrnWithPrefix(rawMrn) : 'No MRN';
+            const mrnPreview = formatMrnWithPrefix(rawMrn);
             const mod = quickFieldModality.value || 'CT';
             showConfirmDialog(
               'Log Case as Done?',
@@ -2919,7 +3865,7 @@
             </button>
             <button type="button" class="btn-primary" id="search-dock-export">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Export Filtered CSV
+              Download Filtered CSV / WhatsApp
             </button>
           `;
           document.getElementById('search-dock-reset').addEventListener('click', resetSearchFilters);
@@ -3007,7 +3953,6 @@
           const primaryMods = mods.filter(m => freqSet.has(m));
           const overflowMods = mods.filter(m => !freqSet.has(m));
 
-          // Ensure at least 1 primary modality
           if (primaryMods.length === 0 && mods.length > 0) {
             primaryMods.push(mods[0]);
           }
@@ -3064,7 +4009,6 @@
               quickModalityOverflow.appendChild(btn);
             });
 
-            // Inline '+ Add' Modality button inside the overflow drawer
             const addQuickModBtn = document.createElement('button');
             addQuickModBtn.type = 'button';
             addQuickModBtn.className = 'quick-mod-btn';
@@ -3164,9 +4108,9 @@
 
         function renderAllSystemChips() {
           const systems = getOrganSystems();
-          const currentSys = systemInput.value || 'CNS';
+          const currentSys = systemInput.value || '';
 
-          // 1. Full Log Organ System Chips
+          // 1. Full Log Organ System Chips (Optional: tap to select, tap again to clear)
           fullSystemChips.innerHTML = '';
           systems.forEach(sys => {
             const btn = document.createElement('button');
@@ -3175,9 +4119,13 @@
             btn.dataset.sys = sys;
             btn.textContent = sys;
             btn.addEventListener('click', () => {
-              systemInput.value = sys;
+              if (systemInput.value === sys) {
+                systemInput.value = '';
+              } else {
+                systemInput.value = sys;
+              }
               document.querySelectorAll('#full-system-chips .chip-btn').forEach(b => {
-                b.classList.toggle('active', b.dataset.sys === sys);
+                b.classList.toggle('active', b.dataset.sys === systemInput.value);
               });
               updateRelevantStudyProtocols();
               if (navigator.vibrate) try { navigator.vibrate(20); } catch (e) {}
@@ -3269,83 +4217,425 @@
         btnAddCustomModality.addEventListener('click', () => openAddBulletModal('modality'));
         btnAddCustomSystem.addEventListener('click', () => openAddBulletModal('system'));
 
-        // ================= STUDY PROTOCOLS STRICT FILTERING =================
-        function updateRelevantStudyProtocols() {
+        // ================= CUSTOM RELIABLE AUTOCOMPLETE DROPDOWN ENGINE =================
+        function getStudySuggestionsForActiveModality(forSearch = false) {
+          const cases = loadCases();
+          const cfg = loadConfig();
+          if (forSearch) {
+            const allSet = new Set();
+            if (cfg.customStudies) {
+              Object.keys(cfg.customStudies).forEach(m => {
+                (cfg.customStudies[m] || []).forEach(item => allSet.add(item));
+              });
+            }
+            Object.keys(STUDY_MATRIX).forEach(m => {
+              Object.keys(STUDY_MATRIX[m]).forEach(s => {
+                STUDY_MATRIX[m][s].forEach(item => allSet.add(item));
+              });
+            });
+            cases.forEach(c => {
+              if (c.studyDescription && c.studyDescription.trim()) allSet.add(c.studyDescription.trim());
+            });
+            return Array.from(allSet)
+              .filter(label => !isDropdownItemDeleted('study', label))
+              .map(label => ({ label, badge: '' }));
+          }
+
           const mod = modalityInput.value || 'CT';
-          const sys = systemInput.value || 'CNS';
+          const sys = systemInput.value || '';
+          const results = [];
+          const seen = new Set();
 
-          studyProtocolHint.textContent = `Strictly ${mod} (${sys}) studies`;
+          // 1. Custom saved studies for this modality
+          if (cfg.customStudies && Array.isArray(cfg.customStudies[mod])) {
+            cfg.customStudies[mod].forEach(st => {
+              if (!seen.has(st) && !isDropdownItemDeleted('study', st)) {
+                seen.add(st);
+                results.push({ label: st, badge: 'Saved' });
+              }
+            });
+          }
 
-          let activeSystemStudies = (STUDY_MATRIX[mod] && STUDY_MATRIX[mod][sys]) ? STUDY_MATRIX[mod][sys] : [];
-          let otherModalityStudies = [];
+          // 2. Active Organ System studies for this modality
+          if (sys && STUDY_MATRIX[mod] && STUDY_MATRIX[mod][sys]) {
+            STUDY_MATRIX[mod][sys].forEach(st => {
+              if (!seen.has(st) && !isDropdownItemDeleted('study', st)) {
+                seen.add(st);
+                results.push({ label: st, badge: `${mod} • ${sys}` });
+              }
+            });
+          }
 
+          // 3. Other Organ Systems for this modality
           if (STUDY_MATRIX[mod]) {
             Object.keys(STUDY_MATRIX[mod]).forEach(k => {
               if (k !== sys) {
-                STUDY_MATRIX[mod][k].forEach(s => {
-                  if (!otherModalityStudies.includes(s) && !activeSystemStudies.includes(s)) {
-                    otherModalityStudies.push(s);
+                STUDY_MATRIX[mod][k].forEach(st => {
+                  if (!seen.has(st) && !isDropdownItemDeleted('study', st)) {
+                    seen.add(st);
+                    results.push({ label: st, badge: `${mod} • ${k}` });
                   }
                 });
               }
             });
           }
 
-          const combined = Array.from(new Set([...activeSystemStudies, ...otherModalityStudies]));
-          const datalist = document.getElementById('study-suggestions');
-          datalist.innerHTML = '';
-          combined.forEach(study => {
-            const opt = document.createElement('option');
-            opt.value = study;
-            datalist.appendChild(opt);
+          // 4. Previously logged studies for this modality
+          cases.forEach(c => {
+            if ((c.modality || '').toUpperCase() === mod && c.studyDescription && c.studyDescription.trim()) {
+              const st = c.studyDescription.trim();
+              if (!seen.has(st) && !isDropdownItemDeleted('study', st)) {
+                seen.add(st);
+                results.push({ label: st, badge: mod });
+              }
+            }
+          });
+
+          return results;
+        }
+
+        function getDiagnosisSuggestions() {
+          const cases = loadCases();
+          const cfg = loadConfig();
+          const customSet = new Set(cfg.customDiagnoses || []);
+          const unique = new Set([...(cfg.customDiagnoses || []), ...STANDARD_DIAGNOSES]);
+          cases.forEach(c => {
+            if (c.primaryDiagnosis && c.primaryDiagnosis.trim()) {
+              unique.add(c.primaryDiagnosis.trim());
+            }
+          });
+          return Array.from(unique)
+            .filter(label => !isDropdownItemDeleted('diagnosis', label))
+            .map(label => ({ label, badge: customSet.has(label) ? 'Saved' : '' }));
+        }
+
+        function getDifferentialSuggestions() {
+          const cases = loadCases();
+          const cfg = loadConfig();
+          const unique = new Set([
+            ...(cfg.customDifferentials || []),
+            ...(cfg.customDiagnoses || []),
+            ...STANDARD_DIFFERENTIALS,
+            ...STANDARD_DIAGNOSES
+          ]);
+          cases.forEach(c => {
+            if (c.differentialDiagnoses && c.differentialDiagnoses.trim()) {
+              unique.add(c.differentialDiagnoses.trim());
+              c.differentialDiagnoses.split(',').forEach(part => {
+                const p = part.trim();
+                if (p.length >= 3) unique.add(p);
+              });
+            }
+            if (c.primaryDiagnosis && c.primaryDiagnosis.trim()) {
+              unique.add(c.primaryDiagnosis.trim());
+            }
+          });
+          return Array.from(unique)
+            .filter(label => !isDropdownItemDeleted('differential', label))
+            .map(label => ({ label, badge: 'Diff' }));
+        }
+
+        function getOrganSuggestions() {
+          const cases = loadCases();
+          const cfg = loadConfig();
+          const customSet = new Set(cfg.customOrgans || []);
+          const unique = new Set([...(cfg.customOrgans || []), ...STANDARD_ORGANS]);
+          cases.forEach(c => {
+            if (c.organOfInterest && c.organOfInterest.trim()) {
+              unique.add(c.organOfInterest.trim());
+            }
+          });
+          return Array.from(unique)
+            .filter(label => !isDropdownItemDeleted('organ', label))
+            .map(label => ({ label, badge: customSet.has(label) ? 'Saved' : '' }));
+        }
+
+        function getDoctorSuggestions() {
+          const cases = loadCases();
+          const cfg = loadConfig();
+          const unique = new Set([
+            ...(cfg.customDoctors || []),
+            'Dr. Resident',
+            'Dr. Senior Resident',
+            'Dr. Consultant'
+          ]);
+          if (cfg.defaultReporter && cfg.defaultReporter.trim()) unique.add(cfg.defaultReporter.trim());
+          cases.forEach(c => {
+            if (c.reportedBy && c.reportedBy.trim()) unique.add(c.reportedBy.trim());
+            if (c.checkedBy && c.checkedBy.trim()) unique.add(c.checkedBy.trim());
+          });
+          return Array.from(unique)
+            .filter(label => !isDropdownItemDeleted('doctor', label))
+            .map(label => ({ label, badge: '' }));
+        }
+
+        function updateRelevantStudyProtocols() {
+          const mod = modalityInput.value || 'CT';
+          const sys = systemInput.value || '';
+          if (studyProtocolHint) {
+            studyProtocolHint.textContent = sys ? `${mod} (${sys}) studies` : `All ${mod} studies`;
+          }
+          if (studyInput) {
+            studyInput.placeholder = sys
+              ? `Tap or type ${mod} (${sys}) study...`
+              : `Tap or type ${mod} study...`;
+          }
+        }
+
+        function highlightLabelMatch(label, query) {
+          const safeLabel = escapeHtml(label);
+          if (!query) return safeLabel;
+          const idx = label.toLowerCase().indexOf(query.toLowerCase());
+          if (idx === -1) return safeLabel;
+          const before = escapeHtml(label.slice(0, idx));
+          const match = escapeHtml(label.slice(idx, idx + query.length));
+          const after = escapeHtml(label.slice(idx + query.length));
+          return `${before}<span class="ac-match">${match}</span>${after}`;
+        }
+
+        let openAutocompleteCloseFn = null;
+
+        function attachCustomAutocomplete(inputEl, getItemsFn, presetCategory = null, onSelectCallback = null, multiComma = false) {
+          if (!inputEl || inputEl.dataset.acAttached === 'true') return;
+          inputEl.dataset.acAttached = 'true';
+          inputEl.removeAttribute('list');
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'ac-wrapper';
+          inputEl.parentNode.insertBefore(wrapper, inputEl);
+          wrapper.appendChild(inputEl);
+
+          const chevronBtn = document.createElement('button');
+          chevronBtn.type = 'button';
+          chevronBtn.className = 'ac-chevron-btn';
+          chevronBtn.tabIndex = -1;
+          chevronBtn.setAttribute('aria-label', 'Show suggestions');
+          chevronBtn.title = 'Tap to view suggestions';
+          chevronBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+          wrapper.appendChild(chevronBtn);
+
+          const dropdown = document.createElement('div');
+          dropdown.className = 'ac-dropdown';
+          wrapper.appendChild(dropdown);
+
+          let activeIndex = -1;
+          let currentFiltered = [];
+
+          function closeDropdown() {
+            dropdown.classList.remove('open');
+            chevronBtn.classList.remove('open');
+            wrapper.classList.remove('ac-open');
+            activeIndex = -1;
+            if (openAutocompleteCloseFn === closeDropdown) {
+              openAutocompleteCloseFn = null;
+            }
+          }
+
+          function getActiveSegmentQuery() {
+            const rawVal = inputEl.value || '';
+            if (!multiComma) return rawVal.trim();
+            const parts = rawVal.split(',');
+            return (parts[parts.length - 1] || '').trim();
+          }
+
+          function selectValue(val) {
+            if (multiComma) {
+              const rawVal = inputEl.value || '';
+              const parts = rawVal.split(',').map(s => s.trim()).filter(Boolean);
+              const endsWithComma = /,\s*$/.test(rawVal);
+              if (endsWithComma) {
+                if (!parts.some(p => p.toLowerCase() === val.toLowerCase())) {
+                  parts.push(val);
+                }
+              } else if (parts.length > 0) {
+                parts[parts.length - 1] = val;
+              } else {
+                parts.push(val);
+              }
+              inputEl.value = parts.join(', ');
+            } else {
+              inputEl.value = val;
+            }
+            inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+            closeDropdown();
+            if (onSelectCallback) onSelectCallback(inputEl.value);
+          }
+
+          function renderDropdown(showAll = false) {
+            if (openAutocompleteCloseFn && openAutocompleteCloseFn !== closeDropdown) {
+              openAutocompleteCloseFn();
+            }
+            openAutocompleteCloseFn = closeDropdown;
+
+            const allItems = getItemsFn() || [];
+            const segmentRaw = getActiveSegmentQuery();
+            const query = showAll ? '' : segmentRaw.toLowerCase();
+
+            if (!query) {
+              currentFiltered = allItems.slice(0, 40);
+            } else {
+              const startsWith = [];
+              const includes = [];
+              allItems.forEach(item => {
+                const lbl = item.label.toLowerCase();
+                if (lbl.startsWith(query)) startsWith.push(item);
+                else if (lbl.includes(query)) includes.push(item);
+              });
+              currentFiltered = [...startsWith, ...includes].slice(0, 35);
+            }
+
+            dropdown.innerHTML = '';
+            activeIndex = -1;
+
+            currentFiltered.forEach((item) => {
+              const row = document.createElement('div');
+              row.className = 'ac-item';
+              row.innerHTML = `
+                <span style="min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis;">${highlightLabelMatch(item.label, query)}</span>
+                <div class="ac-item-right">
+                  ${item.badge ? `<span class="ac-item-badge">${escapeHtml(item.badge)}</span>` : ''}
+                  ${presetCategory ? `<button type="button" class="ac-delete-btn" title="Delete from dropdown options">×</button>` : ''}
+                </div>
+              `;
+              const delBtn = row.querySelector('.ac-delete-btn');
+              if (delBtn) {
+                const handleDelete = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  deleteDropdownOptionFromConfig(presetCategory, item.label);
+                  renderDropdown(showAll);
+                };
+                delBtn.addEventListener('pointerdown', handleDelete);
+                delBtn.addEventListener('mousedown', handleDelete);
+              }
+              const handlePick = (e) => {
+                if (e.target && e.target.closest('.ac-delete-btn')) return;
+                e.preventDefault();
+                e.stopPropagation();
+                selectValue(item.label);
+              };
+              row.addEventListener('pointerdown', handlePick);
+              row.addEventListener('mousedown', handlePick);
+              dropdown.appendChild(row);
+            });
+
+            const exactExists = allItems.some(i => i.label.toLowerCase() === segmentRaw.toLowerCase());
+            if (presetCategory) {
+              const footerBar = document.createElement('div');
+              footerBar.className = 'ac-footer-add-bar';
+              if (segmentRaw.length >= 2 && !exactExists) {
+                footerBar.innerHTML = `
+                  <button type="button" class="ac-footer-add-btn">
+                    <span>➕ Save "${escapeHtml(segmentRaw.length > 26 ? segmentRaw.slice(0, 24) + '…' : segmentRaw)}" to dropdown</span>
+                    <span style="font-size:10px; opacity:0.85;">SAVE</span>
+                  </button>
+                `;
+                const handleSaveTyped = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  addDropdownOptionToConfig(presetCategory, segmentRaw);
+                  selectValue(segmentRaw);
+                  showToast(`Added "${segmentRaw}" to dropdown options!`);
+                };
+                footerBar.addEventListener('pointerdown', handleSaveTyped);
+                footerBar.addEventListener('mousedown', handleSaveTyped);
+              } else {
+                footerBar.innerHTML = `
+                  <button type="button" class="ac-footer-add-btn">
+                    <span>+ Add new option to dropdown...</span>
+                    <span style="font-size:10px; opacity:0.85;">ADD</span>
+                  </button>
+                `;
+                const handleOpenModal = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  closeDropdown();
+                  openAddDropdownOptionModal(presetCategory, selectValue, segmentRaw);
+                };
+                footerBar.addEventListener('pointerdown', handleOpenModal);
+                footerBar.addEventListener('mousedown', handleOpenModal);
+              }
+              dropdown.appendChild(footerBar);
+            }
+
+            if (dropdown.children.length > 0) {
+              dropdown.classList.add('open');
+              chevronBtn.classList.add('open');
+              wrapper.classList.add('ac-open');
+            } else {
+              closeDropdown();
+            }
+          }
+
+          inputEl.addEventListener('focus', () => renderDropdown(false));
+          inputEl.addEventListener('click', () => renderDropdown(false));
+          inputEl.addEventListener('input', () => renderDropdown(false));
+
+          const handleChevronToggle = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (dropdown.classList.contains('open')) {
+              closeDropdown();
+            } else {
+              inputEl.focus();
+              renderDropdown(true);
+            }
+          };
+          chevronBtn.addEventListener('pointerdown', handleChevronToggle);
+          chevronBtn.addEventListener('mousedown', (e) => e.preventDefault());
+
+          inputEl.addEventListener('keydown', (e) => {
+            if (!dropdown.classList.contains('open')) {
+              if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                renderDropdown(true);
+              }
+              return;
+            }
+            const rows = dropdown.querySelectorAll('.ac-item');
+            if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              if (rows.length > 0) {
+                activeIndex = (activeIndex + 1) % rows.length;
+                rows.forEach((r, i) => r.classList.toggle('active', i === activeIndex));
+                if (rows[activeIndex]) rows[activeIndex].scrollIntoView({ block: 'nearest' });
+              }
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              if (rows.length > 0) {
+                activeIndex = (activeIndex - 1 + rows.length) % rows.length;
+                rows.forEach((r, i) => r.classList.toggle('active', i === activeIndex));
+                if (rows[activeIndex]) rows[activeIndex].scrollIntoView({ block: 'nearest' });
+              }
+            } else if (e.key === 'Enter' && activeIndex >= 0 && currentFiltered[activeIndex]) {
+              e.preventDefault();
+              selectValue(currentFiltered[activeIndex].label);
+            } else if (e.key === 'Escape') {
+              closeDropdown();
+            }
+          });
+
+          inputEl.addEventListener('blur', () => {
+            setTimeout(() => closeDropdown(), 180);
           });
         }
 
-        // ================= DIAGNOSES & ORGANS DATALISTS (DECLUTTERED) =================
-        function renderDiagnosisDatalist() {
-          const cases = loadCases();
-          const uniqueDiag = new Set([...STANDARD_DIAGNOSES]);
-          cases.forEach(c => {
-            if (c.primaryDiagnosis && c.primaryDiagnosis.trim()) {
-              uniqueDiag.add(c.primaryDiagnosis.trim());
+        function initAllCustomAutocompletes() {
+          attachCustomAutocomplete(quickPrimaryDiag, getDiagnosisSuggestions, 'diagnosis');
+          attachCustomAutocomplete(studyInput, () => getStudySuggestionsForActiveModality(false), 'study');
+          attachCustomAutocomplete(organInput, getOrganSuggestions, 'organ');
+          attachCustomAutocomplete(primaryDiagInput, getDiagnosisSuggestions, 'diagnosis');
+          attachCustomAutocomplete(diffInput, getDifferentialSuggestions, 'differential', null, true);
+          attachCustomAutocomplete(reportedByInput, getDoctorSuggestions, 'doctor');
+          attachCustomAutocomplete(consultantInput, getDoctorSuggestions, 'doctor');
+          attachCustomAutocomplete(searchStudy, () => getStudySuggestionsForActiveModality(true), null, () => renderSearchResults());
+          attachCustomAutocomplete(searchReportedBy, getDoctorSuggestions, null, () => renderSearchResults());
+          attachCustomAutocomplete(searchDiagnosis, getDiagnosisSuggestions, null, () => renderSearchResults());
+
+          document.addEventListener('pointerdown', (e) => {
+            if (!e.target.closest('.ac-wrapper') && openAutocompleteCloseFn) {
+              openAutocompleteCloseFn();
             }
-          });
-
-          const datalist = document.getElementById('diagnosis-suggestions');
-          datalist.innerHTML = '';
-          Array.from(uniqueDiag).sort().forEach(d => {
-            const opt = document.createElement('option');
-            opt.value = d;
-            datalist.appendChild(opt);
-          });
-
-          // Organs datalist
-          const uniqueOrgans = new Set([...STANDARD_ORGANS]);
-          cases.forEach(c => {
-            if (c.organOfInterest && c.organOfInterest.trim()) {
-              uniqueOrgans.add(c.organOfInterest.trim());
-            }
-          });
-          const organDatalist = document.getElementById('organ-suggestions');
-          organDatalist.innerHTML = '';
-          Array.from(uniqueOrgans).sort().forEach(o => {
-            const opt = document.createElement('option');
-            opt.value = o;
-            organDatalist.appendChild(opt);
-          });
-
-          // Consultant & Reporter suggestions datalist
-          const uniqueReporters = new Set(['Dr. Resident', 'Dr. Senior Resident', 'Dr. Consultant']);
-          cases.forEach(c => {
-            if (c.reportedBy && c.reportedBy.trim()) uniqueReporters.add(c.reportedBy.trim());
-            if (c.checkedBy && c.checkedBy.trim()) uniqueReporters.add(c.checkedBy.trim());
-          });
-          const consDatalist = document.getElementById('consultant-suggestions');
-          consDatalist.innerHTML = '';
-          Array.from(uniqueReporters).forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c;
-            consDatalist.appendChild(opt);
           });
         }
 
@@ -3370,11 +4660,17 @@
           showToast('Quick Log tip restored');
         });
 
-        // ================= QUICK LOG SUBMISSION (OPTIONAL MRN) =================
+        // ================= QUICK LOG SUBMISSION (MANDATORY MRN & DIAGNOSIS, ONLY ENTERED DETAILS) =================
         window.submitQuickCase = function(statusToSave = 'Pending Details') {
           const rawMrn = quickMrn.value.trim();
           const diagnosis = quickPrimaryDiag.value.trim();
           const modality = quickFieldModality.value || 'CT';
+
+          if (!rawMrn) {
+            showToast('Please enter Institute ID / MRN', true);
+            quickMrn.focus();
+            return;
+          }
 
           if (!diagnosis) {
             showToast('Please enter a Primary Diagnosis', true);
@@ -3382,10 +4678,12 @@
             return;
           }
 
-          const formattedMrn = rawMrn ? formatMrnWithPrefix(rawMrn) : '';
+          const formattedMrn = formatMrnWithPrefix(rawMrn);
           const cfg = loadConfig();
           const reporter = (cfg.defaultReporter && cfg.defaultReporter.trim()) ? cfg.defaultReporter.trim() : 'Dr. Resident';
+          const isFav = quickFieldFavorite && quickFieldFavorite.value === '1';
 
+          // Quick Log stores ONLY the entered details (keeps studyDescription and organSystem empty!)
           const newCase = {
             id: 'case_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
             timestamp: new Date().toISOString(),
@@ -3393,58 +4691,79 @@
             mrn: formattedMrn,
             patientName: '',
             modality: modality,
-            studyDescription: `${modality} Study`,
-            organSystem: 'CNS',
+            studyDescription: '',
+            organSystem: '',
             organOfInterest: '',
             primaryDiagnosis: diagnosis,
             differentialDiagnoses: '',
-            finding: 'Abnormal',
+            finding: '',
             status: statusToSave,
             reportedBy: reporter,
             checkedBy: '',
-            confirmationFollowup: ''
+            confirmationFollowup: '',
+            isFavorite: !!isFav,
+            syncedToSheet: false
           };
 
           const cases = loadCases();
           cases.unshift(newCase);
+          triggerHaptic('case_logged');
           saveCases(cases);
           transmitCaseWebhook(newCase);
 
-          showToast(`Case Logged (${statusToSave === 'Completed' ? 'Done' : 'Pending'})! (${modality}${formattedMrn ? ': ' + formattedMrn : ''})`);
+          // Show instant Radiopaedia strip for the just-logged diagnosis
+          if (quickLastLoggedRadiopaedia && quickLastLoggedText && quickLastLoggedRpAnchor) {
+            quickLastLoggedText.textContent = `Logged ${formattedMrn}: ${diagnosis}`;
+            quickLastLoggedRpAnchor.href = getRadiopaediaUrl(diagnosis);
+            quickLastLoggedRadiopaedia.style.display = 'flex';
+          }
+
+          showToast(`Case Logged (${statusToSave === 'Completed' ? 'Done' : 'Pending'})! (${modality}: ${formattedMrn})`);
 
           quickMrn.value = '';
           quickPrimaryDiag.value = '';
-          checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null);
+          setFavoriteButtonState(quickFavToggleBtn, quickFavIcon, quickFavLabel, quickFieldFavorite, false);
+          updateLiveRadiopaediaLinks();
+          checkLiveDuplicateMrn(quickMrn, quickMrnDupWarning, quickMrnDupText, quickMrnDupViewBtn, null, true);
           quickMrn.focus();
         };
 
         quickExpandBtn.addEventListener('click', () => {
+          if (quickMrn.value.trim()) mrnInput.value = quickMrn.value.trim();
+          if (quickPrimaryDiag.value.trim()) primaryDiagInput.value = quickPrimaryDiag.value.trim();
+          if (quickFieldFavorite && quickFieldFavorite.value === '1') {
+            setFavoriteButtonState(fullFavToggleBtn, fullFavIcon, fullFavLabel, fullFieldFavorite, true);
+          }
+          updateLiveRadiopaediaLinks();
           switchTab('tab-full');
         });
 
-        // ================= FULL LOG SUBMISSION (OPTIONAL MRN) =================
+        // ================= FULL LOG SUBMISSION (MANDATORY MRN & DIAGNOSIS, NO MRN PREFIX) =================
         window.submitCase = function() {
           const rawMrn = mrnInput.value.trim();
           const diagnosis = primaryDiagInput.value.trim();
           const studyDesc = studyInput.value.trim();
 
-          if (!studyDesc) {
-            showToast('Please enter a Study Description', true);
-            studyInput.focus();
+          if (!rawMrn) {
+            showToast('Please enter Institute ID / MRN', true);
+            mrnInput.focus();
             return;
           }
+
           if (!diagnosis) {
             showToast('Please enter a Primary Diagnosis', true);
             primaryDiagInput.focus();
             return;
           }
 
-          const formattedMrn = rawMrn ? formatMrnWithPrefix(rawMrn) : '';
+          // Full Log MRN has NO prefix and is mandatory alongside Primary Diagnosis
+          const formattedMrn = rawMrn.toUpperCase();
           const dateVal = dateInput.value || getTodayString();
           const modalityVal = modalityInput.value || 'CT';
-          const systemVal = systemInput.value || 'CNS';
+          const systemVal = systemInput.value || '';
           const findingVal = findingInput.value || 'Abnormal';
           const statusVal = statusInput.value || 'Completed';
+          const isFav = fullFieldFavorite && fullFieldFavorite.value === '1';
 
           const cfg = loadConfig();
           const repVal = reportedByInput.value.trim() || cfg.defaultReporter || 'Dr. Resident';
@@ -3465,7 +4784,9 @@
             status: statusVal,
             reportedBy: repVal,
             checkedBy: consultantInput.value.trim(),
-            confirmationFollowup: confirmationInput.value.trim()
+            confirmationFollowup: confirmationInput.value.trim(),
+            isFavorite: !!isFav,
+            syncedToSheet: false
           };
 
           let cases = loadCases();
@@ -3476,10 +4797,12 @@
             } else {
               cases.unshift(caseData);
             }
-            showToast(`Case Updated${caseData.mrn ? ': ' + caseData.mrn : ''}`);
+            triggerHaptic('case_logged');
+            showToast(`Case Updated: ${caseData.mrn}`);
           } else {
             cases.unshift(caseData);
-            showToast(`Case Logged! (${caseData.modality}${caseData.mrn ? ': ' + caseData.mrn : ''})`);
+            triggerHaptic('case_logged');
+            showToast(`Case Logged! (${caseData.modality}: ${caseData.mrn})`);
           }
 
           saveCases(cases);
@@ -3487,7 +4810,7 @@
 
           cancelEditingMode();
           resetFullFormFields(true);
-          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, null);
+          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, null, false);
           mrnInput.focus();
         };
 
@@ -3500,6 +4823,13 @@
           primaryDiagInput.value = '';
           diffInput.value = '';
           confirmationInput.value = '';
+          systemInput.value = '';
+          setFavoriteButtonState(fullFavToggleBtn, fullFavIcon, fullFavLabel, fullFieldFavorite, false);
+          updateLiveRadiopaediaLinks();
+
+          document.querySelectorAll('#full-system-chips .chip-btn').forEach(b => {
+            b.classList.remove('active');
+          });
 
           document.querySelectorAll('#finding-toggle .toggle-option').forEach(o => {
             o.classList.toggle('active', o.dataset.val === 'Abnormal');
@@ -3514,7 +4844,7 @@
           dateInput.value = getTodayString();
           const cfg = loadConfig();
           if (cfg.defaultReporter) reportedByInput.value = cfg.defaultReporter;
-          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, null);
+          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, null, false);
         }
 
         // Editing / Completing Mode
@@ -3524,15 +4854,7 @@
           editBadgeText.textContent = `${c.mrn || 'No MRN'} - ${c.patientName || c.primaryDiagnosis || 'Case'}`;
 
           dateInput.value = c.date || getTodayString();
-
-          const cfg = loadConfig();
-          const prefix = (!cfg.mrnNumbersOnly && cfg.defaultMrnPrefix !== undefined ? cfg.defaultMrnPrefix : 'MRN').trim().toUpperCase();
-          if (!cfg.mrnNumbersOnly && prefix && c.mrn && c.mrn.toUpperCase().startsWith(prefix)) {
-            mrnInput.value = c.mrn.slice(prefix.length);
-          } else {
-            mrnInput.value = c.mrn || '';
-          }
-
+          mrnInput.value = c.mrn || '';
           patientNameInput.value = c.patientName || '';
 
           const mod = c.modality || 'CT';
@@ -3541,16 +4863,19 @@
             b.classList.toggle('active', b.dataset.mod === mod);
           });
 
-          const sys = c.organSystem || 'CNS';
+          const sys = c.organSystem || '';
           systemInput.value = sys;
           document.querySelectorAll('#full-system-chips .chip-btn').forEach(b => {
             b.classList.toggle('active', b.dataset.sys === sys);
           });
 
-          studyInput.value = c.studyDescription || '';
+          const isPlaceholderStudy = c.studyDescription && c.studyDescription === `${mod} Study`;
+          studyInput.value = isPlaceholderStudy ? '' : (c.studyDescription || '');
           organInput.value = c.organOfInterest || '';
           primaryDiagInput.value = c.primaryDiagnosis || '';
           diffInput.value = c.differentialDiagnoses || '';
+          setFavoriteButtonState(fullFavToggleBtn, fullFavIcon, fullFavLabel, fullFieldFavorite, !!c.isFavorite);
+          updateLiveRadiopaediaLinks();
 
           const findingVal = c.finding || 'Abnormal';
           findingInput.value = findingVal;
@@ -3564,13 +4889,14 @@
             o.classList.toggle('active', o.dataset.status === statusVal);
           });
 
+          const cfg = loadConfig();
           reportedByInput.value = c.reportedBy || cfg.defaultReporter || 'Dr. Resident';
           consultantInput.value = c.checkedBy || '';
           confirmationInput.value = c.confirmationFollowup || '';
 
           switchTab('tab-full');
           updateRelevantStudyProtocols();
-          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId);
+          checkLiveDuplicateMrn(mrnInput, fullMrnDupWarning, fullMrnDupText, fullMrnDupViewBtn, currentEditingCaseId, false);
           showToast(`Completing ${c.mrn || 'case'}. Review details & submit.`);
         }
 
@@ -3587,25 +4913,141 @@
           showToast('Cancelled edit mode.');
         });
 
-        // Webhook Transmit
+        // Clean payload helper: exports only entered details (strips legacy auto-generated placeholders)
+        function getEnteredDetailsPayload(c) {
+          const mod = c.modality || '';
+          const rawStudy = (c.studyDescription || '').trim();
+          const cleanStudy = (rawStudy === `${mod} Study`) ? '' : rawStudy;
+          const isQuickPending = c.status === 'Pending Details' && !cleanStudy;
+          const cleanSys = isQuickPending && c.organSystem === 'CNS' ? '' : (c.organSystem || '');
+          return {
+            id: c.id || '',
+            timestamp: c.timestamp || '',
+            date: c.date || '',
+            mrn: c.mrn || '',
+            patientName: c.patientName || '',
+            modality: mod,
+            studyDescription: cleanStudy,
+            organSystem: cleanSys,
+            organOfInterest: c.organOfInterest || '',
+            primaryDiagnosis: c.primaryDiagnosis || '',
+            differentialDiagnoses: c.differentialDiagnoses || '',
+            finding: c.finding || '',
+            status: c.status || '',
+            reportedBy: c.reportedBy || '',
+            checkedBy: c.checkedBy || '',
+            confirmationFollowup: c.confirmationFollowup || '',
+            isFavorite: !!c.isFavorite
+          };
+        }
+
+        // Webhook Transmit & Manual Google Sheet Sync
         async function transmitCaseWebhook(caseData) {
           const cfg = loadConfig();
-          if (!cfg.webhookUrl || !cfg.webhookUrl.trim().startsWith('http')) return;
+          if (!cfg.webhookUrl || !cfg.webhookUrl.trim().startsWith('http')) return false;
           try {
+            const cleanData = getEnteredDetailsPayload(caseData);
             await fetch(cfg.webhookUrl.trim(), {
               method: 'POST',
-              body: JSON.stringify(caseData),
+              body: JSON.stringify(cleanData),
               mode: 'no-cors'
             });
+            const cases = loadCases();
+            const idx = cases.findIndex(item => item.id === caseData.id);
+            if (idx !== -1) {
+              cases[idx].syncedToSheet = true;
+              localStorage.setItem(STORAGE_CASES, JSON.stringify(cases));
+              updateSyncIndicator();
+            }
+            return true;
           } catch (e) {
             console.warn('Webhook transmit queued:', e);
+            return false;
           }
+        }
+
+        async function syncStudiesToGoogleSheet(onlyUnsynced = true) {
+          const cfg = loadConfig();
+          const urlFromInput = settingsWebhookUrl ? settingsWebhookUrl.value.trim() : '';
+          const targetUrl = urlFromInput || (cfg.webhookUrl || '').trim();
+
+          if (!targetUrl || !targetUrl.startsWith('http')) {
+            showToast('Please enter your Google Sheet Web App URL first', true);
+            const acc = document.getElementById('accordion-webhook');
+            if (acc) acc.open = true;
+            if (settingsWebhookUrl) settingsWebhookUrl.focus();
+            return;
+          }
+
+          if (urlFromInput && urlFromInput !== cfg.webhookUrl) {
+            cfg.webhookUrl = urlFromInput;
+            saveConfig(cfg);
+          }
+
+          const cases = loadCases();
+          if (cases.length === 0) {
+            showToast('No studies in your local library to sync', true);
+            return;
+          }
+
+          const toSync = onlyUnsynced ? cases.filter(c => !c.syncedToSheet) : cases;
+          if (toSync.length === 0) {
+            showToast('All studies are already synced to Google Sheet!');
+            return;
+          }
+
+          const activeBtn = onlyUnsynced ? btnSyncUnsyncedGsheet : btnSyncAllGsheet;
+          const origLabel = activeBtn ? activeBtn.innerHTML : '';
+          if (activeBtn) activeBtn.disabled = true;
+
+          let successCount = 0;
+          for (let i = 0; i < toSync.length; i++) {
+            if (activeBtn) {
+              activeBtn.textContent = `Syncing ${i + 1}/${toSync.length}...`;
+            }
+            try {
+              const cleanPayload = getEnteredDetailsPayload(toSync[i]);
+              await fetch(targetUrl, {
+                method: 'POST',
+                body: JSON.stringify(cleanPayload),
+                mode: 'no-cors'
+              });
+              toSync[i].syncedToSheet = true;
+              successCount++;
+            } catch (err) {
+              console.warn('Sync error on case:', err);
+            }
+          }
+
+          localStorage.setItem(STORAGE_CASES, JSON.stringify(cases));
+          updateSyncIndicator();
+          if (activeBtn) {
+            activeBtn.disabled = false;
+            activeBtn.innerHTML = origLabel;
+          }
+
+          if (successCount > 0) {
+            showToast(`Synced ${successCount} stud${successCount === 1 ? 'y' : 'ies'} to Google Sheet!`);
+          } else {
+            showToast('Failed to reach Google Sheet Web App URL', true);
+          }
+        }
+
+        if (btnSyncUnsyncedGsheet) {
+          btnSyncUnsyncedGsheet.addEventListener('click', () => syncStudiesToGoogleSheet(true));
+        }
+        if (btnSyncAllGsheet) {
+          btnSyncAllGsheet.addEventListener('click', () => syncStudiesToGoogleSheet(false));
         }
 
         // ================= RENDERING VIEWS =================
         function renderAllViews() {
           const cases = loadCases();
           updateStorageStats();
+          updateSyncIndicator();
+          if (shareHubCaseCount) {
+            shareHubCaseCount.textContent = `${cases.length} stud${cases.length === 1 ? 'y' : 'ies'}`;
+          }
 
           // 1. Clean Single-Line Pending Completion rows on Quick tab
           const pendingCases = cases.filter(c => c.status === 'Pending Details');
@@ -3652,21 +5094,35 @@
 
           const mrnDisplay = (c.mrn && c.mrn.trim()) ? c.mrn.trim() : 'No MRN';
           const dxDisplay = c.primaryDiagnosis || c.studyDescription || 'Untitled Case';
+          const isFav = !!c.isFavorite;
+          const rpUrl = c.primaryDiagnosis ? getRadiopaediaUrl(c.primaryDiagnosis) : '';
 
           row.innerHTML = `
             <div class="pending-row-left">
+              <button type="button" class="card-fav-icon-btn ${isFav ? 'active' : ''}" title="${isFav ? 'Remove from Favorites' : 'Tag as Favorite'}">${isFav ? '★' : '☆'}</button>
               <span class="modality-tag ${c.modality || 'CT'}">${c.modality || 'CT'}</span>
               <div class="pending-row-text">
                 <span class="pending-row-dx">${escapeHtml(dxDisplay)}</span>
                 <span class="pending-row-mrn">• ${escapeHtml(mrnDisplay)}</span>
               </div>
             </div>
-            <button type="button" class="btn-sm btn-complete-direct" style="padding: 4px 10px; font-size: 11px; background: #0284c7; border-color: #38bdf8; color: #ffffff; flex-shrink: 0;">
-              Complete ➔
-            </button>
+            <div style="display:flex; align-items:center; gap:5px; flex-shrink:0;">
+              ${rpUrl ? `<a href="${escapeHtml(rpUrl)}" target="_blank" rel="noopener noreferrer" class="radiopaedia-link" style="padding:2px 6px; font-size:10px;" title="Look up on Radiopaedia">📖 RP ↗</a>` : ''}
+              <button type="button" class="btn-sm btn-complete-direct" style="padding: 4px 10px; font-size: 11px; background: #0284c7; border-color: #38bdf8; color: #ffffff; flex-shrink: 0;">
+                Complete ➔
+              </button>
+            </div>
           `;
 
           row.addEventListener('click', (e) => {
+            if (e.target.closest('.radiopaedia-link')) {
+              e.stopPropagation();
+              return;
+            }
+            if (e.target.closest('.card-fav-icon-btn')) {
+              toggleCaseFavoriteById(c.id, e);
+              return;
+            }
             if (e.target.closest('.btn-complete-direct')) {
               e.stopPropagation();
               startEditingCase(c);
@@ -3689,15 +5145,20 @@
           else if (c.status === 'Pending Details') statusClass = 'pending-details';
 
           const mrnLabel = (c.mrn && c.mrn.trim()) ? c.mrn.trim() : 'No MRN';
+          const cleanPayload = getEnteredDetailsPayload(c);
+          const isFav = !!c.isFavorite;
+          const rpUrl = c.primaryDiagnosis ? getRadiopaediaUrl(c.primaryDiagnosis) : '';
 
           card.innerHTML = `
             <div class="case-card-header">
               <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+                <button type="button" class="card-fav-icon-btn ${isFav ? 'active' : ''}" title="${isFav ? 'Remove from Favorites' : 'Tag as Favorite'}">${isFav ? '★' : '☆'}</button>
                 <span class="modality-tag ${c.modality || ''}">${c.modality || 'CT'}</span>
                 <span style="font-weight: 700; font-size: 13px; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(mrnLabel)}</span>
                 ${c.patientName ? `<span style="font-size: 12px; color: #94a3b8; white-space: nowrap;">(${escapeHtml(c.patientName)})</span>` : ''}
               </div>
               <div style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
+                ${rpUrl ? `<a href="${escapeHtml(rpUrl)}" target="_blank" rel="noopener noreferrer" class="radiopaedia-link" style="padding:2px 6px; font-size:10px;" title="Search ${escapeHtml(c.primaryDiagnosis)} on Radiopaedia">📖 RP ↗</a>` : ''}
                 <button type="button" class="btn-sm btn-qr-share" style="padding: 2px 7px; font-size: 11px;" title="Share single case via QR">
                   QR
                 </button>
@@ -3705,10 +5166,15 @@
               </div>
             </div>
             <div style="font-weight: 600; font-size: 13px; color: #e2e8f0; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              ${escapeHtml(c.primaryDiagnosis || c.studyDescription || 'No diagnosis entered')}
+              ${escapeHtml(c.primaryDiagnosis || cleanPayload.studyDescription || 'No diagnosis entered')}
             </div>
+            ${c.confirmationFollowup ? `
+              <div style="font-size: 11px; color: #34d399; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.22); border-radius: 6px; padding: 3px 7px; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                📝 ${escapeHtml(c.confirmationFollowup)}
+              </div>
+            ` : ''}
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #64748b; margin-top: 5px;">
-              <span>${c.date || ''} • ${escapeHtml(c.organSystem || '')}</span>
+              <span>${c.date || ''}${cleanPayload.organSystem ? ' • ' + escapeHtml(cleanPayload.organSystem) : ''}</span>
               ${c.status === 'Pending Details' ? `
                 <button type="button" class="btn-sm btn-complete-direct" style="padding: 3px 9px; font-size: 11px; background: #0284c7; border-color: #38bdf8; color: #ffffff;">
                   Complete ➔
@@ -3720,6 +5186,14 @@
           `;
 
           card.addEventListener('click', (e) => {
+            if (e.target.closest('.radiopaedia-link')) {
+              e.stopPropagation();
+              return;
+            }
+            if (e.target.closest('.card-fav-icon-btn')) {
+              toggleCaseFavoriteById(c.id, e);
+              return;
+            }
             if (e.target.closest('.btn-complete-direct')) {
               e.stopPropagation();
               startEditingCase(c);
@@ -3739,15 +5213,21 @@
         // Case Detail Modal
         function openCaseDetail(c) {
           currentActiveCase = c;
+          const clean = getEnteredDetailsPayload(c);
           detailHeadingText.textContent = `${c.mrn || 'Case'} Details`;
           detailModalityBadge.textContent = c.modality || 'CT';
           detailModalityBadge.className = `modality-tag ${c.modality || 'CT'}`;
+
+          setFavoriteButtonState(detailFavBtn, detailFavIcon, detailFavLabel, null, !!c.isFavorite);
+
+          const primaryRpUrl = c.primaryDiagnosis ? getRadiopaediaUrl(c.primaryDiagnosis) : '';
+          const diffTerms = (c.differentialDiagnoses || '').split(',').map(s => s.trim()).filter(Boolean);
 
           detailBodyContent.innerHTML = `
             <div style="background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 12px;">
               <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 4px;">
                 <span>Date: <strong>${c.date || '-'}</strong></span>
-                <span>System: <strong>${c.organSystem || '-'}</strong></span>
+                <span>System: <strong>${clean.organSystem || 'Not entered'}</strong></span>
               </div>
               <div style="font-size: 15px; font-weight: 700; color: #ffffff;">MRN: ${escapeHtml(c.mrn || 'Not Provided')}</div>
               ${c.patientName ? `<div style="font-size: 13px; color: #94a3b8; margin-top: 2px;">Patient: ${escapeHtml(c.patientName)}</div>` : ''}
@@ -3755,28 +5235,85 @@
 
             <div style="background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 12px;">
               <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Study Description</div>
-              <div style="font-size: 14px; font-weight: 600; color: #38bdf8; margin-top: 2px;">${escapeHtml(c.studyDescription || '-')}</div>
-              ${c.organOfInterest ? `<div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Organ: ${escapeHtml(c.organOfInterest)}</div>` : ''}
+              <div style="font-size: 14px; font-weight: 600; color: #38bdf8; margin-top: 2px;">${escapeHtml(clean.studyDescription || 'Not entered')}</div>
+              ${clean.organOfInterest ? `<div style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Organ: ${escapeHtml(clean.organOfInterest)}</div>` : ''}
             </div>
 
             <div style="background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 12px;">
-              <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Primary Diagnosis (${c.finding || 'Abnormal'})</div>
-              <div style="font-size: 14px; font-weight: 600; color: #f8fafc; margin-top: 2px;">${escapeHtml(c.primaryDiagnosis || '-')}</div>
-              ${c.differentialDiagnoses ? `
-                <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-top: 8px;">Differentials</div>
-                <div style="color: #cbd5e1; font-size: 13px;">${escapeHtml(c.differentialDiagnoses)}</div>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+                <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700;">Primary Diagnosis${clean.finding ? ` (${clean.finding})` : ''}</div>
+                ${primaryRpUrl ? `
+                  <a href="${escapeHtml(primaryRpUrl)}" target="_blank" rel="noopener noreferrer" class="radiopaedia-link" title="Read Radiopaedia articles for ${escapeHtml(c.primaryDiagnosis)}">
+                    <span>📖 Radiopaedia Reference</span>
+                    <span>↗</span>
+                  </a>
+                ` : ''}
+              </div>
+              <div style="font-size: 14px; font-weight: 600; color: #f8fafc; margin-top: 4px;">${escapeHtml(c.primaryDiagnosis || '-')}</div>
+              ${diffTerms.length > 0 ? `
+                <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-top: 10px;">Differentials</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
+                  ${diffTerms.map(d => `
+                    <span style="display:inline-flex; align-items:center; gap:5px; background:#0b0f17; border:1px solid #1e293b; border-radius:6px; padding:3px 8px; font-size:12px; color:#cbd5e1;">
+                      <span>${escapeHtml(d)}</span>
+                      <a href="${escapeHtml(getRadiopaediaUrl(d))}" target="_blank" rel="noopener noreferrer" style="color:#38bdf8; font-size:11px; font-weight:700; text-decoration:none;" title="Look up ${escapeHtml(d)} on Radiopaedia">📖↗</a>
+                    </span>
+                  `).join('')}
+                </div>
               ` : ''}
             </div>
 
             <div style="background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 12px;">
               <div style="font-size: 13px; color: #ffffff;">Reported By: <strong>${escapeHtml(c.reportedBy || '-')}</strong></div>
-              <div style="font-size: 13px; color: #ffffff; margin-top: 2px;">Consultant: <strong>${escapeHtml(c.checkedBy || '-')}</strong></div>
-              ${c.confirmationFollowup ? `
-                <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-top: 8px;">Confirmation / Histopath</div>
-                <div style="color: #e2e8f0; font-size: 13px;">${escapeHtml(c.confirmationFollowup)}</div>
-              ` : ''}
+              ${c.checkedBy ? `<div style="font-size: 13px; color: #ffffff; margin-top: 2px;">Consultant: <strong>${escapeHtml(c.checkedBy)}</strong></div>` : ''}
+              <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #1e293b;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <span style="font-size: 11px; text-transform: uppercase; color: #38bdf8; font-weight: 700;">Confirmation / Histopath & Study Notes</span>
+                </div>
+                ${c.confirmationFollowup ? `
+                  <div style="color: #e2e8f0; font-size: 13px; background: #0b0f17; border: 1px solid #1e293b; border-radius: 8px; padding: 8px; white-space: pre-wrap; margin-bottom: 8px;">${escapeHtml(c.confirmationFollowup)}</div>
+                ` : `
+                  <div style="color: #64748b; font-size: 12px; font-style: italic; margin-bottom: 6px;">No histopath confirmation or study notes recorded yet.</div>
+                `}
+                <textarea id="detail-inline-note-area" rows="2" placeholder="Add histopath result, follow-up, or teaching notes for this study..." style="width:100%; font-size:12px; padding:7px 9px; border-radius:8px; background:#0b0f17; border:1px solid #1e293b; color:#f8fafc; resize:vertical;">${escapeHtml(c.confirmationFollowup || '')}</textarea>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; margin-top:6px; flex-wrap:wrap;">
+                  <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                    <button type="button" class="note-quick-chip" data-detail-note-chip="Histopath confirmed: ">+ Histopath</button>
+                    <button type="button" class="note-quick-chip" data-detail-note-chip="Teaching pearl: ">+ Teaching Pearl</button>
+                    <button type="button" class="note-quick-chip" data-detail-note-chip="Follow-up: ">+ Follow-up</button>
+                  </div>
+                  <button type="button" id="detail-save-note-btn" class="btn-sm" style="background:#059669; border-color:#10b981; color:#ffffff; font-weight:700; padding:4px 10px;">Save Note</button>
+                </div>
+              </div>
             </div>
           `;
+
+          const inlineNoteArea = document.getElementById('detail-inline-note-area');
+          const detailSaveNoteBtn = document.getElementById('detail-save-note-btn');
+          if (inlineNoteArea) {
+            detailBodyContent.querySelectorAll('[data-detail-note-chip]').forEach(btn => {
+              btn.addEventListener('click', () => {
+                const phrase = btn.getAttribute('data-detail-note-chip') || '';
+                const cur = inlineNoteArea.value.trim();
+                inlineNoteArea.value = cur ? `${cur}\n${phrase}` : phrase;
+                inlineNoteArea.focus();
+              });
+            });
+          }
+          if (detailSaveNoteBtn && inlineNoteArea) {
+            detailSaveNoteBtn.addEventListener('click', () => {
+              const allCases = loadCases();
+              const idx = allCases.findIndex(item => item.id === c.id);
+              if (idx !== -1) {
+                allCases[idx].confirmationFollowup = inlineNoteArea.value.trim();
+                currentActiveCase = allCases[idx];
+                triggerHaptic('tap');
+                saveCases(allCases);
+                openCaseDetail(allCases[idx]);
+                showToast('Saved confirmation / study notes!');
+              }
+            });
+          }
 
           detailCompleteBtn.style.display = 'inline-flex';
           detailCompleteBtn.onclick = () => {
@@ -3818,14 +5355,14 @@
 
         // Drawer Toggle
         drawerHeader.addEventListener('click', (e) => {
-          if (e.target.closest('#quick-export-csv') || e.target.closest('#btn-export-lib-qr-drawer')) return;
+          if (e.target.closest('#quick-export-csv') || e.target.closest('#quick-share-wa') || e.target.closest('#btn-export-lib-qr-drawer')) return;
           const isOpen = drawerContent.classList.toggle('open');
           drawerHeader.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
           drawerChevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
         });
 
         // ================= STUDY SEARCH & FILTER ENGINE =================
-        function renderSearchResults() {
+        function getFilteredSearchCases() {
           const cases = loadCases();
           const kw = (searchKeyword.value || '').toLowerCase().trim();
           const mrnF = (searchMrn.value || '').toLowerCase().trim();
@@ -3835,9 +5372,15 @@
           const diagF = (searchDiagnosis.value || '').toLowerCase().trim();
           const statusF = searchStatus.value;
 
-          const filtered = cases.filter(c => {
+          return cases.filter(c => {
+            if (searchFilters.favoritesOnly && !c.isFavorite) return false;
+            if (statusF === 'FAVORITES') {
+              if (!c.isFavorite) return false;
+            } else if (statusF !== 'ALL' && c.status !== statusF) {
+              return false;
+            }
             if (kw) {
-              const fullText = `${c.mrn || ''} ${c.patientName || ''} ${c.primaryDiagnosis || ''} ${c.organOfInterest || ''} ${c.studyDescription || ''} ${c.organSystem || ''} ${c.reportedBy || ''}`.toLowerCase();
+              const fullText = `${c.mrn || ''} ${c.patientName || ''} ${c.primaryDiagnosis || ''} ${c.differentialDiagnoses || ''} ${c.organOfInterest || ''} ${c.studyDescription || ''} ${c.organSystem || ''} ${c.reportedBy || ''} ${c.confirmationFollowup || ''}`.toLowerCase();
               if (!fullText.includes(kw)) return false;
             }
             if (searchFilters.modality !== 'ALL' && (c.modality || '').toUpperCase() !== searchFilters.modality) return false;
@@ -3847,9 +5390,24 @@
             if (studyF && !(c.studyDescription || '').toLowerCase().includes(studyF)) return false;
             if (repF && !(c.reportedBy || '').toLowerCase().includes(repF)) return false;
             if (diagF && !(c.primaryDiagnosis || '').toLowerCase().includes(diagF)) return false;
-            if (statusF !== 'ALL' && c.status !== statusF) return false;
             return true;
           });
+        }
+
+        function updateSearchFavoriteFilterUI() {
+          const allCases = loadCases();
+          const favTotal = allCases.filter(c => !!c.isFavorite).length;
+          if (searchFavCount) searchFavCount.textContent = favTotal;
+          if (searchFavOnlyBtn && searchFavIcon) {
+            const isActive = searchFilters.favoritesOnly || (searchStatus && searchStatus.value === 'FAVORITES');
+            searchFavOnlyBtn.classList.toggle('active', isActive);
+            searchFavIcon.textContent = isActive ? '★' : '☆';
+          }
+        }
+
+        function renderSearchResults() {
+          updateSearchFavoriteFilterUI();
+          const filtered = getFilteredSearchCases();
 
           searchResultsCount.textContent = filtered.length;
           searchResultsList.innerHTML = '';
@@ -3879,6 +5437,7 @@
           searchStatus.value = 'ALL';
           searchFilters.modality = 'ALL';
           searchFilters.system = 'ALL';
+          searchFilters.favoritesOnly = false;
           document.querySelectorAll('#search-modality-chips .chip-btn').forEach(b => {
             b.classList.toggle('active', b.dataset.mod === 'ALL');
           });
@@ -3889,34 +5448,58 @@
           showToast('Search filters reset');
         }
 
+        if (searchFavOnlyBtn) {
+          searchFavOnlyBtn.addEventListener('click', () => {
+            searchFilters.favoritesOnly = !searchFilters.favoritesOnly;
+            if (!searchFilters.favoritesOnly && searchStatus.value === 'FAVORITES') {
+              searchStatus.value = 'ALL';
+            }
+            triggerHaptic('tap');
+            renderSearchResults();
+          });
+        }
+
         [searchKeyword, searchMrn, searchName, searchStudy, searchReportedBy, searchDiagnosis].forEach(input => {
           input.addEventListener('input', renderSearchResults);
         });
-        searchStatus.addEventListener('change', renderSearchResults);
+        searchStatus.addEventListener('change', () => {
+          searchFilters.favoritesOnly = (searchStatus.value === 'FAVORITES');
+          renderSearchResults();
+        });
         searchResetBtn.addEventListener('click', resetSearchFilters);
 
-        // ================= CSV EXPORT UTILITY =================
-        function generateAndDownloadCSV(casesToExport, filenamePrefix = 'RadLog_Cases') {
-          if (!casesToExport || casesToExport.length === 0) {
-            showToast('No cases to export', true);
-            return;
-          }
+        // ================= CSV EXPORT & WHATSAPP SHARE UTILITY =================
+        let activeCsvExportCases = [];
+        let activeCsvFilenamePrefix = 'RadLog_Cases';
+        let activeCsvTitleLabel = 'All Logged Studies';
 
+        function buildCSVContentString(casesToExport) {
           const headers = [
             'ID', 'Date', 'MRN', 'PatientName', 'Modality', 'StudyDescription',
             'OrganSystem', 'OrganOfInterest', 'PrimaryDiagnosis', 'DifferentialDiagnoses',
-            'Finding', 'Status', 'ReportedBy', 'CheckedBy', 'ConfirmationFollowup', 'Timestamp'
+            'Finding', 'Status', 'ReportedBy', 'CheckedBy', 'ConfirmationFollowup', 'Favorite', 'Timestamp'
           ];
 
-          const rows = casesToExport.map(c => [
-            c.id || '', c.date || '', c.mrn || '', c.patientName || '', c.modality || '',
-            c.studyDescription || '', c.organSystem || '', c.organOfInterest || '',
-            c.primaryDiagnosis || '', c.differentialDiagnoses || '', c.finding || '',
-            c.status || '', c.reportedBy || '', c.checkedBy || '',
-            c.confirmationFollowup || '', c.timestamp || ''
-          ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+          const rows = casesToExport.map(rawCase => {
+            const c = getEnteredDetailsPayload(rawCase);
+            return [
+              c.id || '', c.date || '', c.mrn || '', c.patientName || '', c.modality || '',
+              c.studyDescription || '', c.organSystem || '', c.organOfInterest || '',
+              c.primaryDiagnosis || '', c.differentialDiagnoses || '', c.finding || '',
+              c.status || '', c.reportedBy || '', c.checkedBy || '',
+              c.confirmationFollowup || '', c.isFavorite ? 'YES' : '', c.timestamp || ''
+            ].map(val => `"${String(val).replace(/"/g, '""')}"`).join(',');
+          });
 
-          const csvContent = [headers.join(','), ...rows].join('\r\n');
+          return [headers.join(','), ...rows].join('\r\n');
+        }
+
+        function downloadCSVFileNow(casesToExport, filenamePrefix = 'RadLog_Cases') {
+          if (!casesToExport || casesToExport.length === 0) {
+            showToast('No cases to export', true);
+            return false;
+          }
+          const csvContent = buildCSVContentString(casesToExport);
           const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
@@ -3926,46 +5509,169 @@
           link.click();
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
-
-          showToast(`Exported ${casesToExport.length} cases to CSV!`);
+          showToast(`Downloaded ${casesToExport.length} stud${casesToExport.length === 1 ? 'y' : 'ies'} as CSV!`);
+          return true;
         }
 
-        quickExportCsv.addEventListener('click', (e) => {
-          e.stopPropagation();
-          generateAndDownloadCSV(loadCases(), 'RadLog_AllCases');
-        });
+        function buildWhatsAppShareMessage(casesToExport, titleLabel = 'Radiology Cases') {
+          const count = casesToExport.length;
+          const previewLimit = Math.min(count, 15);
+          const lines = [];
+          lines.push(`*RadLog Resident Tracker — ${titleLabel} (${count})*`);
+          lines.push('');
+
+          for (let i = 0; i < previewLimit; i++) {
+            const c = getEnteredDetailsPayload(casesToExport[i]);
+            const mod = c.modality || 'STUDY';
+            const mrn = c.mrn || 'No MRN';
+            const dx = c.primaryDiagnosis || 'Pending Dx';
+            const studyPart = c.studyDescription ? ` (${c.studyDescription})` : '';
+            lines.push(`${i + 1}. *${mod}* | MRN: *${mrn}*${studyPart} — ${dx}`);
+          }
+
+          if (count > previewLimit) {
+            lines.push(`...and ${count - previewLimit} more stud${count - previewLimit === 1 ? 'y' : 'ies'}.`);
+          }
+
+          // Include short sync code & 1-tap import link for up to 25 studies so colleagues can import directly from WhatsApp
+          const syncSubset = casesToExport.slice(0, 25);
+          const packedTokens = syncSubset.map(c => packCaseToShortToken(c)).join(';');
+          const shortCode = syncSubset.length === 1 ? `RL1:${packedTokens}` : `RLL:${packedTokens}`;
+          const baseUrl = window.location.origin + window.location.pathname;
+          const importUrl = `${baseUrl}?sync=${encodeURIComponent(shortCode)}`;
+
+          lines.push('');
+          lines.push(`*1-Tap RadLog Import Link:*`);
+          lines.push(importUrl);
+          lines.push('');
+          lines.push(`*Short Sync Code:*`);
+          lines.push(shortCode);
+
+          return lines.join('\n');
+        }
+
+        function shareCasesViaWhatsAppUrl(casesToExport, titleLabel = 'Radiology Cases') {
+          if (!casesToExport || casesToExport.length === 0) {
+            showToast('No cases to share via WhatsApp', true);
+            return;
+          }
+          const text = buildWhatsAppShareMessage(casesToExport, titleLabel);
+          const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+          const a = document.createElement('a');
+          a.href = waUrl;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+
+        async function shareCsvFileViaNativeSheet(casesToExport, filenamePrefix = 'RadLog_Cases', titleLabel = 'Radiology Cases') {
+          if (!casesToExport || casesToExport.length === 0) {
+            showToast('No cases to share', true);
+            return;
+          }
+          const csvContent = buildCSVContentString(casesToExport);
+          const fileName = `${filenamePrefix}_${getTodayString()}.csv`;
+          const file = new File([csvContent], fileName, { type: 'text/csv' });
+
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: `RadLog CSV — ${titleLabel}`,
+                text: `Radiology Case Log CSV (${casesToExport.length} studies)`,
+                files: [file]
+              });
+              showToast('Shared CSV file successfully!');
+              return;
+            } catch (err) {
+              if (err && err.name === 'AbortError') return;
+            }
+          }
+
+          // Fallback for desktop browsers: download the CSV file and open WhatsApp message
+          downloadCSVFileNow(casesToExport, filenamePrefix);
+          shareCasesViaWhatsAppUrl(casesToExport, titleLabel);
+        }
+
+        function openCsvExportModal(casesToExport, filenamePrefix = 'RadLog_Cases', titleLabel = 'All Logged Studies', autoDownloadFirst = false) {
+          if (!casesToExport || casesToExport.length === 0) {
+            showToast('No cases available to export', true);
+            return;
+          }
+          activeCsvExportCases = casesToExport;
+          activeCsvFilenamePrefix = filenamePrefix;
+          activeCsvTitleLabel = titleLabel;
+
+          if (autoDownloadFirst) {
+            downloadCSVFileNow(casesToExport, filenamePrefix);
+          }
+
+          if (csvExportSummaryTitle) {
+            csvExportSummaryTitle.textContent = titleLabel;
+          }
+          if (csvExportCountBadge) {
+            csvExportCountBadge.textContent = `${casesToExport.length} stud${casesToExport.length === 1 ? 'y' : 'ies'}`;
+          }
+          if (btnModalWhatsappChat) {
+            const waText = buildWhatsAppShareMessage(casesToExport, titleLabel);
+            btnModalWhatsappChat.href = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+          }
+
+          if (csvExportModal) {
+            csvExportModal.classList.add('show');
+          }
+        }
+
+        if (closeCsvExportModalBtn) {
+          closeCsvExportModalBtn.addEventListener('click', () => csvExportModal.classList.remove('show'));
+        }
+        if (btnModalDownloadCsv) {
+          btnModalDownloadCsv.addEventListener('click', () => {
+            downloadCSVFileNow(activeCsvExportCases, activeCsvFilenamePrefix);
+          });
+        }
+        if (btnModalShareCsvFile) {
+          btnModalShareCsvFile.addEventListener('click', () => {
+            shareCsvFileViaNativeSheet(activeCsvExportCases, activeCsvFilenamePrefix, activeCsvTitleLabel);
+          });
+        }
+
+        function generateAndDownloadCSV(casesToExport, filenamePrefix = 'RadLog_Cases', titleLabel = 'All Logged Studies') {
+          openCsvExportModal(casesToExport, filenamePrefix, titleLabel, true);
+        }
+
+        if (quickExportCsv) {
+          quickExportCsv.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openCsvExportModal(loadCases(), 'RadLog_AllCases', 'All Logged Studies', false);
+          });
+        }
 
         function exportFilteredCSV() {
-          const cases = loadCases();
-          const kw = (searchKeyword.value || '').toLowerCase().trim();
-          const mrnF = (searchMrn.value || '').toLowerCase().trim();
-          const nameF = (searchName.value || '').toLowerCase().trim();
-          const studyF = (searchStudy.value || '').toLowerCase().trim();
-          const repF = (searchReportedBy.value || '').toLowerCase().trim();
-          const diagF = (searchDiagnosis.value || '').toLowerCase().trim();
-
-          const filtered = cases.filter(c => {
-            if (kw) {
-              const fullText = `${c.mrn || ''} ${c.patientName || ''} ${c.primaryDiagnosis || ''} ${c.organOfInterest || ''} ${c.studyDescription || ''} ${c.organSystem || ''} ${c.reportedBy || ''}`.toLowerCase();
-              if (!fullText.includes(kw)) return false;
-            }
-            if (searchFilters.modality !== 'ALL' && (c.modality || '').toUpperCase() !== searchFilters.modality) return false;
-            if (searchFilters.system !== 'ALL' && (c.organSystem || '').toUpperCase() !== searchFilters.system) return false;
-            if (mrnF && !(c.mrn || '').toLowerCase().includes(mrnF)) return false;
-            if (nameF && !(c.patientName || '').toLowerCase().includes(nameF)) return false;
-            if (studyF && !(c.studyDescription || '').toLowerCase().includes(studyF)) return false;
-            if (repF && !(c.reportedBy || '').toLowerCase().includes(repF)) return false;
-            if (diagF && !(c.primaryDiagnosis || '').toLowerCase().includes(diagF)) return false;
-            if (searchStatus.value !== 'ALL' && c.status !== searchStatus.value) return false;
-            return true;
-          });
-
-          generateAndDownloadCSV(filtered, 'RadLog_FilteredCases');
+          const filtered = getFilteredSearchCases();
+          openCsvExportModal(filtered, 'RadLog_FilteredCases', 'Filtered Search Studies', false);
         }
 
-        searchExportCsvBtn.addEventListener('click', exportFilteredCSV);
+        if (searchExportCsvBtn) {
+          searchExportCsvBtn.addEventListener('click', () => exportFilteredCSV());
+        }
 
         // ================= CSV PARSER & COLLEAGUE IMPORT =================
+        function sanitizeImportedStudyAndSystem(mod, rawStudy, rawSys, rawStatus) {
+          const cleanMod = (mod || '').trim().toUpperCase();
+          let study = (rawStudy || '').trim();
+          if (study === `${cleanMod} Study`) {
+            study = '';
+          }
+          let sys = (rawSys || '').trim().toUpperCase();
+          // Keep study details and organ system empty when importing Quick Log / unentered studies
+          if (!study && (rawStatus === 'Pending Details' || !rawSys)) {
+            sys = '';
+          }
+          return { studyDescription: study, organSystem: sys };
+        }
+
         function parseCSVToCases(csvText) {
           const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
           if (lines.length < 2) return [];
@@ -3986,7 +5692,8 @@
           const idxStatus = header.findIndex(h => h.includes('status'));
           const idxReported = header.findIndex(h => h.includes('reported') || h.includes('resident'));
           const idxChecked = header.findIndex(h => h.includes('checked') || h.includes('consultant'));
-          const idxConfirm = header.findIndex(h => h.includes('confirm') || h.includes('histopath'));
+          const idxConfirm = header.findIndex(h => h.includes('confirm') || h.includes('histopath') || h.includes('note'));
+          const idxFav = header.findIndex(h => h.includes('fav'));
 
           const parsedCases = [];
           for (let i = 1; i < lines.length; i++) {
@@ -3995,25 +5702,34 @@
 
             const mrnVal = (idxMrn !== -1 && cols[idxMrn]) ? cols[idxMrn].trim() : '';
             const diagVal = (idxDiag !== -1 && cols[idxDiag]) ? cols[idxDiag].trim() : '';
-            if (!mrnVal && !diagVal) continue;
+            const modVal = (idxMod !== -1 && cols[idxMod]) ? cols[idxMod].trim().toUpperCase() : '';
+            if (!mrnVal && !diagVal && !modVal) continue;
+
+            const rawStudyVal = (idxStudy !== -1 && cols[idxStudy]) ? cols[idxStudy].trim() : '';
+            const rawSysVal = (idxSystem !== -1 && cols[idxSystem]) ? cols[idxSystem].trim().toUpperCase() : '';
+            const rawStatusVal = (idxStatus !== -1 && cols[idxStatus]) ? cols[idxStatus].trim() : '';
+            const favRaw = (idxFav !== -1 && cols[idxFav]) ? cols[idxFav].trim().toUpperCase() : '';
+            const isFavVal = favRaw === 'YES' || favRaw === 'TRUE' || favRaw === '1' || favRaw === '★';
+            const { studyDescription, organSystem } = sanitizeImportedStudyAndSystem(modVal, rawStudyVal, rawSysVal, rawStatusVal);
 
             parsedCases.push({
               id: 'case_imp_' + Date.now() + '_' + i + '_' + Math.random().toString(36).substr(2, 3),
               timestamp: new Date().toISOString(),
-              date: (idxDate !== -1 && cols[idxDate]) ? cols[idxDate].trim() : getTodayString(),
+              date: (idxDate !== -1 && cols[idxDate]) ? cols[idxDate].trim() : '',
               mrn: mrnVal,
               patientName: (idxName !== -1 && cols[idxName]) ? cols[idxName].trim() : '',
-              modality: (idxMod !== -1 && cols[idxMod]) ? cols[idxMod].trim().toUpperCase() : 'CT',
-              studyDescription: (idxStudy !== -1 && cols[idxStudy]) ? cols[idxStudy].trim() : '',
-              organSystem: (idxSystem !== -1 && cols[idxSystem]) ? cols[idxSystem].trim().toUpperCase() : 'CNS',
+              modality: modVal,
+              studyDescription: studyDescription,
+              organSystem: organSystem,
               organOfInterest: (idxOrgan !== -1 && cols[idxOrgan]) ? cols[idxOrgan].trim() : '',
               primaryDiagnosis: diagVal,
               differentialDiagnoses: (idxDiff !== -1 && cols[idxDiff]) ? cols[idxDiff].trim() : '',
-              finding: (idxFinding !== -1 && cols[idxFinding]) ? cols[idxFinding].trim() : 'Abnormal',
-              status: (idxStatus !== -1 && cols[idxStatus]) ? cols[idxStatus].trim() : 'Completed',
-              reportedBy: (idxReported !== -1 && cols[idxReported]) ? cols[idxReported].trim() : 'Dr. Colleague',
+              finding: (idxFinding !== -1 && cols[idxFinding]) ? cols[idxFinding].trim() : '',
+              status: rawStatusVal || (studyDescription ? 'Completed' : 'Pending Details'),
+              reportedBy: (idxReported !== -1 && cols[idxReported]) ? cols[idxReported].trim() : '',
               checkedBy: (idxChecked !== -1 && cols[idxChecked]) ? cols[idxChecked].trim() : '',
-              confirmationFollowup: (idxConfirm !== -1 && cols[idxConfirm]) ? cols[idxConfirm].trim() : ''
+              confirmationFollowup: (idxConfirm !== -1 && cols[idxConfirm]) ? cols[idxConfirm].trim() : '',
+              isFavorite: isFavVal
             });
           }
           return parsedCases;
@@ -4109,22 +5825,26 @@
         let currentShortSyncCode = '';
         let currentQrEncodedText = '';
 
-        function packCaseToShortToken(c) {
+        function packCaseToShortToken(rawCase) {
+          const c = getEnteredDetailsPayload(rawCase);
           const today = getTodayString();
           const dtToken = (!c.date || c.date === today) ? 'T' : c.date.replace(/-/g, '').slice(2); // e.g. 261020 or T
-          const mod = (c.modality || 'CT').trim();
+          const mod = (c.modality || '').trim();
           const mrn = (c.mrn || '').trim();
           const dxRaw = (c.primaryDiagnosis || '').trim();
           const stdIdx = STANDARD_DIAGNOSES.findIndex(d => d.toLowerCase() === dxRaw.toLowerCase());
           const dxToken = stdIdx !== -1 ? `#${stdIdx}` : dxRaw.replace(/[|;~]/g, ' ');
-          const sys = (c.organSystem && c.organSystem !== 'CNS') ? c.organSystem : '';
+          const sys = (c.organSystem || '').trim();
           const stFlag = c.status === 'Pending Details' ? 'P' : (c.status === 'Pending Review' ? 'R' : '');
-          const fFlag = c.finding === 'Normal' ? 'N' : '';
-          const flags = (stFlag || fFlag) ? `${stFlag}${fFlag}` : '';
-          const by = (c.reportedBy && c.reportedBy !== 'Dr. Resident') ? c.reportedBy.replace(/[|;~]/g, ' ') : '';
+          const fFlag = c.finding === 'Normal' ? 'N' : (c.finding === 'Abnormal' ? 'A' : '');
+          const favFlag = c.isFavorite ? 'F' : '';
+          const flags = (stFlag || fFlag || favFlag) ? `${stFlag}${fFlag}${favFlag}` : '';
+          const by = (c.reportedBy || '').replace(/[|;~]/g, ' ').trim();
+          const study = (c.studyDescription || '').replace(/[|;~]/g, ' ').trim();
+          const organ = (c.organOfInterest || '').replace(/[|;~]/g, ' ').trim();
 
-          // Trim trailing empty fields so the code stays as short as possible (often 16-26 chars!)
-          const parts = [mod, mrn, dxToken, dtToken, sys, flags, by];
+          // Trim trailing empty fields so Quick Log codes stay ultra-short and only contain entered details
+          const parts = [mod, mrn, dxToken, dtToken, sys, flags, by, study, organ];
           while (parts.length > 3 && !parts[parts.length - 1]) {
             parts.pop();
           }
@@ -4133,7 +5853,7 @@
 
         function unpackShortTokenToCase(token, index = 0) {
           const parts = token.split('|');
-          const mod = (parts[0] || 'CT').trim().toUpperCase();
+          const mod = (parts[0] || '').trim().toUpperCase();
           const mrn = (parts[1] || '').trim();
           const dxToken = (parts[2] || '').trim();
           let primaryDiagnosis = dxToken;
@@ -4143,16 +5863,23 @@
               primaryDiagnosis = STANDARD_DIAGNOSES[idx];
             }
           }
-          const dtRaw = (parts[3] || 'T').trim();
-          let dateStr = getTodayString();
-          if (dtRaw !== 'T' && dtRaw.length === 6) {
+          const dtRaw = (parts[3] || '').trim();
+          let dateStr = '';
+          if (dtRaw === 'T') {
+            dateStr = getTodayString();
+          } else if (dtRaw.length === 6) {
             dateStr = `20${dtRaw.slice(0, 2)}-${dtRaw.slice(2, 4)}-${dtRaw.slice(4, 6)}`;
           } else if (dtRaw.includes('-')) {
             dateStr = dtRaw;
           }
-          const sys = (parts[4] || 'CNS').trim().toUpperCase();
+          const rawSys = (parts[4] || '').trim().toUpperCase();
           const flags = (parts[5] || '').trim();
-          const by = (parts[6] || 'Dr. Colleague').trim();
+          const by = (parts[6] || '').trim();
+          const rawStudy = (parts[7] || '').trim();
+          const rawOrgan = (parts[8] || '').trim();
+          const statusVal = flags.includes('P') ? 'Pending Details' : (flags.includes('R') ? 'Pending Review' : (rawStudy ? 'Completed' : 'Pending Details'));
+
+          const { studyDescription, organSystem } = sanitizeImportedStudyAndSystem(mod, rawStudy, rawSys, statusVal);
 
           return {
             id: 'case_sync_' + Date.now() + '_' + index + '_' + Math.random().toString(36).substr(2, 3),
@@ -4161,16 +5888,17 @@
             mrn: mrn,
             patientName: '',
             modality: mod,
-            studyDescription: `${mod} Study`,
-            organSystem: sys || 'CNS',
-            organOfInterest: '',
-            primaryDiagnosis: primaryDiagnosis || `${mod} Study`,
+            studyDescription: studyDescription,
+            organSystem: organSystem,
+            organOfInterest: rawOrgan,
+            primaryDiagnosis: primaryDiagnosis,
             differentialDiagnoses: '',
-            finding: flags.includes('N') ? 'Normal' : 'Abnormal',
-            status: flags.includes('P') ? 'Pending Details' : (flags.includes('R') ? 'Pending Review' : 'Completed'),
-            reportedBy: by || 'Dr. Colleague',
+            finding: flags.includes('N') ? 'Normal' : (flags.includes('A') ? 'Abnormal' : ''),
+            status: statusVal,
+            reportedBy: by,
             checkedBy: '',
-            confirmationFollowup: ''
+            confirmationFollowup: '',
+            isFavorite: flags.includes('F')
           };
         }
 
@@ -4343,6 +6071,48 @@
           openPeerSyncBtn.click();
         });
 
+        // Share Hub Top Modal Export Buttons (QR, Short Code, CSV, WhatsApp)
+        if (btnHubExportQr) {
+          btnHubExportQr.addEventListener('click', () => {
+            peerSyncModal.classList.remove('show');
+            stopQrCamera();
+            openEntireLibraryQrModal();
+          });
+        }
+
+        if (btnHubCopyCode) {
+          btnHubCopyCode.addEventListener('click', () => {
+            const cases = loadCases();
+            if (cases.length === 0) {
+              showToast('No studies in library to export', true);
+              return;
+            }
+            const packedTokens = cases.map(c => packCaseToShortToken(c)).join(';');
+            const shortCode = `RLL:${packedTokens}`;
+            navigator.clipboard.writeText(shortCode).then(() => {
+              showToast(`Copied sync code for ${cases.length} stud${cases.length === 1 ? 'y' : 'ies'} (${shortCode.length} chars)!`);
+            }).catch(() => {
+              showToast('Failed to copy sync code', true);
+            });
+          });
+        }
+
+        if (btnHubExportCsv) {
+          btnHubExportCsv.addEventListener('click', () => {
+            peerSyncModal.classList.remove('show');
+            stopQrCamera();
+            openCsvExportModal(loadCases(), 'RadLog_AllCases', 'Entire Library', false);
+          });
+        }
+
+        if (btnHubShareWhatsapp) {
+          btnHubShareWhatsapp.addEventListener('click', () => {
+            peerSyncModal.classList.remove('show');
+            stopQrCamera();
+            openCsvExportModal(loadCases(), 'RadLog_AllCases', 'Entire Library', false);
+          });
+        }
+
         // Copy always copies the ultra-short sync code (e.g. RL1:CT|90214|#0)
         copyQrTextBtn.addEventListener('click', () => {
           if (!currentShortSyncCode) return;
@@ -4409,6 +6179,7 @@
                   inversionAttempts: 'attemptBoth'
                 });
                 if (qrResult && qrResult.data) {
+                  triggerHaptic('qr_scanned');
                   handleDecodedSyncPayload(qrResult.data);
                   return;
                 }
@@ -4421,6 +6192,7 @@
                 const detector = new BarcodeDetector({ formats: ['qr_code'] });
                 const barcodes = await detector.detect(qrDecodeCanvas);
                 if (barcodes.length > 0 && barcodes[0].rawValue) {
+                  triggerHaptic('qr_scanned');
                   handleDecodedSyncPayload(barcodes[0].rawValue);
                   return;
                 }
@@ -4456,6 +6228,7 @@
 
           // 1. Check Ultra-Short Single Case Code (RL1:...)
           if (codeString.startsWith('RL1:')) {
+            triggerHaptic('qr_scanned');
             const token = codeString.slice(4);
             const incomingCase = unpackShortTokenToCase(token, 0);
             const currentCases = loadCases();
@@ -4483,6 +6256,7 @@
           if (codeString.startsWith('RLL')) {
             const colonIdx = codeString.indexOf(':');
             if (colonIdx !== -1) {
+              triggerHaptic('qr_scanned');
               const headerPart = codeString.slice(3, colonIdx); // "" or "1/2"
               let page = 1;
               let totalPages = 1;
@@ -4506,27 +6280,32 @@
             const data = JSON.parse(codeString);
 
             if (data && data.radlib === 1 && Array.isArray(data.cases)) {
+              triggerHaptic('qr_scanned');
               handleLibrarySyncReconciliation(data.cases, data.page, data.totalPages);
               return;
             }
 
             if (data && data.radlog && data.case) {
+              triggerHaptic('qr_scanned');
               const c = data.case;
+              const mod = (c.mod || '').toUpperCase();
+              const rawStatus = c.stat || '';
+              const { studyDescription, organSystem } = sanitizeImportedStudyAndSystem(mod, c.study || '', c.sys || '', rawStatus);
               const incomingCase = {
                 id: 'case_peer_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
                 timestamp: new Date().toISOString(),
-                date: c.date || getTodayString(),
+                date: c.date || '',
                 mrn: c.mrn || '',
                 patientName: c.patient || '',
-                modality: c.mod || 'CT',
-                studyDescription: c.study || '',
-                organSystem: c.sys || 'CNS',
+                modality: mod,
+                studyDescription: studyDescription,
+                organSystem: organSystem,
                 organOfInterest: c.organ || '',
                 primaryDiagnosis: c.dx || '',
                 differentialDiagnoses: c.diff || '',
-                finding: c.find || 'Abnormal',
-                status: c.stat || 'Completed',
-                reportedBy: c.by || 'Dr. Colleague',
+                finding: c.find || '',
+                status: rawStatus || (studyDescription ? 'Completed' : 'Pending Details'),
+                reportedBy: c.by || '',
                 checkedBy: '',
                 confirmationFollowup: ''
               };
@@ -4590,23 +6369,33 @@
           const duplicateCases = [];
 
           rawIncomingList.forEach((raw, i) => {
+            const mod = (raw.modality || raw.m || '').toUpperCase();
+            const rawStatus = (raw.status === 'C' || raw.status === 'Completed') ? 'Completed' : (raw.status === 'P' || raw.status === 'Pending Details' ? 'Pending Details' : (raw.status === 'R' || raw.status === 'Pending Review' ? 'Pending Review' : (raw.status || '')));
+            const { studyDescription, organSystem } = sanitizeImportedStudyAndSystem(
+              mod,
+              raw.studyDescription !== undefined ? raw.studyDescription : (raw.s || ''),
+              raw.organSystem !== undefined ? raw.organSystem : (raw.sys || ''),
+              rawStatus
+            );
+
             const c = {
               id: raw.id || ('case_sync_' + Date.now() + '_' + i + '_' + Math.random().toString(36).substr(2, 3)),
               timestamp: raw.timestamp || raw.ts || new Date().toISOString(),
-              date: raw.date || raw.dt || getTodayString(),
+              date: raw.date || raw.dt || '',
               mrn: raw.mrn !== undefined ? raw.mrn : '',
               patientName: raw.patientName || raw.pt || '',
-              modality: (raw.modality || raw.m || 'CT').toUpperCase(),
-              studyDescription: raw.studyDescription || raw.s || `${(raw.modality || raw.m || 'CT').toUpperCase()} Study`,
-              organSystem: (raw.organSystem || raw.sys || 'CNS').toUpperCase(),
+              modality: mod,
+              studyDescription: studyDescription,
+              organSystem: organSystem,
               organOfInterest: raw.organOfInterest || raw.og || '',
               primaryDiagnosis: raw.primaryDiagnosis || raw.dx || '',
               differentialDiagnoses: raw.differentialDiagnoses || raw.df || '',
-              finding: (raw.finding === 'N' || raw.finding === 'Normal') ? 'Normal' : 'Abnormal',
-              status: (raw.status === 'C' || raw.status === 'Completed') ? 'Completed' : (raw.status === 'P' || raw.status === 'Pending Details' ? 'Pending Details' : 'Pending Review'),
-              reportedBy: raw.reportedBy || raw.by || 'Dr. Colleague',
+              finding: (raw.finding === 'N' || raw.finding === 'Normal') ? 'Normal' : ((raw.finding === 'A' || raw.finding === 'Abnormal') ? 'Abnormal' : (raw.finding || '')),
+              status: rawStatus || (studyDescription ? 'Completed' : 'Pending Details'),
+              reportedBy: raw.reportedBy !== undefined ? raw.reportedBy : (raw.by || ''),
               checkedBy: raw.checkedBy || raw.ck || '',
-              confirmationFollowup: raw.confirmationFollowup || raw.cf || ''
+              confirmationFollowup: raw.confirmationFollowup || raw.cf || '',
+              isFavorite: !!raw.isFavorite
             };
 
             const mrnKey = (c.mrn || '').trim().toUpperCase();
@@ -4698,12 +6487,20 @@
 
         closeLibReviewBtn.addEventListener('click', () => librarySyncReviewModal.classList.remove('show'));
 
-        // Peer Sync Modal Open/Tabs
+        // Peer Sync Modal Open/Tabs (Share Hub: Export & Import)
         openPeerSyncBtn.addEventListener('click', () => {
+          const cases = loadCases();
+          if (shareHubCaseCount) {
+            shareHubCaseCount.textContent = `${cases.length} stud${cases.length === 1 ? 'y' : 'ies'}`;
+          }
           peerSyncModal.classList.add('show');
           tabBtnQrScan.click();
         });
         searchImportCsvBtn.addEventListener('click', () => {
+          const cases = loadCases();
+          if (shareHubCaseCount) {
+            shareHubCaseCount.textContent = `${cases.length} stud${cases.length === 1 ? 'y' : 'ies'}`;
+          }
           peerSyncModal.classList.add('show');
           tabBtnCsvImport.click();
         });
@@ -4789,6 +6586,7 @@
                     inversionAttempts: 'attemptBoth'
                   });
                   if (result && result.data) {
+                    triggerHaptic('qr_scanned');
                     handleDecodedSyncPayload(result.data);
                     URL.revokeObjectURL(img.src);
                     qrImageInput.value = '';
@@ -4800,6 +6598,7 @@
                   const detector = new BarcodeDetector({ formats: ['qr_code'] });
                   const codes = await detector.detect(img);
                   if (codes.length > 0 && codes[0].rawValue) {
+                    triggerHaptic('qr_scanned');
                     handleDecodedSyncPayload(codes[0].rawValue);
                     URL.revokeObjectURL(img.src);
                     qrImageInput.value = '';
@@ -4819,8 +6618,80 @@
           }
         });
 
-        // ================= SETTINGS MODAL =================
+        // ================= SETTINGS MODAL & DROPDOWN OPTIONS MANAGER =================
         let tempSettingsMrnNumbersOnly = false;
+
+        if (settingsDdCategory) {
+          settingsDdCategory.addEventListener('change', renderSettingsDropdownManager);
+        }
+
+        if (settingsDdAddBtn && settingsDdNewInput) {
+          const handleSettingsAddOption = () => {
+            const cat = settingsDdCategory ? settingsDdCategory.value : 'diagnosis';
+            const val = settingsDdNewInput.value.trim();
+            if (!val) {
+              showToast('Please enter an option name to add', true);
+              settingsDdNewInput.focus();
+              return;
+            }
+            addDropdownOptionToConfig(cat, val);
+            settingsDdNewInput.value = '';
+            showToast(`Added "${val}" to dropdown options!`);
+          };
+          settingsDdAddBtn.addEventListener('click', handleSettingsAddOption);
+          settingsDdNewInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSettingsAddOption();
+            }
+          });
+        }
+
+        if (settingsDdRestoreBtn) {
+          settingsDdRestoreBtn.addEventListener('click', () => {
+            const cat = settingsDdCategory ? settingsDdCategory.value : 'diagnosis';
+            const cfg = loadConfig();
+            if (cfg.deletedDropdownItems && Array.isArray(cfg.deletedDropdownItems[cat])) {
+              cfg.deletedDropdownItems[cat] = [];
+              saveConfig(cfg);
+              triggerHaptic('tap');
+              renderSettingsDropdownManager();
+              showToast('Restored deleted default options for this category!');
+            }
+          });
+        }
+
+        if (closeAddDdItemBtn) {
+          closeAddDdItemBtn.addEventListener('click', () => {
+            addDropdownItemModal.classList.remove('show');
+            activeDropdownAddContext = null;
+          });
+        }
+        if (cancelAddDdItemBtn) {
+          cancelAddDdItemBtn.addEventListener('click', () => {
+            addDropdownItemModal.classList.remove('show');
+            activeDropdownAddContext = null;
+          });
+        }
+        if (addDdItemForm) {
+          addDdItemForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = addDdItemInput ? addDdItemInput.value.trim() : '';
+            if (!val) {
+              showToast('Please enter an option value', true);
+              return;
+            }
+            if (activeDropdownAddContext && activeDropdownAddContext.category) {
+              addDropdownOptionToConfig(activeDropdownAddContext.category, val, activeDropdownAddContext.modality);
+              if (typeof activeDropdownAddContext.selectValueFn === 'function') {
+                activeDropdownAddContext.selectValueFn(val);
+              }
+              showToast(`Saved & selected "${val}"`);
+            }
+            addDropdownItemModal.classList.remove('show');
+            activeDropdownAddContext = null;
+          });
+        }
 
         function syncSettingsMrnModeUI(isNumbersOnly) {
           tempSettingsMrnNumbersOnly = !!isNumbersOnly;
@@ -4854,6 +6725,7 @@
           updateStorageStats();
           renderFrequentModalitiesSelector();
           renderCustomTagsManager();
+          renderSettingsDropdownManager();
           settingsModal.classList.add('show');
         });
 
@@ -4934,7 +6806,7 @@
         });
 
         // Modal backdrop close
-        [settingsModal, caseDetailModal, peerSyncModal, qrShareModal, addBulletModal, librarySyncReviewModal, confirmModal].forEach(m => {
+        [settingsModal, caseDetailModal, peerSyncModal, qrShareModal, addBulletModal, addDropdownItemModal, librarySyncReviewModal, confirmModal, csvExportModal].forEach(m => {
           if (m) {
             m.addEventListener('click', (e) => {
               if (e.target === m) {
@@ -4956,7 +6828,7 @@
             }
           }
           if (e.key === 'Escape') {
-            [settingsModal, caseDetailModal, peerSyncModal, qrShareModal, addBulletModal, librarySyncReviewModal, confirmModal].forEach(m => {
+            [settingsModal, caseDetailModal, peerSyncModal, qrShareModal, addBulletModal, addDropdownItemModal, librarySyncReviewModal, confirmModal, csvExportModal].forEach(m => {
               if (m) {
                 m.classList.remove('show');
                 if (m === peerSyncModal) stopQrCamera();
@@ -4973,10 +6845,11 @@
           checkTipDismissalState();
           renderAllModalityChips();
           renderAllSystemChips();
-          renderDiagnosisDatalist();
+          initAllCustomAutocompletes();
           renderDockForQuick();
           renderAllViews();
           updateSyncIndicator();
+          updateLiveRadiopaediaLinks();
           checkUrlSyncImport();
 
           quickMrn.focus();
